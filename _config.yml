@@ -12,7 +12,7 @@ author:
 #  facebook:         your-id
 #  twitter:          your-id
 #  github:           your-id
-#  linkedin:         your-id
+  linkedin:        https://www.linkedin.com/company/door2doc-bv
 #  medium:           your-id
 #  tumblr:           your-id
   email:            info@door2doc.com
@@ -46,10 +46,10 @@ kramdown:
 
 # Navigation
 nav:
-  - name:           "About"
-    url:            "/about"
-  - name:           "Archive"
-    url:            "/archive"
+#  - name:           "About"
+#    url:            "/about"
+#  - name:           "Archive"
+#    url:            "/archive"
 #  - name:           "Tags"
 #    url:            "/tags"
 
