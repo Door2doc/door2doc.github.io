@@ -48,7 +48,12 @@ share: true
   </div>
 
 <script>
-
+    document.getElementById("kosten-indicatie").addEventListener("keypress", function(ev) {
+      if (ev.keyCode == 13) {
+        showCosts();
+      }
+    });
+    
     function showCosts() {
       var inputVisitors = document.getElementById('num-visitors').value,
           inputLocations = document.getElementById('num-locations').value
