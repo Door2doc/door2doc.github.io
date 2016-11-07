@@ -25,18 +25,17 @@
       margin-left: 155px;
     }
   }
-  
-  #kosten-indicatie-result {
-    opacity: 0;
-    transition: opacity .25s ease-in-out;
-    
-    &.show {
-      opacity: 1;
-    }
-  }
 }
 
 
+#kosten-indicatie-result {
+  opacity: 0;
+  transition: opacity .25s ease-in-out;
+
+  &.show {
+    opacity: 1;
+  }
+}
 
 
 
