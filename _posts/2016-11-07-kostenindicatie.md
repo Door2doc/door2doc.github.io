@@ -44,19 +44,7 @@ share: true
     <span class="result" id="connectionFee"></span>
   </div>
   
-<script>
-
-    function showCosts() {
-      var inputVisitors = document.getElementById('num-visitors').value,
-          inputLocations = document.getElementById('num-locations').value
-          ;
-      if (inputVisitors == "") {
-        inputVisitors = 0;
-      }
-
-      if (inputLocations == "") {
-        inputLocations = 0;
-<form action="" id="kosten-indicatie">
+    <form action="" id="kosten-indicatie">
     <div class="formfield-container">
       <label for="num-visitors">Aantal bezoekers</label>
       <input type="text" id="num-visitors" name="num-visitors">
@@ -97,7 +85,7 @@ share: true
 
   <script>
 
-    function showCosts() {
+    function showCosts() 
       var inputVisitors = document.getElementById('num-visitors').value,
           inputLocations = document.getElementById('num-locations').value
           ;
