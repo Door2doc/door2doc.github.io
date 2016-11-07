@@ -8,43 +8,7 @@ comments: true
 share: true
 ---
 
-<form action="">
-    <div formfield-container>
-      <label for="num-visitors">Aantal bezoekers</label>
-      <input type="text" id="num-visitors" name="num-visitors">
-    </div>
-
-    <div formfield-container>
-      <label for="num-visitors">Aantal locaties</label>
-      <input type="text" id="num-locations" name="num-locations">
-    </div>
-
-    <div formfield-container>
-      <input type="button" value="Bereken" onclick="showCosts()"/>
-    </div>
-</form>
-<div class="result-container">
-    <span class="label">Indicatie prijs A: </span>
-    <span class="result" id="resultAMonth"></span>
-    <span> per maand,</span>
-    <span class="result" id="resultA"></span>
-    <span> per jaar</span>
-  </div>
-
-  <div class="result-container">
-    <span class="label">Indicatie prijs AB: </span>
-    <span class="result" id="resultABMonth"></span>
-    <span> per maand,</span>
-    <span class="result" id="resultAB"></span>
-    <span> per jaar</span>
-  </div>
-
-  <div class="result-container">
-    <span class="label">Eenmalige aansluitkosten: </span>
-    <span class="result" id="connectionFee"></span>
-  </div>
-  
-    <form action="" id="kosten-indicatie">
+<form action="" id="kosten-indicatie">
     <div class="formfield-container">
       <label for="num-visitors">Aantal bezoekers</label>
       <input type="text" id="num-visitors" name="num-visitors">
@@ -83,9 +47,9 @@ share: true
     </div>
   </div>
 
-  <script>
+<script>
 
-    function showCosts() 
+    function showCosts() {
       var inputVisitors = document.getElementById('num-visitors').value,
           inputLocations = document.getElementById('num-locations').value
           ;
