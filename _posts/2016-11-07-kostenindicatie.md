@@ -11,12 +11,12 @@ share: true
 <form action="" id="kosten-indicatie">
     <div class="formfield-container">
       <label for="num-visitors">Aantal bezoekers</label>
-      <input type="text" id="num-visitors" name="num-visitors">
+      <input type="number" id="num-visitors" name="num-visitors">
     </div>
 
     <div class="formfield-container">
       <label for="num-visitors">Aantal locaties</label>
-      <input type="text" id="num-locations" name="num-locations">
+      <input type="number" id="num-locations" name="num-locations">
     </div>
 
     <div class="formfield-container">
