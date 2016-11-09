@@ -14,17 +14,17 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
     <div class="formfield-container checkbox-container">
       <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief zorgverlenerspakket</label>
     </div>
-    <div class="formfield-container">
+    <div class="formfield-container textfield-container">
       <label for="num-visitors">Aantal bezoekers</label>
       <input type="number" id="num-visitors" name="num-visitors">
     </div>
 
-    <div class="formfield-container">
+    <div class="formfield-container textfield-container">
       <label for="num-visitors">Aantal locaties</label>
       <input type="number" id="num-locations" name="num-locations">
     </div>
 
-    <div class="formfield-container">
+    <div class="formfield-container button-container">
       <input type="button" value="Bereken" onclick="showCosts()"/>
     </div>
   </form>
