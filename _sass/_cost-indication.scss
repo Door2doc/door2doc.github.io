@@ -20,6 +20,7 @@
     }
     &.textfield-container {
       label {
+        display: block;
         @media (min-width: 481px) {
           width: 150px;
         }
