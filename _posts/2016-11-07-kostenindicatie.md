@@ -8,7 +8,12 @@ comments: true
 share: true
 ---
 
-<form action="" id="kosten-indicatie">
+Tekstje over inhoud standaard pakket.
+Dit pakket kan aangevuld worden met het zorgverlenerspakket.
+  <form action="" id="kosten-indicatie">
+    <div class="formfield-container checkbox-container">
+      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief zorgverlenerspakket</label>
+    </div>
     <div class="formfield-container">
       <label for="num-visitors">Aantal bezoekers</label>
       <input type="number" id="num-visitors" name="num-visitors">
@@ -26,18 +31,10 @@ share: true
 
   <div id="kosten-indicatie-result">
     <div class="result-container">
-      <span class="label">Indicatie prijs A: </span>
-      <span class="result" id="resultAMonth"></span>
+      <span class="label">Indicatie prijs : </span>
+      <strong class="result" id="resultMonth"></strong>
       <span> per maand,</span>
-      <span class="result" id="resultA"></span>
-      <span> per jaar</span>
-    </div>
-
-    <div class="result-container">
-      <span class="label">Indicatie prijs AB: </span>
-      <span class="result" id="resultABMonth"></span>
-      <span> per maand,</span>
-      <span class="result" id="resultAB"></span>
+      <span class="result" id="result"></span>
       <span> per jaar</span>
     </div>
 
@@ -53,11 +50,12 @@ share: true
         showCosts();
       }
     });
-    
     function showCosts() {
-      var inputVisitors = document.getElementById('num-visitors').value,
-          inputLocations = document.getElementById('num-locations').value
-          ;
+
+      var inputVisitors = parseInt(document.getElementById('num-visitors').value),
+          inputLocations = parseInt(document.getElementById('num-locations').value),
+          ab_included = Boolean(document.getElementById('checkbox-ab').checked);
+
       if (inputVisitors == "") {
         inputVisitors = 0;
       }
@@ -65,54 +63,47 @@ share: true
       if (inputLocations == "") {
         inputLocations = 0;
       }
-
-
-      var result = calculateCosts(parseInt(inputVisitors), parseInt(inputLocations)),
+      
+      var result = calculateCosts(parseInt(inputVisitors), parseInt(inputLocations), ab_included),
           unit = '€',
           cents = ',-';
-
-
-        document.getElementById('resultA').textContent        = unit + parseInt(result.priceA) + cents;
-        document.getElementById('resultAMonth').textContent   = unit + parseInt(result.priceA / 12) + cents;
-        document.getElementById('resultAB').textContent       = unit + parseInt(result.priceAB) + cents;
-        document.getElementById('resultABMonth').textContent  = unit + parseInt(result.priceAB / 12) + cents;
+      
+        document.getElementById('result').textContent        = unit + parseInt(result.price) + cents;
+        document.getElementById('resultMonth').textContent   = unit + parseInt(result.price / 12) + cents;
         document.getElementById('connectionFee').textContent  = unit + parseInt(result.connectionFee) + cents;
 
         var resultContainer = document.getElementById('kosten-indicatie-result');
+      
         if (resultContainer) {
           resultContainer.className = 'show';
         }
     }
 
-//     reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
-    function calculateCosts(numVisitors, numLocations) {
+//  reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
+    function calculateCosts(numVisitors, numLocations, ab) {
+   
       var rateA = .6,
           rateAB = .8,
-          priceA = 0,
-          priceAB = 0,
-          priceAMonth  = 0,
-          priceABMonth = 0,
+          price = 0,
           feeBasic = 6000,
           feeNext = 4000,
           connectionFee = 0,
           limitVisitors_1 = 20000,
-          limitVisitors_2 = 40000
-      ;
+          limitVisitors_2 = 40000,
+          ab_included = ab,
+          rate = ab_included ? rateAB : rateA;
 
       if ( numVisitors > limitVisitors_2 ){
 
-        priceA = parseInt(numVisitors - limitVisitors_2) * rateA * (1-0.4) + limitVisitors_1 * rateA * (1.8);
-        priceAB = (numVisitors - limitVisitors_2) *rateAB * (1-0.4) + limitVisitors_1 * rateAB * (1.8) ;
+        price = parseInt(numVisitors - limitVisitors_2) * rate * (1-0.4) + limitVisitors_1 * rate * (1.8);
 
       } else if (numVisitors > limitVisitors_1) {
 
-        priceA = (numVisitors - limitVisitors_1) * rateA * (1-0.2) + limitVisitors_1 * rateA;
-        priceAB = (numVisitors - limitVisitors_1) * rateAB*(1-0.2) + limitVisitors_1 * rateAB;
+        price = parseInt(numVisitors - limitVisitors_1) * rate * (1-0.2) + limitVisitors_1 * rate;
 
       } else {
 
-        priceA = numVisitors * rateA;
-        priceAB = numVisitors * rateAB;
+        price = numVisitors * rate;
 
       }
 
@@ -126,8 +117,8 @@ share: true
 
       }
 
-      return ({"priceA":priceA, "priceAB":priceAB, "connectionFee":connectionFee});
-    }
+      return ({"price":price, "connectionFee":connectionFee});
+    }    
 
-  </script>
+</script>
   
