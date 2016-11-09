@@ -5,13 +5,11 @@
     
     label {
       display: inline-block;
-      width: 150px;
     }
     input {
       font-family: inherit;
       font-size: inherit;
       color: inherit;
-      padding: 5px 10px;
     }  
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
@@ -19,6 +17,16 @@
       -moz-appearance: none;
       appearance: none;
       margin: 0; 
+    }
+    &.textfield-container {
+      label {
+        @media (min-width: 481px) {
+          width: 150px;
+        }
+      }
+      input {
+        padding: 5px 10px;
+      }  
     }
     input[type=button] {
       display: inline-block;
@@ -29,7 +37,10 @@
       text-decoration: none;
       border-radius: 3px;
       border: 0;
-      margin-left: 155px;
+      
+      @media (min-width: 481px) {
+        margin-left: 155px;
+      }
     }
   }
 }
