@@ -124,5 +124,6 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
           resultContainer.className = 'show';
         }
     }
+    
 </script>
   
