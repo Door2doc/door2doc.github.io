@@ -50,35 +50,11 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
         showCosts();
       }
     });
-    function showCosts() {
-
-      var inputVisitors = parseInt(document.getElementById('num-visitors').value),
-          inputLocations = parseInt(document.getElementById('num-locations').value),
-          ab_included = Boolean(document.getElementById('checkbox-ab').checked);
-
-      if (inputVisitors == "") {
-        inputVisitors = 0;
-      }
-
-      if (inputLocations == "") {
-        inputLocations = 0;
-      }
-      
-      var result = calculateCosts(parseInt(inputVisitors), parseInt(inputLocations), ab_included),
-          unit = '€',
-          cents = ',-';
-      
-        document.getElementById('result').textContent        = unit + parseInt(result.price) + cents;
-        document.getElementById('resultMonth').textContent   = unit + parseInt(result.price / 12) + cents;
-        document.getElementById('connectionFee').textContent  = unit + parseInt(result.connectionFee) + cents;
-
-        var resultContainer = document.getElementById('kosten-indicatie-result');
-      
-        if (resultContainer) {
-          resultContainer.className = 'show';
-        }
+    
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
-
+    
 //  reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
     function calculateCosts(numVisitors, numLocations, ab) {
    
@@ -120,5 +96,33 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
       return ({"price":price, "connectionFee":connectionFee});
     }    
 
+    function showCosts() {
+
+      var inputVisitors = parseInt(document.getElementById('num-visitors').value),
+          inputLocations = parseInt(document.getElementById('num-locations').value),
+          ab_included = Boolean(document.getElementById('checkbox-ab').checked);
+
+      if (inputVisitors == "") {
+        inputVisitors = 0;
+      }
+
+      if (inputLocations == "") {
+        inputLocations = 0;
+      }
+      
+      var result = calculateCosts(parseInt(inputVisitors), parseInt(inputLocations), ab_included),
+          unit = '€',
+          cents = ',-';
+      
+        document.getElementById('result').textContent        = unit + " " + numberWithCommas(parseInt(result.price)) + cents;
+        document.getElementById('resultMonth').textContent   = unit + " " + numberWithCommas(parseInt(result.price / 12)) + cents;
+        document.getElementById('connectionFee').textContent  = unit + " " + numberWithCommas(parseInt(result.connectionFee)) + cents;
+
+        var resultContainer = document.getElementById('kosten-indicatie-result');
+      
+        if (resultContainer) {
+          resultContainer.className = 'show';
+        }
+    }
 </script>
   
