@@ -1,0 +1,162 @@
+swagger: "2.0"
+info:
+  title: Prediction Service
+  version: v2
+
+basePath: /services/v1/prediction
+
+produces:
+  - application/json
+
+tags:
+  - name: "predict"
+    description: "Make predictions about the future."
+
+definitions:
+  Prediction:
+    type: object
+    example:
+      {
+        "timestamp": "2016-08-12T09:32:35.837Z",
+        "arts": "seh",
+        "d2d": 24,
+        "vbt": 160,
+        "wachtend": 1,
+        "aanwezig": 4,
+        "wachtend_arts": 1,
+        "aanwezig_arts": 2,
+        "in_behandeling_arts": 1,
+        "model": "dz-seh-aa-1:dz-seh-aw-2"
+      }
+    required:
+      - timestamp
+      - arts
+      - d2d
+      - vbt
+      - wachtend
+      - aanwezig
+      - model
+      - wachtend_arts
+      - aanwezig_arts
+      - in_behandeling_arts
+    properties:
+      timestamp:
+        type: string
+        format: date-time
+        description: >
+          RFC3339 tijdstip waar de voorspelling voor is gemaakt. Als de service is aangeroepen met een t parameterm
+          dan is dit de waarde van die parameter.
+      arts:
+        type: string
+        description: >
+          Type arts waarvoor de voorspelling is gemaakt. Als de service is aangeroepen met een arts parameter, dan
+          is dit de waarde van die parameter.
+      d2d:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Voorspelde deur-tot-doktertijd in minuten
+      vbt:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Voorspelde totale verblijftijd in minuten
+      wachtend:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal patiënten aanwezig op tijdstip t die nog wachten op een dokter
+      aanwezig:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal patiënten aanwezig op tijdstip t, ongeacht of zij een dokter gezien hebben
+      wachtend_arts:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Aantal patiënten aanwezig op tijdstip t die nog wachten op deze specifieke arts
+      aanwezig_arts:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Aantal patiënten aanwezig op tijdstip t, die te maken hebben met deze specifieke arts
+      in_behandeling_arts:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Aantal patiënten in behandeling bij deze arts op tijdstip t
+      model:
+        type: string
+        description: Identifier voor het gebruikte model
+
+paths:
+  /predict:
+    get:
+      summary: Voorspel de wachttijd op de SEH
+      operationId: get_prediction
+      tags:
+        - predict
+      parameters:
+        - name: arts
+          in: query
+          description: Type arts, leeg laten voor 'algemeen'
+          required: false
+          type: string
+          enum:
+            - "chi"
+            - "seh"
+            - "int"
+            - "ov"
+        - name: t
+          in: query
+          description: RFC3339 tijdstip waar de voorspelling voor berekend moet worden. Default is nu.
+          required: false
+          type: string
+          format: date-time
+      responses:
+        200:
+          description: De voorspelling voor het opgegeven tijdstip
+          schema:
+            $ref: '#/definitions/Prediction'
+        400:
+          description: Invalid timestamp
+
+  /predict/range:
+    get:
+      summary: Haal een serie aan voorspellingen op
+      operationId: get_predictions_in_range
+      tags:
+        - predict
+      parameters:
+        - name: arts
+          in: query
+          description: Type arts, leeg laten voor 'algemeen'
+          required: false
+          type: string
+          enum:
+            - "chi"
+            - "seh"
+            - "int"
+            - "ov"
+        - name: from
+          in: query
+          description: Datum waarop de serie begint, in het formaat YYYY-MM-DD.
+          required: true
+          type: string
+          format: date
+        - name: days
+          in: query
+          description: Aantal dagen waarover de serie berekend wordt.
+          required: true
+          default: 7
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 31
+      produces:
+        - text/csv
+      responses:
+        200:
+          description: De voorspellingen voor het opgegeven tijdstip
+

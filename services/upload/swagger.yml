@@ -1,0 +1,313 @@
+swagger: "2.0"
+info:
+  title: Upload Service Door2doc SEH
+  version: 1.0
+
+  description: |
+    Om de correcte informatie te kunnen presenteren, dient de Door2doc software op de hoogte te zijn van relevante
+    bezoek-gegevens. U kunt deze gegevens aanleveren via de Upload Service die hier beschreven wordt.
+
+    # Introductie
+
+    Dit document omschrijft hoe u kunt aansluiten op deze upload service. In sectie 1 wordt beschreven welke
+    informatie Door2doc precies nodig heeft om optimaal te kunnen functioneren. Sectie 2 beschrijft de technische
+    aspecten van de aansluiting. In sectie 3 wordt beschreven op welke manieren de communicatie met de Upload Service
+    beveiligd is. Sectie 4 geeft een algemene toelichting op de technische aspecten.
+
+    De laatste sectie bevat de interactieve API. Hier worden de exacte technische details getoond.
+
+
+    # 1. Bezoek-informatie
+
+    De benodigde informatie is onder te verdelen in drie categorieën:
+
+     - informatie over het proces: tijdstippen, locaties en vervoersmethoden
+     - informatie over de behandeling: ingangsklachten en specialismes
+     - demografische informatie over de bezoeker: generieke categorieën
+
+    Merk op dat de Door2doc software dus geen identificerende informatie over de patiënt nodig heeft.
+
+    Ieder bezoek doorloopt een aantal fases. Voor de Door2doc software zijn de volgende fases relevant:
+
+    * Binnenkomst - het moment waarop de bezoeker arriveert; dit is het moment waarop de demografische
+      en behandelingsinformatie bekend wordt.
+    * Triage - het moment waarop de triage heeft plaatsgevonden; op dit moment zou de ingangsklacht, triagecode en
+      het specialisme bekend moeten zijn.
+    * Naar behandelkamer - het moment waarop de bezoeker naar een behandelkamer gaat; vanaf dit moment is het
+      kamernummer bekend.
+    * Eerste contact arts - het moment waarop de arts voor het eerst contact heeft met de patiënt.
+    * Gereed voor opname - voor patiënten die opgenomen moeten worden: het moment waarop dit bekend is.
+    * Vertrek - voor patiënten die opgenomen moeten worden: het moment waarop ze daadwerkelijk opgenomen worden.
+      Voor de overige patiënten: het moment waarop de SEH verlaten.
+
+    Om updates over hetzelfde bezoek aan elkaar te kunnen relateren, dient ieder bezoek van een uniek ID voorzien te
+    zijn. Dit ID hoeft niet hetzelfde te zijn als het ID in uw eigen systemen; het ID _mag_ niet hetzelfde zijn als een
+    patiëntnummer. Twee bezoeken door eenzelfde patiënt dienen een verschillende ID te hebben.
+
+    # 2. Aansluiting
+
+    Het aanroepen van de Upload Service gebeurt via een [REST API](https://en.wikipedia.org/wiki/Representational_state_transfer).
+    Deze API wordt ontsloten over HTTPS en gebruikt JSON als uitwisselingsformaat.
+
+    Het is de bedoeling dat vanuit het informatiesysteem bij de bronhouder, op regelmatige basis updates worden aangeleverd
+    door deze API aan te roepen. Hoe vaker deze informatie wordt aangeleverd, hoe accurater de informatievoorziening
+    van de Door2doc software zal zijn.
+
+    Idealiter wordt de service aangeroepen bij iedere wijziging. Indien dit niet mogelijk is, adviseert Door2doc
+    om één keer minuut de huidige status door te geven.
+
+    # 3. Beveiliging
+
+    De service is op een aantal manieren beveiligd. Om te beginnen is de informatie beveiligd tegen onderschepping en/of
+    data corruptie door het gebruik van TLS met een server side certificaat.
+
+    Vervolgens is de service beveiligd tegen ongeautoriseerd gebruik door middel van een gebruikersnaam en wachtwoord
+    die alleen voor deze service bedoeld is.
+
+    Indien gewenst, kan de service daarnaast nog worden beschermd door alleen verkeer van bepaalde IP adressen toe te
+    staan.
+
+    En tenslotte kan, indien gewenst, de service nog verder worden beschermd door ook een client side certificaat te
+    gebruiken bij de communicatie.
+
+    # 4. Implementatie-tips
+
+    # 4.1. HTTP Codes en foutafhandeling
+
+    De Upload Service maakt gebruik van de standaard HTTP codes. Code 200 geeft aan dat de upload succesvol is
+    verlopen. Een succesvolle upload geeft een informatie-bericht terug met daarin het aantal verwerkte records. Dit
+    hoort identiek te zijn aan het aantal aangeleverde records.
+
+    Code 400 duidt op fouten in de aangeleverde records. Naast deze code wordt een informatie-bericht geleverd, waarin
+    wij proberen aan te geven welke fouten zijn aangetroffen.
+
+    Codes 500 en hoger duiden op problemen aan onze kant. In dit geval, en in het geval er netwerk problemen optreden,
+    wordt u geacht de aanlevering na een minuut nog een keer te proberen.
+
+    # 4.2. Tijdstippen
+
+    De Upload Service accepteert alleen datum/tijd velden die zijn opgemaakt zoals gedefinieerd in de sectie `date-time`
+    in [RFC3339](http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14).
+
+
+
+    # 5. De API
+
+
+basePath: /services/v1/upload
+schemes:
+  - https
+
+consumes:
+  - application/json
+
+produces:
+  - application/json
+
+definitions:
+  RecordList:
+    type: array
+    items:
+      $ref: '#/definitions/Record'
+    example:
+      [
+        {
+          "bezoek_id": "A12345",
+          "dt_binnenkomst": "2016-10-07T13:00:00+0200",
+          "code_ingangsklacht": "PAC",
+          "code_specialisme": "9",
+          "code_herkomst": "4",
+          "code_vervoerder": "0",
+          "cat_geslacht": "m",
+          "cat_leeftijd": "194"
+        },
+        {
+          "bezoek_id": "123456AAA",
+          "dt_binnenkomst": "2016-10-07T13:08:47+0200",
+          "dt_aanvang_triage": "2016-10-07T13:08:47+0200",
+          "dt_naar_behandelkamer": "2016-10-07T13:10:12+0200",
+          "dt_eerste_contact_arts": "2016-10-07T13:42:00+0200",
+          "dt_gereed_voor_opname": "2016-10-07T14:02:17+0200",
+          "dt_vertrek": "2016-10-07T14:04:17+0200",
+          "behandelkamer": "D18",
+          "bed": "2",
+          "code_ingangsklacht": "Klacht extremiteit",
+          "code_specialisme": "11",
+          "code_triage": "1",
+          "code_herkomst": "4",
+          "code_vervoerder": "0",
+          "code_ontslagbestemming": "AX",
+          "code_opnamespecialisme": "11",
+          "cat_geslacht": "m",
+          "cat_leeftijd": "197"
+        },
+      ]
+
+  Record:
+    type: object
+    example:
+      {
+        "bezoek_id": "123456AAA",
+        "dt_binnenkomst": "2016-10-07T13:08:47+0200",
+        "dt_naar_behandelkamer": "2016-10-07T13:10:12+0200",
+        "dt_eerste_contact_arts": "2016-10-07T13:42:00+0200",
+        "dt_vertrek": "2016-10-07T14:04:17+0200",
+        "behandelkamer": "D18",
+        "bed": "2",
+        "code_ingangsklacht": "Klacht extermiteit/gewricht",
+        "code_specialisme": "11",
+        "code_herkomst": "4",
+        "code_vervoerder": "0",
+        "cat_geslacht": "m",
+        "cat_leeftijd": "201"
+      }
+    required:
+      - bezoek_id
+    properties:
+      bezoek_id:
+        type: string
+        description: Uniek ID voor dit bezoek. Dit is *geen* patiënt nummer; meerdere bezoeken door dezelfde
+          bezoeker resulteren in verschillende IDs.
+
+      dt_binnenkomst:
+        type: string
+        format: date-time
+        description: Datum/Tijd van binnenkomst.
+
+      dt_aanvang_triage:
+        type: string
+        format: date-time
+        description: Datum/Tijd waarop de triage is begonnen.
+
+      dt_naar_behandelkamer:
+        type: string
+        format: date-time
+        description: Datum/Tijd waarop de patiënt naar de behandelkamer is gegaan.
+
+      dt_eerste_contact_arts:
+        type: string
+        format: date-time
+        description: Datum/Tijd van het eerste contact van de patiënt met de behandelend arts.
+
+      dt_gereed_voor_opname:
+        type: string
+        format: date-time
+        description: Datum/Tijd waarop de patiënt gereed is voor opname.
+
+      dt_vertrek:
+        type: string
+        format: date-time
+        description: Datum/Tijd waarop de patiënt vertrokken is van de SEH, danwel daadwerkelijk opgenomen.
+
+      behandelkamer:
+        type: string
+        description: Code van de behandelkamer. Wordt geacht aanwezig te zijn wanneer `dt_naar_behandelkamer` ingevuld is.
+
+      bed:
+        type: string
+        description: Code van het bed binnen de behandelkamer; indien van toepassing.
+
+      code_ingangsklacht:
+        type: string
+        description: Code van de ingangsklacht, zoals gebruikt in het ZIS.
+
+      code_specialisme:
+        type: string
+        description: Code van het specialisme waar de patiënt aan toegewezen is, zoals gebruikt in het ZIS.
+
+      code_triage:
+        type: string
+        description: Toegekende triage code, indien van toepassing.
+
+      code_herkomst:
+        type: string
+        description: Code van de herkomst van de patiënt, zoals gebruikt in het ZIS.
+
+      code_vervoerder:
+        type: string
+        description: Code van de vervoerder gebruiker om op de SEH te komen.
+
+      code_ontslagbestemming:
+        type: string
+        description: Code van de ontslagbestemming.
+
+      code_opnamespecialisme:
+        type: string
+        description: Code van het specialisme bij opname, indien van toepassing.
+
+      cat_geslacht:
+        type: string
+        description: Geslacht van de bezoeker
+        enum:
+          - 'm'
+          - 'v'
+          - 'x'
+
+      cat_leeftijd:
+        type: string
+        description: Leeftijdscategorie. Deze wordt bepaald aan de hand van de eerste drie cijfers van het geboortejaar.
+
+
+  Verwerking:
+    type: object
+    example:
+      {
+        "duur_verwerking": 423,
+        "records_verwerkt": 12,
+      }
+    required:
+      - duur_verwerking
+      - records_verwerkt
+    properties:
+      duur_verwerking:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Aantal milliseconden dat benodigd was voor de verwerking.
+      records_verwerkt:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Aantal records dat is verwerkt.
+
+  Probleem:
+    type: object
+    example:
+      {
+        "messages": [
+          "'2016' is not a valid date-time"
+        ]
+      }
+    required:
+      - messages
+    properties:
+      messages:
+        type: array
+        items:
+          type: string
+
+
+paths:
+  /:
+    post:
+      summary: Verwerk één of meer bezoek records.
+      operationId: post_events
+      tags:
+        - Service definitie
+      parameters:
+        - name: records
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RecordList'
+
+      responses:
+        200:
+          description: De records zijn succesvol verwerkt. Het retourbericht bevat aanvullende informatie over de verwerking.
+          schema:
+            $ref: '#/definitions/Verwerking'
+        400:
+          description: Er was een probleem met één of meerdere records. Het retourbericht bevat aanvullende informatie.
+          schema:
+            $ref: '#/definitions/Probleem'
+
