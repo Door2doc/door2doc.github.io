@@ -1,0 +1,106 @@
+swagger: "2.0"
+info:
+  title: LCMS Service
+  version: 1.0
+  license:
+    name: ODC-BY 1.0
+    url: http://opendatacommons.org/licenses/by/
+
+  description: |
+    Deze service ontsluit de beschikbaarheid van kamers op de SEH van een geselecteerd aantal ziekenhuizen.
+
+    De data die door deze API beschikbaar wordt gemaakt is gelicenseerd onder de
+    [Open Data Commons Attribution License](http://opendatacommons.org/licenses/by/1.0/). Wanneer u deze data
+    gebruikt, dient u de volgende bronvermelding te hanteren:
+
+      Powered by door2doc
+
+host: data.door2doc.com
+basePath: /services/v1/lcms
+schemes:
+  - https
+
+consumes:
+  - application/json
+
+produces:
+  - application/json
+
+definitions:
+  HospitalInfoList:
+    type: object
+    example:
+      {
+        "timestamp": "2016-12-12T12:38:43.000Z",
+        "data": [
+          {
+            "ziekenhuis": "qcx",
+            "kamers_totaal": 14,
+            "kamers_bezet": 8,
+            "kamers_beschikbaar": 6
+          }
+        ]
+      }
+    required:
+      - timestamp
+      - data
+    properties:
+      timestamp:
+        type: string
+        format: date-time
+        description: Tijdstip waarop deze informatie is opgehaald
+      data:
+        description: Entry per ziekenhuis
+        type: array
+        items:
+          $ref: '#/definitions/HospitalInfo'
+
+  HospitalInfo:
+    type: object
+    example:
+      {
+            "ziekenhuis": "qcx",
+            "kamers_totaal": 14,
+            "kamers_bezet": 8,
+            "kamers_beschikbaar": 6
+      }
+    required:
+      - ziekenhuis
+      - kamers_totaal
+      - kamers_bezet
+      - kamers_beschikbaar
+    properties:
+      ziekenhuis:
+        type: string
+        description: Uniek ID voor het betreffende ziekenhuis
+
+      kamers_totaal:
+        type: integer
+        format: int32
+        description: Het totaal aantal beschikbare kamers op de SEH
+
+      kamers_bezet:
+        type: integer
+        format: int32
+        description: Het aantal kamers dat momenteel bezet is
+
+      kamers_beschikbaar:
+        type: integer
+        format: int32
+        description: Het aantal kamers dat op dit moment beschikbaar is
+
+
+paths:
+  /seh:
+    get:
+      summary: Haal informatie op over de beschikbaarheid van kamers
+      operationId: get_seh_rooms
+      tags:
+        - SEH
+      responses:
+        200:
+          description: Geeft alle bekende ziekenhuisgegevens terug.
+          schema:
+            $ref: '#/definitions/HospitalInfoList'
+        403:
+          description: Geen toegang
