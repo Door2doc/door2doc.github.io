@@ -2,10 +2,10 @@
 layout: post
 title: "Kosten indicatie"
 description: "Omschrijving."
-date: 2016-11-07
-tags: [kosten, kostenindicatie]
-comments: true
-share: true
+date: 2017-01-13
+tags: []
+comments: false
+share: false
 ---
 
 Tekstje over inhoud standaard pakket.
