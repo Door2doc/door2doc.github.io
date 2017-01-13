@@ -7,5 +7,5 @@ tags: []
 comments: false
 share: false
 ---
-[Open pagina](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie) 
+[Ga naar pagina](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie) 
 
