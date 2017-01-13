@@ -7,5 +7,5 @@ tags: []
 comments: false
 share: false
 ---
-em ipsum dolor sit amet, [Bekijk](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie) 
+[Open op nieuw tabblad](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie) 
 
