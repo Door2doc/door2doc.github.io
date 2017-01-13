@@ -7,7 +7,7 @@ info:
     url: http://opendatacommons.org/licenses/by/
 
   description: |
-    Deze service ontsluit de beschikbaarheid van bedden bij aangesloten ziekenhuizen.
+    Deze service ontsluit de actuele beschikbaarheid van OK's, IC-bedden en SEH behandelruimten bij aangesloten ziekenhuizen.
 
     De data die door deze API beschikbaar wordt gemaakt is gelicenseerd onder de
     [Open Data Commons Attribution License](http://opendatacommons.org/licenses/by/1.0/). Wanneer u deze data
@@ -41,22 +41,27 @@ definitions:
               "beschikbaar": 6
             },
             "ok": {
-              "capaciteit": 19,
-              "bezet": 18,
-              "beschikbaar": 1
+              "capaciteit": 6,
+              "bezet": 4,
+              "beschikbaar": 2
+            },
+            "seh": {
+              "capaciteit": 24,
+              "bezet": 13,
+              "beschikbaar": 11
             }
           },
           {
             "ziekenhuis": "xz",
-            "ic": {
+            "ok": {
               "capaciteit": 4,
               "bezet": 4,
               "beschikbaar": 0
             },
             "seh": {
-              "capaciteit": 4,
-              "bezet": 0,
-              "beschikbaar": 4
+              "capaciteit": 20,
+              "bezet": 8,
+              "beschikbaar": 12
             }
           }
         ]
