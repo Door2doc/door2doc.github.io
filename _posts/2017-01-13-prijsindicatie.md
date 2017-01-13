@@ -8,11 +8,11 @@ comments: false
 share: false
 ---
 
-Tekstje over inhoud standaard pakket.
+Hieronder kunt u een prijsindicatie opvragen voor het abonnement op de cloudservice van Door2doc. Het standaardabonnement bevat de realtime informatie voor patiënten in de wachtkamer en op de behandelkamers (Live en myLive tools). Deze informatie is op te vragen via pc’s en tablets overal in het ziekenhuis en (indien gewenst) op de ziekenhuiswebsite.
 Dit pakket kan aangevuld worden met het zorgverlenerspakket.
   <form action="" id="kosten-indicatie">
     <div class="formfield-container checkbox-container">
-      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor zorgverleners en managers</label>
+      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor zorgverleners en managers (Timeline, Target, Capacity)</label>
     </div>
     <div class="formfield-container textfield-container">
       <label for="num-visitors">Aantal bezoeken per jaar</label>
@@ -25,7 +25,7 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
     </div>
 
     <div class="formfield-container button-container">
-      <input type="button" value="Bereken" onclick="showCosts()"/>
+      <input type="button" value="Bekijk" onclick="showCosts()"/>
     </div>
   </form>
 
