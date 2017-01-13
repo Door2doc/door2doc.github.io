@@ -12,11 +12,9 @@ Hieronder kunt u een prijsindicatie opvragen voor het abonnement op de cloudserv
 
 Het standaardabonnement bevat realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (Live en myLive tools). Deze informatie is tevens op te vragen via pc’s en tablets overal in het ziekenhuis en (indien gewenst) op de ziekenhuiswebsite.
 
-Dit pakket kan aangevuld worden met het zorgverlenerspakket.
+Door2doc biedt ook andere realtime informatie, bedoeld voor zorgverleners en managers. Met de Timeline en Target tools krijgen zij realtime operational control van de doorstroom en verwachte werkdruk. De Capacity tool biedt tactisch inzicht voor dienstroosteroptimalisatie. 
+
   <form action="" id="kosten-indicatie">
-    <div class="formfield-container checkbox-container">
-      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor zorgverleners en managers (Timeline, Target, Capacity)</label>
-    </div>
     <div class="formfield-container textfield-container">
       <label for="num-visitors">Aantal bezoeken per jaar</label>
       <input type="number" id="num-visitors" name="num-visitors">
@@ -29,6 +27,9 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
 
     <div class="formfield-container button-container">
       <input type="button" value="Bekijk" onclick="showCosts()"/>
+    </div>
+    <div class="formfield-container checkbox-container">
+      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor zorgverleners en managers (Timeline, Target, Capacity)</label>
     </div>
   </form>
 
