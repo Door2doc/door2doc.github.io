@@ -8,11 +8,11 @@ comments: false
 share: false
 ---
 
-Hieronder kunt u een prijsindicatie opvragen voor het abonnement op de cloudservice van Door2doc.
+Hieronder kunt u een prijsindicatie opvragen voor het abonnement op de cloudservice van Door2doc voor de Spoedeisende Hulp en Eerste Harthulp.
 
 Het standaardabonnement bevat realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (Live en myLive tools). Deze informatie is tevens op te vragen via pc’s en tablets overal in het ziekenhuis en (indien gewenst) op de ziekenhuiswebsite.
 
-Door2doc biedt ook andere realtime informatie, bedoeld voor zorgverleners en managers. Met de Timeline en Target tools krijgen zij realtime operational control van de doorstroom en verwachte werkdruk. De Capacity tool biedt tactisch inzicht voor dienstroosteroptimalisatie. 
+Door2doc biedt ook andere realtime informatie, bedoeld voor artsen, verpleekundigen en managers. Met de Timeline en Target tools krijgen zij realtime operational control van de doorstroom en verwachte werkdruk. De Capacity tool biedt tactisch inzicht voor dienstroosteroptimalisatie. 
 
   <form action="" id="kosten-indicatie">
     <div class="formfield-container textfield-container">
@@ -25,10 +25,10 @@ Door2doc biedt ook andere realtime informatie, bedoeld voor zorgverleners en man
       <input type="number" id="num-locations" name="num-locations">
     </div>
     <div class="formfield-container checkbox-container">
-      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor zorgverleners en managers (Timeline, Target, Capacity)</label>
+      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor professionals (Timeline, Target, Capacity)</label>
     </div>
     <div class="formfield-container button-container">
-      <input type="button" value="Bekijk" onclick="showCosts()"/>
+      <input type="button" value="Indicatie" onclick="showCosts()"/>
     </div>
   </form>
 
