@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Kosten indicatie"
+title: "Kostenindicatie"
 description: "Omschrijving."
 date: 2016-11-07
 tags: []
@@ -61,7 +61,7 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
       var rateA = .6,
           rateAB = .8,
           price = 0,
-          feeBasic = 6000,
+          feeBasic = 4000,
           feeNext = 4000,
           connectionFee = 0,
           limitVisitors_1 = 20000,
