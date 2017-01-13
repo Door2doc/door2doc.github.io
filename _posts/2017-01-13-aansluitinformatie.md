@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Aansluitinformatie cloudservice Door2doc"
+title: "Aansluitinformatie cloudservice"
 description: ""
 date: 2017-01-13
 tags: []
