@@ -7,7 +7,7 @@ info:
     url: http://opendatacommons.org/licenses/by/
 
   description: |
-    Deze service ontsluit de beschikbaarheid van kamers op de SEH van een geselecteerd aantal ziekenhuizen.
+    Deze service ontsluit de beschikbaarheid van bedden bij aangesloten ziekenhuizen.
 
     De data die door deze API beschikbaar wordt gemaakt is gelicenseerd onder de
     [Open Data Commons Attribution License](http://opendatacommons.org/licenses/by/1.0/). Wanneer u deze data
@@ -27,7 +27,7 @@ produces:
   - application/json
 
 definitions:
-  HospitalInfoList:
+  ZiekenhuisInfoList:
     type: object
     example:
       {
@@ -35,9 +35,29 @@ definitions:
         "data": [
           {
             "ziekenhuis": "qcx",
-            "kamers_totaal": 14,
-            "kamers_bezet": 8,
-            "kamers_beschikbaar": 6
+            "ic": {
+              "capaciteit": 14,
+              "bezet": 8,
+              "beschikbaar": 6
+            },
+            "ok": {
+              "capaciteit": 19,
+              "bezet": 18,
+              "beschikbaar": 1
+            }
+          },
+          {
+            "ziekenhuis": "xz",
+            "ic": {
+              "capaciteit": 4,
+              "bezet": 4,
+              "beschikbaar": 0
+            },
+            "seh": {
+              "capaciteit": 4,
+              "bezet": 0,
+              "beschikbaar": 4
+            }
           }
         ]
       }
@@ -53,54 +73,82 @@ definitions:
         description: Entry per ziekenhuis
         type: array
         items:
-          $ref: '#/definitions/HospitalInfo'
+          $ref: '#/definitions/ZiekenhuisInfo'
 
-  HospitalInfo:
+  ZiekenhuisInfo:
     type: object
     example:
       {
             "ziekenhuis": "qcx",
-            "kamers_totaal": 14,
-            "kamers_bezet": 8,
-            "kamers_beschikbaar": 6
+            "ok": {
+              "capaciteit": 19,
+              "bezet": 18,
+              "beschikbaar": 1
+            },
+            "ic": {
+              "capaciteit": 14,
+              "bezet": 8,
+              "beschikbaar": 6
+            },
       }
     required:
       - ziekenhuis
-      - kamers_totaal
-      - kamers_bezet
-      - kamers_beschikbaar
     properties:
       ziekenhuis:
         type: string
         description: Uniek ID voor het betreffende ziekenhuis
+      ok:
+        type: object
+        $ref: '#/definitions/Bezetting'
+        description: Bezetting van de operatiekamers. Afwezig indien de bezetting van de OK onbekend is voor dit ziekenhuis.
+      ic:
+        type: object
+        $ref: '#/definitions/Bezetting'
+        description: Bezetting van de bedden op de intensive care. Afwezig indien de bezetting van de IC onbekend is voor dit ziekenhuis.
+      seh:
+        type: object
+        $ref: '#/definitions/Bezetting'
+        description: Bezetting van de behandelruimtes op de spoedeisende hulp. Afwezig indien de bezetting van de SEH onbekend is voor dit ziekenhuis.
 
-      kamers_totaal:
+  Bezetting:
+    type: object
+    example:
+      {
+            "beschikbaar": 6,
+            "capaciteit": 14,
+            "bezet": 8,
+      }
+    required:
+      - beschikbaar
+      - capaciteit
+      - bezet
+    properties:
+      capaciteit:
         type: integer
         format: int32
-        description: Het totaal aantal beschikbare kamers op de SEH
+        description: Het totaal aantal plaatsen
 
-      kamers_bezet:
+      bezet:
         type: integer
         format: int32
-        description: Het aantal kamers dat momenteel bezet is
+        description: Het aantal plaatsen dat momenteel bezet is
 
-      kamers_beschikbaar:
+      beschikbaar:
         type: integer
         format: int32
-        description: Het aantal kamers dat op dit moment beschikbaar is
-
+        description: Het aantal plaatsen dat op dit moment beschikbaar is
 
 paths:
-  /seh:
+  /beschikbaarheid:
     get:
-      summary: Haal informatie op over de beschikbaarheid van kamers
-      operationId: get_seh_rooms
+      summary: Haal informatie op over de beschikbaarheid van bedden bij de aangesloten ziekenhuizen
+      operationId: get_availability
       tags:
-        - SEH
+        - Beschikbaarheid
       responses:
         200:
           description: Geeft alle bekende ziekenhuisgegevens terug.
           schema:
-            $ref: '#/definitions/HospitalInfoList'
+            $ref: '#/definitions/ZiekenhuisInfoList'
         403:
           description: Geen toegang
