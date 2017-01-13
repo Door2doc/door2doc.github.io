@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Kostenindicatie"
-description: "Omschrijving."
+title: "Indicatie abonnementskosten cloud service Door2doc"
+description: ""
 date: 2016-11-07
 tags: []
 comments: false
@@ -15,7 +15,7 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
       <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief zorgverlenerspakket</label>
     </div>
     <div class="formfield-container textfield-container">
-      <label for="num-visitors">Aantal bezoekers</label>
+      <label for="num-visitors">Aantal bezoeken per jaar</label>
       <input type="number" id="num-visitors" name="num-visitors">
     </div>
 
@@ -31,7 +31,7 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
 
   <div id="kosten-indicatie-result">
     <div class="result-container">
-      <span class="label">Indicatie prijs : </span>
+      <span class="label">Indicatie investering: </span>
       <strong class="result" id="resultMonth"></strong>
       <span> per maand,</span>
       <span class="result" id="result"></span>
