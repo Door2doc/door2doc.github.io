@@ -13,6 +13,7 @@ Bedankt voor uw belangstelling voor Door2doc. Deze pagina geeft u een prijsindic
 Het standaardabonnement bevat realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (Live en myLive tools). Deze informatie is tevens op te vragen via pc’s en tablets overal in het ziekenhuis en (indien gewenst) op de ziekenhuiswebsite.
 
 Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, verpleegkundigen en managers:
+
 * realtime operational control van de doorstroom en verwachte werkdruk (Timeline, Target tools)
 * tactische inzichten voor dienstroosteroptimalisatie op basis van Treatment Point Staffing (Capacity tool)
 
