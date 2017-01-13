@@ -36,7 +36,7 @@ Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, ve
     <div class="result-container">
       <span class="label">Indicatie abonnementskosten: </span>
       <strong class="result" id="resultMonth"></strong>
-      <span> per maand, (</span>
+      <span> per maand (</span>
       <span class="result" id="result"></span>
       <span> per jaar)</span>
     </div>
@@ -117,7 +117,7 @@ Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, ve
           unit = '€',
           cents = ',-';
       
-        document.getElementById('result').textContent        = unit + " " + numberWithCommas(parseInt(result.price)) + cents;
+        document.getElementById('result').textContent        =unit + " " + numberWithCommas(parseInt(result.price)) + cents;
         document.getElementById('resultMonth').textContent   = unit + " " + numberWithCommas(parseInt(result.price / 12)) + cents;
         document.getElementById('connectionFee').textContent  = unit + " " + numberWithCommas(parseInt(result.connectionFee)) + cents;
 
