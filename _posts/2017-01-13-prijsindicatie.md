@@ -16,7 +16,7 @@ Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, ve
 * realtime operational control van de doorstroom en verwachte werkdruk (Timeline, Target tools)
 * tactische inzichten voor dienstroosteroptimalisatie op basis van Treatment Point Staffing (Capacity tool)
 
-### Voer gegevens in van uw organisatie
+#### Voer gegevens in van uw organisatie
 
   <form action="" id="kosten-indicatie">
     <div class="formfield-container textfield-container">
