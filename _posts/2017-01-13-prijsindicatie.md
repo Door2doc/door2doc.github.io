@@ -12,11 +12,11 @@ Hieronder kunt u een prijsindicatie opvragen voor het abonnement op de cloudserv
 
 Het standaardabonnement bevat realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (Live en myLive tools). Deze informatie is tevens op te vragen via pc’s en tablets overal in het ziekenhuis en (indien gewenst) op de ziekenhuiswebsite.
 
-Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, verpleegkundigen en managers: realtime operational control van de doorstroom en verwachte werkdruk (Timeline, Target tools) en tactisch inzicht voor dienstroosteroptimalisatie op basis van Treatment Point Staffing (Capacity tool). 
+Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, verpleegkundigen en managers: realtime operational control van de doorstroom en verwachte werkdruk (Timeline, Target tools) en tactische inzichten voor dienstroosteroptimalisatie op basis van Treatment Point Staffing (Capacity tool). 
 
   <form action="" id="kosten-indicatie">
     <div class="formfield-container textfield-container">
-      <label for="num-visitors">Bezoeken SEH/EHH per jaar</label>
+      <label for="num-visitors">Aantal bezoeken SEH/EHH per jaar</label>
       <input type="number" id="num-visitors" name="num-visitors">
     </div>
 
@@ -28,7 +28,7 @@ Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, ve
       <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor professionals (Timeline, Target, Capacity)</label>
     </div>
     <div class="formfield-container button-container">
-      <input type="button" value="Indicatie" onclick="showCosts()"/>
+      <input type="button" value="Bekijk indicatie" onclick="showCosts()"/>
     </div>
   </form>
 
