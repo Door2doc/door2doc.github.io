@@ -7,4 +7,4 @@ tags: []
 comments: false
 share: false
 ---
-http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/
+<html> <a href=http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/>Bekijk</a></html>
