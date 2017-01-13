@@ -24,12 +24,11 @@ Door2doc biedt ook andere realtime informatie, bedoeld voor zorgverleners en man
       <label for="num-visitors">Aantal locaties</label>
       <input type="number" id="num-locations" name="num-locations">
     </div>
-
-    <div class="formfield-container button-container">
-      <input type="button" value="Bekijk" onclick="showCosts()"/>
-    </div>
     <div class="formfield-container checkbox-container">
       <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor zorgverleners en managers (Timeline, Target, Capacity)</label>
+    </div>
+    <div class="formfield-container button-container">
+      <input type="button" value="Bekijk" onclick="showCosts()"/>
     </div>
   </form>
 
