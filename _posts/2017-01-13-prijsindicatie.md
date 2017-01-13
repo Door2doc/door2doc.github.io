@@ -36,8 +36,8 @@ Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, ve
     <div class="result-container">
       <span class="label">Indicatie abonnementskosten: </span>
       <strong class="result" id="resultMonth"></strong>
-      <span> per maand</span>
-      <span class="result" ( id="result"></span>
+      <span> per maand, (</span>
+      <span class="result" id="result"></span>
       <span> per jaar)</span>
     </div>
 
