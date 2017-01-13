@@ -8,7 +8,8 @@ comments: false
 share: false
 ---
 
-Hieronder kunt u een prijsindicatie opvragen voor het abonnement op de cloudservice van Door2doc. Het standaardabonnement bevat de realtime informatie voor patiënten in de wachtkamer en op de behandelkamers (Live en myLive tools). Deze informatie is op te vragen via pc’s en tablets overal in het ziekenhuis en (indien gewenst) op de ziekenhuiswebsite.
+Hieronder kunt u een prijsindicatie opvragen voor het abonnement op de cloudservice van Door2doc.
+Het standaardabonnement bevat realtime informatie voor patiënten in de wachtkamer en de behandelkamers (Live en myLive tools). Deze informatie is tevens op te vragen via pc’s en tablets overal in het ziekenhuis en (indien gewenst) op de ziekenhuiswebsite.
 Dit pakket kan aangevuld worden met het zorgverlenerspakket.
   <form action="" id="kosten-indicatie">
     <div class="formfield-container checkbox-container">
@@ -31,7 +32,7 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
 
   <div id="kosten-indicatie-result">
     <div class="result-container">
-      <span class="label">Indicatie investering: </span>
+      <span class="label">Indicatie abonnementskosten: </span>
       <strong class="result" id="resultMonth"></strong>
       <span> per maand,</span>
       <span class="result" id="result"></span>
