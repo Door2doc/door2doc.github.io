@@ -15,7 +15,7 @@ Dit pakket kan aangevuld worden met het zorgverlenerspakket.
       <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor zorgverleners en managers</label>
     </div>
     <div class="formfield-container textfield-container">
-      <label for="num-visitors">Aantal bezoeken (jaar)</label>
+      <label for="num-visitors">Aantal bezoeken per jaar</label>
       <input type="number" id="num-visitors" name="num-visitors">
     </div>
 
