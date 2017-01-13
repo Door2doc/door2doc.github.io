@@ -43,7 +43,7 @@ Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, ve
 
     <div class="result-container">
       <span class="label">Eenmalige aansluitkosten inclusief evaluatieperiode: </span>
-      <strong class="result" id="connectionFee"></strong>
+      <span class="result" id="connectionFee"></span>
     </div>
   </div>
 
