@@ -19,12 +19,12 @@ Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, ve
 
   <form action="" id="kosten-indicatie">
     <div class="formfield-container textfield-container">
-      <label for="num-visitors">Aantal bezoeken SEH/EHH per jaar</label>
+      <label for="num-visitors">Aantal bezoeken SEH/EHH per jaar:</label>
       <input type="number" id="num-visitors" name="num-visitors">
     </div>
 
     <div class="formfield-container textfield-container">
-      <label for="num-visitors">Aantal locaties</label>
+      <label for="num-visitors">Aantal locaties:</label>
       <input type="number" id="num-locations" name="num-locations">
     </div>
     <div class="formfield-container checkbox-container">
