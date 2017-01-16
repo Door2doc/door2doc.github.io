@@ -15,7 +15,7 @@ Het standaardabonnement bevat realtime informatie over verwachte wacht- en verbl
 Door2doc biedt hiernaast ook andere realtime informatie, bedoeld voor artsen, verpleegkundigen en managers: realtime operational control van de doorstroom en verwachte werkdruk (*Timeline, Target tools*) en tactische inzichten voor dienstroosteroptimalisatie op basis van Treatment Point Staffing (*Capacity tool*).
 
 #### Voer gegevens in van uw organisatie
-
+<p>
 
   <form action="" id="kosten-indicatie">
     <div class="formfield-container textfield-container">
