@@ -27,6 +27,28 @@ produces:
   - application/json
 
 definitions:
+  PointGeometry:
+    type: object
+    example:
+      {
+        "type": "Point",
+        "coordinates": [52.2946323, 4.955779]
+      }
+    required:
+      - type
+      - coordinates
+    properties:
+      type:
+        type: string
+        description: Type geometrie. Op dit moment wordt alleen type 'Point' ondersteund
+      coordinates:
+        type: array
+        description: Coordinaten van deze geometrie in WSG84
+        minItems: 2
+        maxItems: 2
+        items:
+          type: number
+
   ZiekenhuisInfoList:
     type: object
     example:
@@ -35,6 +57,10 @@ definitions:
         "data": [
           {
             "ziekenhuis": "qcx",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [52.2946323, 4.955779]
+            },
             "ic": {
               "capaciteit": 14,
               "bezet": 8,
@@ -53,6 +79,10 @@ definitions:
           },
           {
             "ziekenhuis": "xz",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [52.1660058,4.4751329]
+            },
             "ok": {
               "capaciteit": 4,
               "bezet": 4,
@@ -85,6 +115,10 @@ definitions:
     example:
       {
             "ziekenhuis": "qcx",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [52.2946323, 4.955779]
+            },
             "ok": {
               "capaciteit": 19,
               "bezet": 18,
@@ -102,6 +136,10 @@ definitions:
       ziekenhuis:
         type: string
         description: Uniek ID voor het betreffende ziekenhuis
+      geometry:
+        type: object
+        $ref: '#/definitions/PointGeometry'
+        description: Locatie van het betreffende ziekenhuis in GeoJSON.
       ok:
         type: object
         $ref: '#/definitions/Bezetting'
