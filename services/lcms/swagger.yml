@@ -43,7 +43,7 @@ definitions:
         description: Type geometrie. Op dit moment wordt alleen type 'Point' ondersteund
       coordinates:
         type: array
-        description: Coordinaten van deze geometrie in WSG84
+        description: Coordinaten van deze geometrie in WGS84
         minItems: 2
         maxItems: 2
         items:
