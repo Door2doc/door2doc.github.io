@@ -13,15 +13,15 @@ De totale benodigde tijd om de aansluiting te realiseren bedraagt enkele weken, 
 
 | Activiteit | Verantwoordelijk |
 |:--------|:-------:|
-| Aanleveren historische dataset SEH/EHH-bezoeken volgens instructie door2doc | ICT |
-| Valideren registratie van brongegevens op SEH/EHH en scenarioanalyse | Door2doc |
-|Inrichten realtime ontsluiting data SEH/EHH conform [protocol](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/) door2doc | ICT |
-| Bepalen effecten realtime ontsluiting op performance bronsysteem ZIS | ICT |
-| Aanbieden van realtime data over HTTPS (TLS) aan cloud door2doc | ICT |
+| Aanleveren historische dataset SEH/EHH-bezoeken | ICT |
+| Valideren registratie van brongegevens op SEH/EHH | Door2doc |
+|Inrichten realtime ontsluiting data SEH/EHH conform ons [protocol](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/) | ICT |
+| Bepalen effecten realtime ontsluiting op performance bronsysteem | ICT |
+| Aanbieden van realtime data over HTTPS (TLS) aan onze cloud | ICT |
 | Beoordelen stabiliteit en kwaliteit van de aangeboden datastroom | Door2doc |
-| In kaart brengen hoofdlijnen organisatie van zorgverlening SEH | Door2doc |
-| Creëren voorspellende modellen wacht- en verblijftijden SEH | Door2doc |
-| Aansluiting accorderen (overeenstemming informatie door2doc met bronsysteem ZIS) | Opdrachtgever |
+| In kaart brengen hoofdlijnen organisatie van zorgverlening SEH/EHH| Door2doc |
+| Creëren voorspellende modellen wacht- en verblijftijden SEH/EHH | Door2doc |
+| Aansluiting accorderen (overeenstemming informatie door2doc met bronsysteem) | Opdrachtgever |
 
 [Technische informatie dataprotocol Door2doc](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/) 
 
