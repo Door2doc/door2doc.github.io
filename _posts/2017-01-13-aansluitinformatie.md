@@ -7,7 +7,7 @@ tags: []
 comments: false
 share: false
 ---
-Op deze pagina leest u hoe uw organisatie kan aansluiten op de cloud van Door2doc. De tabel geeft een overzicht van de benodigde activiteiten en de bijbehorende verantwoordelijkheid. 
+Deze pagina geeft een overzicht van de benodigde activiteiten om uw organisatie aan te sluiten op onze cloud, inclusief de bijbehorende verantwoordelijkheid. 
 
 De totale benodigde tijd om de aansluiting te realiseren bedraagt enkele weken, afhankelijk van de beschikbaarheid bij de afdeling ICT in uw organisatie. Door2doc gebruikt uitsluitend informatie over bezoeken op de SEH/EHH, wij verwerken geen identificerende informatie over patiënten.
 
