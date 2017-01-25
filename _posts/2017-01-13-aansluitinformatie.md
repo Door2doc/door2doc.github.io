@@ -22,6 +22,5 @@ De totale benodigde tijd om de aansluiting te realiseren bedraagt enkele weken, 
 | Creëren voorspellende modellen wacht- en verblijftijden | Door2doc |
 | Aansluiting accorderen | Opdrachtgever |
 
- Door2doc gebruikt uitsluitend informatie over bezoeken op de SEH/EHH, wij verwerken geen identificerende informatie over patiënten.
-[Technische informatie dataprotocol Door2doc](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/) 
+[Technische informatie dataprotocol Door2doc](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/). Door2doc gebruikt uitsluitend informatie over bezoeken op de SEH/EHH, wij verwerken geen identificerende informatie over patiënten.
 
