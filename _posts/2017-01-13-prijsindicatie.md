@@ -8,7 +8,7 @@ comments: false
 share: false
 ---
 
-Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie bekijken van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De prijs bestaat uit eenmalige kosten voor de aansluiting op onze cloud, met daarbij een gratis evaluatieperiode van vier maanden. Daarna geldt een meerjarig abonnement met maandelijkse facturatie. Updates en onderhoud zijn inbegrepen bij onze cloudservice.
+Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie bekijken van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De prijs bestaat uit eenmalige kosten voor de aansluiting op onze cloud, met daarbij inbegrepen een evaluatieperiode van vier maanden; daarna geldt een meerjarig abonnement met maandelijkse facturatie. Updates en onderhoud zijn inbegrepen bij onze cloudservice.
 
 Het standaardabonnement biedt realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (*Live en myLive tools*). Deze informatie is tevens op te vragen via pc’s en tablets overal in het ziekenhuis en (naar wens) aan te bieden op de ziekenhuiswebsite en aan landelijke informatiediensten zoals LCMS.
 
