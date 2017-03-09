@@ -45,7 +45,7 @@ Door2doc biedt hiernaast ook andere informatie, bedoeld voor artsen, verpleegkun
     </div>
 
     <div class="result-container">
-      <span class="label">Eenmalige aansluitkosten inclusief evaluatieperiode: </span>
+      <span class="label">Eenmalige aansluitkosten inclusief evaluatieperiode (vier maanden): </span>
       <span class="result" id="connectionFee"></span>
     </div>
   </div>
