@@ -67,7 +67,7 @@ Door2doc biedt hiernaast ook andere informatie, bedoeld voor artsen, verpleegkun
       var rateA = .6,
           rateAB = .8,
           price = 0,
-          feeBasic = 8000,
+          feeBasic = 7500,
           feeNext = 5000,
           connectionFee = 0,
           limitVisitors_1 = 20000,
