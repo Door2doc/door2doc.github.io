@@ -1,0 +1,156 @@
+swagger: "2.0"
+info:
+  title: Door2doc Frontend Services
+  version: v2
+  description: |
+    Dit is het overzicht van alle beschikbare services waar de huidige frontends op gebaseerd zijn.
+
+    ## Algemene conventies
+    Alle datum/tijd velden volgen het formaat van [RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14).
+    Dit formaat is voorzien van tijdzone-informatie die niet noodzakelijkerwijs overeenkomt met de huidige tijdzone van de gebruiker.
+
+  termsOfService: Deze services zijn alleen te gebruiken door de offiële front-ends van door2doc.
+  contact:
+    name: door2doc
+    email: yigal@publysher.nl
+
+host: demo.door2doc.net
+basePath: /services/
+
+produces:
+  - application/json
+
+tags:
+  - name: Timeline
+    description: Informatie over de huidige bezoekers.
+
+definitions:
+  Arts:
+    type: string
+    enum:
+      - vpk
+      - seh
+      - int
+      - chi
+      - ov
+    description: |
+      Type arts:
+      * vpk: Verpleegkundige (geen arts)
+      * seh: SEH arts
+      * int: Internist
+      * chi: Chirurg
+      * ov: Overig
+
+  Care:
+    type: string
+    enum:
+      - lc
+      - mc
+      - hc
+    description: |
+      Type zorg dat benodigd is:
+      * hc: High Care
+      * mc: Medium Care
+      * lc: Low Care
+
+  Timeline:
+    type: array
+    items:
+      $ref: '#/definitions/VisitRecord'
+
+  VisitRecord:
+    type: object
+    properties:
+      bezoek_nummer:
+        type: string
+        description: Unieke identifier voor dit bezoek
+      type_arts:
+        $ref: '#/definitions/Arts'
+      care:
+        $ref: '#/definitions/Care'
+      specialisme:
+        type: string
+        description: Het exacte specialisme van de benodigde arts.
+      kamernummer:
+        type: string
+        description: Het kamernummer (eventueel met bednummer) waar deze patiënt momenteel verblijft.
+          Het is mogelijk dat een patiënt wel gezien is, nog niet vertrokken is, en niet meer op een kamer ligt.
+      reden:
+        type: string
+        description: De reden van dit bezoek.
+      binnenkomst:
+        type: string
+        format: 'date-time'
+        description: Datum/Tijd waarop de patiënt is binnengekomen.
+      naar_kamer:
+        type: string
+        format: 'date-time'
+        description: Datum/Tijd waarop de patiënt de huidige behandelkamer is binnengekomen.
+      gezien:
+        type: string
+        format: 'date-time'
+        description: Datum/Tijd waarop de patiënt voor het eerst is gezien door een arts.
+      opname:
+        type: string
+        format: 'date-time'
+        description: Datum/Tijd waarop de patiënt is geregistreerd voor opname.
+      vbt:
+        type: integer
+        description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
+      d2d:
+        type: integer
+        description: "De huidige deur-tot-doktertijd; indien de patiënt gezien is: het aantal minuten van binnenkomst tot `gezien`; anders gelijk aan `vbt`."
+
+    required:
+      - bezoek_nummer
+      - type_arts
+      - care
+      - reden
+      - binnenkomst
+      - vbt
+      - d2d
+    example:
+      {
+        "bezoek_nummer": "0000320459",
+        "type_arts": "seh",
+        "specialisme": "Heelkunde",
+        "care": "HC",
+        "kamernummer": "D15.01",
+        "reden": "Stomp buiktrauma",
+
+        "binnenkomst": "2017-03-13T10:08:00+0200",
+        "naar_kamer": "2017-03-13T10:26:00+0200",
+        "gezien": "2017-03-13T11:12:00+0200",
+        "vbt": 262,
+        "d2d": 200
+      }
+
+parameters:
+  t:
+    name: t
+    type: string
+    format: 'date-time'
+    in: query
+    required: false
+    description: Optionele datum/tijd in het verleden. Indien afwezig, wordt het huidige tijdstip als default genomen.
+
+paths:
+  /v1/visits/timeline/:
+    get:
+      summary: Haal een overzicht op van de huidige bezoekers
+      tags:
+        - Timeline
+      operationId: getTimeline
+      parameters:
+        - $ref: '#/parameters/t'
+          description: Optionele datum/Tijd in het verleden om historische aanwezigheid te bekijken. De verblijftijd en
+            deur-tot-dokter tijd wordt hierop aangepast; kenmerkende tijdstippen die ná de opgegeven datum/tijd komen,
+            worden niet teruggegeven.
+      responses:
+        200:
+          description: Een arbitrair geordende lijst van alle bezoekers die op dit moment aanwezig zijn.
+          schema:
+            $ref: '#/definitions/Timeline'
+        400:
+          description: Fout bij het uitlezen van de parameter `t`.
+
