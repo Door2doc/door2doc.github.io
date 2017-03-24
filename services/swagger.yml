@@ -3,7 +3,8 @@ info:
   title: Door2doc Frontend Services
   version: v2
   description: |
-    Dit is het overzicht van alle beschikbare services waar de huidige frontends op gebaseerd zijn.
+    Dit is het overzicht van alle beschikbare services waar de huidige frontends op gebaseerd zijn. De endpoints zijn
+    zowel gegroepeerd op service als op scherm.
 
     ## Algemene conventies
     Alle datum/tijd velden volgen het formaat van [RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14).
@@ -21,8 +22,13 @@ produces:
   - application/json
 
 tags:
-  - name: Timeline
-    description: Informatie over de huidige bezoekers.
+  - name: "Service: Visits"
+  - name: "Service: Prediction"
+  - name: "Service: Rooms"
+  - name: "Scherm: Live"
+  - name: "Scherm: MyLive"
+  - name: "Scherm: Timeline"
+  - name: "Scherm: Target"
 
 definitions:
   Arts:
@@ -53,6 +59,17 @@ definitions:
       * mc: Medium Care
       * lc: Low Care
 
+  VisitStatus:
+    type: string
+    enum:
+      - wachtend
+      - inbehandeling
+    description: |
+      Status van de bezoeker:
+      * wachtend: Wachtend op arts
+      * inbehandeling: Gezien door een arts
+      * opname: Geregistreerd voor opname, maar nog niet opgenomen
+
   Timeline:
     type: array
     items:
@@ -68,84 +85,193 @@ definitions:
         $ref: '#/definitions/Arts'
       care:
         $ref: '#/definitions/Care'
+      status:
+        $ref: '#/definitions/VisitStatus'
+      queue:
+        type: integer
+        format: int32
+        description: Aantal bezoekers die eerder zijn binnengekomen
+        minimum: 0
       specialisme:
         type: string
         description: Het exacte specialisme van de benodigde arts.
       kamernummer:
         type: string
-        description: Het kamernummer (eventueel met bednummer) waar deze patiënt momenteel verblijft.
-          Het is mogelijk dat een patiënt wel gezien is, nog niet vertrokken is, en niet meer op een kamer ligt.
+        description: Het kamernummer (eventueel met bednummer) waar deze bezoeker momenteel verblijft.
+          Het is mogelijk dat een bezoeker wel gezien is, nog niet vertrokken is, en niet meer op een kamer ligt.
       reden:
         type: string
         description: De reden van dit bezoek.
       binnenkomst:
         type: string
         format: 'date-time'
-        description: Datum/Tijd waarop de patiënt is binnengekomen.
+        description: Datum/Tijd waarop de bezoeker is binnengekomen.
       naar_kamer:
         type: string
         format: 'date-time'
-        description: Datum/Tijd waarop de patiënt de huidige behandelkamer is binnengekomen.
+        description: Datum/Tijd waarop de bezoeker de huidige behandelkamer is binnengekomen.
       gezien:
         type: string
         format: 'date-time'
-        description: Datum/Tijd waarop de patiënt voor het eerst is gezien door een arts.
+        description: Datum/Tijd waarop de bezoeker voor het eerst is gezien door een arts.
       opname:
         type: string
         format: 'date-time'
-        description: Datum/Tijd waarop de patiënt is geregistreerd voor opname.
-      vbt:
+        description: Datum/Tijd waarop de bezoeker is geregistreerd voor opname.
+      minuten_aanwezig:
         type: integer
         description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
-      d2d:
+      minuten_tot_dokter:
         type: integer
-        description: "De huidige deur-tot-doktertijd; indien de patiënt gezien is: het aantal minuten van binnenkomst tot `gezien`; anders gelijk aan `vbt`."
+        description: "De huidige deur-tot-doktertijd; indien de bezoeker gezien is: het aantal minuten van binnenkomst tot `gezien`; anders gelijk aan `minuten_aanwezig`."
+      minuten_sinds_dokter:
+        type: integer
+        description: "Voor bezoekers die gezien zijn door een arts: het aantal minuten sinds `gezien`. Anders gelijk aan 0."
 
     required:
       - bezoek_nummer
       - type_arts
       - care
+      - status
+      - queue
       - reden
       - binnenkomst
-      - vbt
-      - d2d
+      - minuten_aanwezig
+      - minuten_tot_dokter
+      - minuten_sinds_dokter
     example:
       {
         "bezoek_nummer": "0000320459",
         "type_arts": "seh",
-        "specialisme": "Heelkunde",
         "care": "HC",
+        "status": "inbehandeling",
+        "queue": 0,
+        "specialisme": "Heelkunde",
         "kamernummer": "D15.01",
         "reden": "Stomp buiktrauma",
 
         "binnenkomst": "2017-03-13T10:08:00+0200",
         "naar_kamer": "2017-03-13T10:26:00+0200",
         "gezien": "2017-03-13T11:12:00+0200",
-        "vbt": 262,
-        "d2d": 200
+        "minuten_aanwezig": 262,
+        "minuten_tot_dokter": 200,
+        "minuten_sinds_dokter": 62
       }
 
+  PredictionList:
+    type: array
+    items:
+      $ref: '#/definitions/Prediction'
+
+  Prediction:
+    type: object
+    example:
+      {
+        "timestamp": "2016-08-12T09:32:35.837Z",
+        "arts": "seh",
+        "d2d": 24,
+        "vbt": 160,
+        "wachtend": 1,
+        "aanwezig": 4,
+        "wachtend_arts": 1,
+        "aanwezig_arts": 2,
+        "in_behandeling_arts": 1,
+        "model": "dz-seh-aa-1:dz-seh-aw-2"
+      }
+    required:
+      - timestamp
+      - arts
+      - d2d
+      - vbt
+      - wachtend
+      - aanwezig
+      - model
+      - wachtend_arts
+      - aanwezig_arts
+      - in_behandeling_arts
+    properties:
+      timestamp:
+        type: string
+        format: date-time
+        description: >
+          Tijdstip waar de voorspelling voor is gemaakt. Als de service is aangeroepen met een `t` parameter
+          dan is dit de waarde van die parameter.
+      arts:
+        type: string
+        description: >
+          Type arts waarvoor de voorspelling is gemaakt. Als de service is aangeroepen met een `arts` parameter, dan
+          is dit de waarde van die parameter.
+      d2d:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Voorspelde deur-tot-doktertijd in minuten
+      vbt:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Voorspelde totale verblijftijd in minuten
+      wachtend:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal patiënten aanwezig op tijdstip t die nog wachten op een dokter
+      aanwezig:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal patiënten aanwezig op tijdstip t, ongeacht of zij een dokter gezien hebben
+      wachtend_arts:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Aantal patiënten aanwezig op tijdstip t die nog wachten op deze specifieke arts
+      aanwezig_arts:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Aantal patiënten aanwezig op tijdstip t, die te maken hebben met deze specifieke arts
+      in_behandeling_arts:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Aantal patiënten in behandeling bij deze arts op tijdstip t
+      model:
+        type: string
+        description: Identifier voor het gebruikte model
+
 parameters:
-  t:
+  tijdstip:
     name: t
     type: string
     format: 'date-time'
     in: query
     required: false
-    description: Optionele datum/tijd in het verleden. Indien afwezig, wordt het huidige tijdstip als default genomen.
+    description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan
+      gedraagt de service zich alsof deze op dat moment werd aangeroepen.
+
+  arts:
+    name: arts
+    in: query
+    description: Type arts, leeg laten voor 'algemeen'
+    required: false
+    type: string
+    enum:
+      - "chi"
+      - "seh"
+      - "int"
+      - "ov"
 
 paths:
-  /v1/visits/timeline/:
+  /v1/visits/:
     get:
       summary: Haal een overzicht op van de huidige bezoekers
       tags:
-        - Timeline
+        - 'Service: Visits'
+        - 'Scherm: Timeline'
       operationId: getTimeline
       parameters:
-        - $ref: '#/parameters/t'
-          description: Optionele datum/Tijd in het verleden om historische aanwezigheid te bekijken. De verblijftijd en
-            deur-tot-dokter tijd wordt hierop aangepast; kenmerkende tijdstippen die ná de opgegeven datum/tijd komen,
-            worden niet teruggegeven.
+        - $ref: '#/parameters/tijdstip'
       responses:
         200:
           description: Een arbitrair geordende lijst van alle bezoekers die op dit moment aanwezig zijn.
@@ -153,4 +279,55 @@ paths:
             $ref: '#/definitions/Timeline'
         400:
           description: Fout bij het uitlezen van de parameter `t`.
+
+  /v1/predict:
+    get:
+      summary: Voorspel de wachttijd op de SEH
+      operationId: get_prediction
+      tags:
+        - 'Service: Prediction'
+        - 'Scherm: Live'
+      parameters:
+        - $ref: '#/parameters/arts'
+        - $ref: '#/parameters/tijdstip'
+      responses:
+        200:
+          description: De voorspelling voor het opgegeven tijdstip
+          schema:
+            $ref: '#/definitions/Prediction'
+        400:
+          description: Fout bij het uitlezen van de parameter `t`; of een ongeldige waarde voor `arts`.
+
+  /v1/predict/range:
+    get:
+      summary: Haal een serie aan voorspellingen op
+      operationId: get_predictions_in_range
+      tags:
+        - 'Service: Prediction'
+      parameters:
+        - $ref: '#/parameters/arts'
+        - name: from
+          in: query
+          description: Datum waarop de serie begint, in het formaat YYYY-MM-DD.
+          required: true
+          type: string
+          format: date
+        - name: days
+          in: query
+          description: Aantal dagen waarover de serie berekend wordt.
+          required: true
+          default: 7
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 31
+      produces:
+        - text/csv
+      responses:
+        200:
+          description: De voorspellingen voor het opgegeven tijdstip
+          schema:
+            $ref: '#/definitions/PredictionList'
+        400:
+          description: Fout bij het uitlezen van de parameter `from`; een negatieve waarde voor `days`; of een ongeldige waarde voor `arts`.
 
