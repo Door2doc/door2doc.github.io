@@ -25,6 +25,7 @@ tags:
   - name: "Service: Visits"
   - name: "Service: Prediction"
   - name: "Service: Rooms"
+  - name: "Service: Target"
   - name: "Scherm: Live"
   - name: "Scherm: MyLive"
   - name: "Scherm: Timeline"
@@ -253,7 +254,7 @@ parameters:
   arts:
     name: arts
     in: query
-    description: Type arts, leeg laten voor 'algemeen'
+    description: Type arts
     required: false
     type: string
     enum:
