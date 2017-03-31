@@ -64,10 +64,10 @@ Door2doc biedt hiernaast ook andere informatie, bedoeld voor artsen, verpleegkun
 //  reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
     function calculateCosts(numVisitors, numLocations, ab) {
    
-      var rateA = .6,
-          rateAB = .8,
+      var rateA = .65,
+          rateAB = .85,
           price = 0,
-          feeBasic = 7500,
+          feeBasic = 7450,
           feeNext = 5000,
           connectionFee = 0,
           limitVisitors_1 = 20000,
