@@ -8,13 +8,13 @@ comments: false
 share: false
 ---
 
-Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De abonnementsprijs gaat uit van het totaal aantal bezoeken op beide afdelingen voor alle locaties van uw (samenwerkende) organisatie(s). De prijs daalt bij grotere aantallen bezoeken (vanaf 20.000 op jaarbasis en nogmaals vanaf 40.000).
+Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De abonnementsprijs gaat uit van het totaal aantal bezoeken, op beide afdelingen en voor alle locaties van uw (samenwerkende) organisatie(s). De prijs daalt bij grotere aantallen (vanaf 20.000 bezoeken op jaarbasis en nogmaals vanaf 40.000).
 
 Wij rekenen eenmalig kosten voor de aansluiting op onze cloud en bieden daarbij een eluatieperiode van vier maanden aan. Indien u daarna het gebruik van de cloudservice wilt voortzetten, geldt een meerjarig abonnement met maandelijkse facturatie. Updates en onderhoud zijn altijd inbegrepen, onze cloudservice is voortdurend in ontwikkeling.
 
-Het standaardabonnement biedt realtime informatie over verwachte wacht- en verblijftijden aan patiënten in de wachtkamer en de behandelkamers (*Live en myLive tools*). Patiënten zien tevens berichten met uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte.
+Het standaardabonnement biedt realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (*Live en myLive tools*). Patiënten zien tevens berichten met uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte.
 
-Door2doc biedt hierbovenop informatie voor artsen, verpleegkundigen en managers, om de acute doorstroom te managen (*Timeline tool*), de actuele realisatie van doelstellingen te zien (*Target tool*) en de optimale inzet (dienstroosters) voor verpleegkundigen en artsen te bepalen (*Capacity tool*).
+Door2doc biedt hierbovenop informatie voor artsen, verpleegkundigen en managers, waarmee zij de acute doorstroom kunnen managen (*Timeline tool*), de actuele realisatie van doelstellingen zien (*Target tool*) en de optimale capaciteitsinzet (dienstroosters) kunnen bepalen (*Capacity tool*).
 
 Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobiele Apple/Android app (verwacht mei 2017) en browser op pc en tablet. Tevens koppelen wij specifieke informatie naar wens met uw ziekenhuiswebsite en landelijke informatiediensten zoals LCMS.
 
