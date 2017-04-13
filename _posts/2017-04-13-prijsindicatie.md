@@ -16,7 +16,7 @@ Het standaardabonnement biedt realtime informatie over verwachte wacht- en verbl
 
 Door2doc biedt hierbovenop informatie voor artsen, verpleegkundigen en managers, waarmee zij grip hebben op de acute doorstroom (*Timeline tool*), de actuele realisatie van doelstellingen zien (*Target tool*) en de optimale capaciteitsinzet van de dienstroosters kunnen bepalen (*Capacity tool*).
 
-Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobiele Apple/Android app (verwacht mei 2017) en browser op pc en tablet. Tevens koppelen wij specifieke informatie naar wens met uw ziekenhuiswebsite en landelijke informatiediensten zoals LCMS.
+Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobiele Apple/Android app (verwacht mei 2017) en browser op pc en tablet. Tevens koppelen wij gerichte informatie naar wens met uw ziekenhuiswebsite en landelijke informatiediensten zoals LCMS.
 
 #### Voer gegevens in van uw organisatie(s)
 <p>
