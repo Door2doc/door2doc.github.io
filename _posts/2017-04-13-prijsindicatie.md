@@ -2,24 +2,28 @@
 layout: post
 title: "Prijsindicatie cloudservice SEH en EHH"
 description: ""
-date: 2017-01-13
+date: 2017-04-13
 tags: []
 comments: false
 share: false
 ---
 
-Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie bekijken van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De prijs bestaat uit eenmalige kosten voor de aansluiting op onze cloud, met daarbij inbegrepen een evaluatieperiode van vier maanden; daarna geldt een meerjarig abonnement met maandelijkse facturatie. Updates en onderhoud zijn inbegrepen bij onze cloudservice.
+Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De abonnementsprijs gaat uit van het totaal aantal bezoeken op beide afdelingen voor alle locaties van uw (samenwerkende) organisatie(s). De prijs daalt bij grotere aantallen bezoeken (vanaf 20.000 op jaarbasis en nogmaals vanaf 40.000).
 
-Het standaardabonnement biedt realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (*Live en myLive tools*). Deze informatie is tevens op te vragen via pc’s en tablets overal in het ziekenhuis en (naar wens) aan te bieden op de ziekenhuiswebsite en aan landelijke informatiediensten zoals LCMS.
+Wij rekenen eenmalig kosten voor de aansluiting op onze cloud en bieden daarbij een eluatieperiode van vier maanden aan. Indien u daarna het gebruik van de cloudservice wilt voortzetten, geldt een meerjarig abonnement met maandelijkse facturatie. Updates en onderhoud zijn altijd inbegrepen, onze cloudservice is voortdurend in ontwikkeling.
 
-Door2doc biedt hiernaast ook andere informatie, bedoeld voor artsen, verpleegkundigen en managers: realtime operational control van de doorstroom en verwachte werkdruk (*Timeline, Target tools*) en tactische inzichten voor dienstroosteroptimalisatie op basis van Treatment Point Staffing (*Capacity tool*).
+Het standaardabonnement biedt realtime informatie over verwachte wacht- en verblijftijden aan patiënten in de wachtkamer en de behandelkamers (*Live en myLive tools*). Patiënten zien tevens berichten met uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte.
+
+Door2doc biedt hierbovenop informatie voor artsen, verpleegkundigen en managers, om de acute doorstroom te managen (*Timeline tool*), de actuele realisatie van doelstellingen te zien (*Target tool*) en de optimale inzet (dienstroosters) voor verpleegkundigen en artsen te bepalen (*Capacity tool*).
+
+Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobiele Apple/Android app (verwacht mei 2017) en browser op pc en tablet. Tevens koppelen wij specifieke informatie naar wens met uw ziekenhuiswebsite en landelijke informatiediensten zoals LCMS.
 
 #### Voer gegevens in van uw organisatie
 <p>
 
   <form action="" id="kosten-indicatie">
     <div class="formfield-container textfield-container">
-      <label for="num-visitors">Aantal bezoeken SEH/EHH per jaar:</label>
+      <label for="num-visitors">Aantal bezoeken SEH en EHH per jaar:</label>
       <input type="number" id="num-visitors" name="num-visitors">
     </div>
 
@@ -45,7 +49,7 @@ Door2doc biedt hiernaast ook andere informatie, bedoeld voor artsen, verpleegkun
     </div>
 
     <div class="result-container">
-      <span class="label">Eenmalige aansluitkosten inclusief evaluatieperiode (vier maanden): </span>
+      <span class="label">Eenmalige aansluitkosten inclusief vier maanden evaluatieperiode: </span>
       <span class="result" id="connectionFee"></span>
     </div>
   </div>
