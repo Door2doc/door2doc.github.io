@@ -14,7 +14,7 @@ Wij rekenen eenmalig kosten voor de aansluiting op onze cloud en bieden daarbij 
 
 Het standaardabonnement biedt realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (*Live en myLive tools*). Patiënten zien tevens berichten met uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte.
 
-Door2doc biedt hierbovenop informatie voor artsen, verpleegkundigen en managers, waarmee zij de acute doorstroom kunnen managen (*Timeline tool*), de actuele realisatie van doelstellingen zien (*Target tool*) en de optimale capaciteitsinzet (dienstroosters) kunnen bepalen (*Capacity tool*).
+Door2doc biedt hierbovenop informatie voor artsen, verpleegkundigen en managers, waarmee zij grip hebben op de acute doorstroom (*Timeline tool*), de actuele realisatie van doelstellingen zien (*Target tool*) en de optimale capaciteitsinzet (dienstroosters) kunnen bepalen (*Capacity tool*).
 
 Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobiele Apple/Android app (verwacht mei 2017) en browser op pc en tablet. Tevens koppelen wij specifieke informatie naar wens met uw ziekenhuiswebsite en landelijke informatiediensten zoals LCMS.
 
