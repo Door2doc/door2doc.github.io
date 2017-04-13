@@ -18,7 +18,7 @@ Door2doc biedt hierbovenop informatie voor artsen, verpleegkundigen en managers,
 
 Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobiele Apple/Android app (verwacht mei 2017) en browser op pc en tablet. Tevens koppelen wij specifieke informatie naar wens met uw ziekenhuiswebsite en landelijke informatiediensten zoals LCMS.
 
-#### Voer gegevens in van uw organisatie
+#### Voer gegevens in van uw organisatie(s)
 <p>
 
   <form action="" id="kosten-indicatie">
