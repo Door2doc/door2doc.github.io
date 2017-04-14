@@ -8,7 +8,7 @@ comments: false
 share: false
 ---
 
-Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De abonnementsprijs gaat uit van het totaal aantal bezoeken, op beide afdelingen en voor alle locaties van uw (samenwerkende) organisatie(s). De prijs daalt bij grotere aantallen (vanaf 20.000 bezoeken op jaarbasis en nogmaals vanaf 40.000).
+Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De abonnementsprijs gaat uit van het totaal aantal bezoeken op beide afdelingen en voor alle locaties van uw (samenwerkende) organisatie(s). De prijs daalt bij grotere aantallen (vanaf 20.000 bezoeken op jaarbasis en nogmaals vanaf 40.000).
 
 Wij rekenen eenmalig kosten voor de aansluiting op onze cloud en bieden daarbij een eluatieperiode van vier maanden aan. Indien u daarna het gebruik van de cloudservice wilt voortzetten, geldt een meerjarig abonnement met maandelijkse facturatie. Updates en onderhoud zijn altijd inbegrepen, onze cloudservice is voortdurend in ontwikkeling.
 
