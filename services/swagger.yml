@@ -15,6 +15,8 @@ info:
     name: door2doc
     email: yigal@publysher.nl
 
+schemes:
+  - https
 host: demo.door2doc.net
 basePath: /services/
 
@@ -26,6 +28,7 @@ tags:
   - name: "Service: Prediction"
   - name: "Service: Rooms"
   - name: "Service: Target"
+  - name: "Service: Interrupt"
   - name: "Scherm: Live"
   - name: "Scherm: MyLive"
   - name: "Scherm: Timeline"
@@ -72,9 +75,70 @@ definitions:
       * opname: Geregistreerd voor opname, maar nog niet opgenomen
 
   Timeline:
-    type: array
-    items:
-      $ref: '#/definitions/VisitRecord'
+    type: object
+    required:
+      - visitors
+    properties:
+      visitors:
+        type: array
+        items:
+          $ref: '#/definitions/VisitRecord'
+    example:
+      {
+        "visitors": [
+          {
+            "bezoek_nummer": "0000320459",
+            "type_arts": "seh",
+            "care": "hc",
+            "status": "inbehandeling",
+            "queue": 0,
+            "specialisme": "Heelkunde",
+            "kamernummer": "D15.01",
+            "reden": "Stomp buiktrauma",
+
+            "binnenkomst": "2017-03-13T10:08:00+0200",
+            "naar_kamer": "2017-03-13T10:26:00+0200",
+            "gezien": "2017-03-13T11:12:00+0200",
+            "minuten_aanwezig": 262,
+            "minuten_tot_dokter": 200,
+            "minuten_sinds_dokter": 62
+          },
+          {
+            "bezoek_nummer": "0000320452",
+            "type_arts": "int",
+            "care": "lc",
+            "status": "wachtend",
+            "queue": 0,
+            "specialisme": "Interne geneeskunde",
+            "kamernummer": "D17.01",
+            "reden": "Algehele malaise",
+
+            "binnenkomst": "2017-03-13T10:08:00+0200",
+            "naar_kamer": "2017-03-13T10:26:00+0200",
+            "gezien": "2017-03-13T11:12:00+0200",
+            "minuten_aanwezig": 42,
+            "minuten_tot_dokter": 42,
+            "minuten_sinds_dokter": 0
+          },
+          {
+            "bezoek_nummer": "0000320452",
+            "type_arts": "int",
+            "care": "lc",
+            "status": "wachtend",
+            "queue": 0,
+            "specialisme": "Interne geneeskunde",
+            "kamernummer": "D17.01",
+            "reden": "Algehele malaise",
+
+            "binnenkomst": "2017-03-13T10:08:00+0200",
+            "naar_kamer": "2017-03-13T10:26:00+0200",
+            "gezien": "2017-03-13T11:12:00+0200",
+            "minuten_aanwezig": 42,
+            "minuten_tot_dokter": 42,
+            "minuten_sinds_dokter": 0
+          }
+        ]
+      }
 
   VisitRecord:
     type: object
@@ -91,7 +155,7 @@ definitions:
       queue:
         type: integer
         format: int32
-        description: Aantal bezoekers die eerder zijn binnengekomen
+        description: Aantal aanwezige bezoekers die eerder zijn binnengekomen en dezelfde arts nodig hebben.
         minimum: 0
       specialisme:
         type: string
@@ -241,7 +305,44 @@ definitions:
         type: string
         description: Identifier voor het gebruikte model
 
+  InterruptStatus:
+    type: object
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        enum:
+          - spoed-patient
+        description: Type interrupt
+      seconds_remaining:
+        type: integer
+        format: int32
+        minimum: 0
+        description: >
+          Aantal seconden dat deze interrupt nog aan blijft staan. Interrupts *kunnen* eerder inactief
+          worden, dus dit is meer een indicatie. Afwezig indien er geen interrupt actief is.
+      message:
+        type: string
+        description: Tekst die bij deze interrupt hoort. Afwezig indien er geen interrupt actief is.
+    example:
+      {
+        "type": "spoed-patient",
+        "seconds_remaining": 285,
+        "message": "Er is een patiënt binnengebracht die al onze aandacht behoeft. Uw behandeling duurt hierdoor mogelijk langer. Bedankt voor uw begrip."
+      }
+
 parameters:
+  afdeling:
+    name: afdeling
+    type: string
+    in: query
+    required: true
+    description: De afdeling waarvoor deze informatie wordt opgevraagd
+    enum:
+      - "seh"
+      - "ehh"
+
   tijdstip:
     name: t
     type: string
@@ -264,14 +365,15 @@ parameters:
       - "ov"
 
 paths:
-  /v1/visits/:
+  /v2/visits/:
     get:
-      summary: Haal een overzicht op van de huidige bezoekers
+      summary: Haal een overzicht op van de huidige bezoekers.
       tags:
         - 'Service: Visits'
         - 'Scherm: Timeline'
       operationId: getTimeline
       parameters:
+        - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/tijdstip'
       responses:
         200:
@@ -279,16 +381,17 @@ paths:
           schema:
             $ref: '#/definitions/Timeline'
         400:
-          description: Fout bij het uitlezen van de parameter `t`.
+          description: Fout bij het uitlezen van een van de parameters.
 
-  /v1/predict:
+  /v2/predict:
     get:
-      summary: Voorspel de wachttijd op de SEH
+      summary: Voorspel de wachttijd op de opgegeven afdeling
       operationId: get_prediction
       tags:
         - 'Service: Prediction'
         - 'Scherm: Live'
       parameters:
+        - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/arts'
         - $ref: '#/parameters/tijdstip'
       responses:
@@ -297,15 +400,16 @@ paths:
           schema:
             $ref: '#/definitions/Prediction'
         400:
-          description: Fout bij het uitlezen van de parameter `t`; of een ongeldige waarde voor `arts`.
+          description: Fout bij het uitlezen van een van de parameters.
 
-  /v1/predict/range:
+  /v2/predict/range:
     get:
       summary: Haal een serie aan voorspellingen op
       operationId: get_predictions_in_range
       tags:
         - 'Service: Prediction'
       parameters:
+        - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/arts'
         - name: from
           in: query
@@ -330,5 +434,54 @@ paths:
           schema:
             $ref: '#/definitions/PredictionList'
         400:
-          description: Fout bij het uitlezen van de parameter `from`; een negatieve waarde voor `days`; of een ongeldige waarde voor `arts`.
+          description: Fout bij het uitlezen van een van de parameters.
+
+  /v2/interrupt/spoed-patient:
+    get:
+      summary: Haal de waarde van de interrupt "spoed-patient" op.
+      tags:
+        - 'Service: Interrupt'
+        - 'Scherm: Timeline'
+        - 'Scherm: Live'
+        - 'Scherm: MyLive'
+      operationId: getSpoedPatient
+      parameters:
+        - $ref: '#/parameters/afdeling'
+      responses:
+        200:
+          description: De status van de interrupt "spoed-patient". Indien de interrupt uit staat, is het veld 'seconds_remaining' afwezig.
+          schema:
+            $ref: '#/definitions/InterruptStatus'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
+
+    put:
+      summary: Activeer de interrupt "spoed-patient".
+      tags:
+        - 'Service: Interrupt'
+        - 'Scherm: Timeline'
+      operationId: setSpoedPatient
+      parameters:
+        - $ref: '#/parameters/afdeling'
+      responses:
+        200:
+          description: De nieuwe status van de interrupt "spoed-patient".
+          schema:
+            $ref: '#/definitions/InterruptStatus'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
+
+    delete:
+      summary: Deactiveer de interrupt "spoed-patient".
+      tags:
+        - 'Service: Interrupt'
+        - 'Scherm: Timeline'
+      operationId: unsetSpoedPatient
+      parameters:
+        - $ref: '#/parameters/afdeling'
+      responses:
+        200:
+          description: De nieuwe status van de interrupt "spoed-patient"; de velden 'seconds_remaining' en 'description' zullen hierin afwezig zijn.
+          schema:
+            $ref: '#/definitions/InterruptStatus'
 
