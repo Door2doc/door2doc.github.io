@@ -10,6 +10,9 @@ info:
     Alle datum/tijd velden volgen het formaat van [RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14).
     Dit formaat is voorzien van tijdzone-informatie die niet noodzakelijkerwijs overeenkomt met de huidige tijdzone van de gebruiker.
 
+    Het domein waarop de service wordt aangeroepen is ziekenhuis-afhankelijk; in dit document wordt consequent het
+    Demo ziekenhuis gebruikt op https://demo.door2doc.net.
+
   termsOfService: Deze services zijn alleen te gebruiken door de offiële front-ends van door2doc.
   contact:
     name: door2doc
@@ -29,10 +32,13 @@ tags:
   - name: "Service: Rooms"
   - name: "Service: Target"
   - name: "Service: Interrupt"
+  - name: "Service: Capacity"
   - name: "Scherm: Live"
   - name: "Scherm: MyLive"
   - name: "Scherm: Timeline"
   - name: "Scherm: Target"
+  - name: "Scherm: Capacity"
+  - name: "Reporting"
 
 definitions:
   Arts:
@@ -350,6 +356,197 @@ definitions:
         items:
           type: string
 
+  TreatmentPointOverview:
+    type: object
+    example:
+      {
+        "behandelpunten": [
+          {
+            "tijdvak": "2017-04-22T12:00:00+0200",
+            "behandelpunten": 8,
+            "vpk": 5,
+            "seh": 0,
+            "int": 3,
+            "chi": 0,
+            "ov":  0
+          },
+          {
+            "tijdvak": "2017-04-22T13:00:00+0200",
+            "behandelpunten": 10,
+            "vpk": 6,
+            "seh": 2,
+            "int": 1,
+            "chi": 0,
+            "ov":  1
+          }
+        ]
+      }
+    properties:
+      behandelpunten:
+        type: array
+        description: Een lijst van behandelpunt-gegevens, geordend op tijdvak.
+        items:
+          $ref: '#/definitions/TreatmentPoint'
+
+  TreatmentPoint:
+    type: object
+    example:
+      {
+        "tijdvak": "2017-04-22T12:00:00+0200",
+        "behandelpunten": 12,
+        "vpk": 6,
+        "seh": 2,
+        "int": 4,
+        "chi": 0,
+        "ov":  0,
+      }
+    required:
+      - tijdvak
+      - behandelpunten
+      - vpk
+      - seh
+      - int
+      - chi
+    properties:
+      tijdvak:
+        type: string
+        format: 'date-time'
+        description: Tijdvak voor de berekende behandelpunten.
+      behandelpunten:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor dit tijdvak
+      vpk:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor verpleegkundigen voor dit tijdvak
+      seh:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor SEH artsen voor dit tijdvak
+      int:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor internisten voor dit tijdvak
+      chi:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor chirurgen voor dit tijdvak
+      ov:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor 'overige' artsen voor dit tijdvak
+
+  TreatmentPointDetails:
+    type: array
+    items:
+      - $ref: '#/definitions/TreatmentPointDetail'
+
+  TreatmentPointDetail:
+    type: object
+    properties:
+      bezoek_nummer:
+        type: string
+        description: Unieke identifier voor dit bezoek
+      binnenkomst:
+        type: string
+        format: 'date-time'
+        description: Datum/Tijd waarop de bezoeker is binnengekomen.
+      minuten_aanwezig:
+        type: integer
+        description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
+      patientgroep:
+        type: string
+        description: "Groep waar deze patient onder is geschaard voor het berekenen van behandelpunten."
+      tijdvak:
+        type: string
+        format: 'date-time'
+        description: Tijdvak voor de berekende behandelpunten.
+
+      behandelpunten:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor dit tijdvak
+      vpk:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor verpleegkundigen voor dit tijdvak
+      seh:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor SEH artsen voor dit tijdvak
+      int:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor internisten voor dit tijdvak
+      chi:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor chirurgen voor dit tijdvak
+      ov:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten benodigd voor 'overige' artsen voor dit tijdvak
+
+  TargetInfo:
+    type: object
+    required:
+      - t
+      - minuten_aanwezig_percentage
+      - minuten_aanwezig_avg
+      - visits
+    example:
+      {
+        "t": "2017-05-22",
+        "minuten_aanwezig_percentage": 67,
+        "minuten_aanwezig_avg": 156,
+        "visits": 40
+      }
+    properties:
+      t:
+        type: string
+        format: date
+        description: Begindatum van de periode waarvoor deze informatie geldig is.
+      minuten_aanwezig_percentage:
+        type: integer
+        format: int32
+        minimum: 0
+        maximum: 100
+        description: "Het percentage bezoeken waarvan de aanwezigheid <= 180 minuten is."
+      minuten_aanwezig_avg:
+        type: integer
+        format: int32
+        minimum: 0
+        description: "De gemiddelde verblijftijd: het aantal minuten van binnenkomst tot nu."
+      visits:
+        type: integer
+        format: int32
+        minimum: 0
+        description: "Het gemiddeld aantal bezoeken per dag"
+
+  Target:
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/TargetInfo'
+
+
 parameters:
   afdeling:
     name: afdeling
@@ -369,6 +566,22 @@ parameters:
     required: false
     description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan
       gedraagt de service zich alsof deze op dat moment werd aangeroepen.
+
+  t-from:
+    name: from
+    type: string
+    format: 'date-time'
+    in: query
+    required: true
+    description: Datum/tijd in het verleden; gebruikt om een periode aan te geven.
+
+  t-to:
+    name: to
+    type: string
+    format: 'date-time'
+    in: query
+    required: true
+    description: Datum/tijd; gebruikt om een periode aan te geven.
 
   arts:
     name: arts
@@ -468,6 +681,7 @@ paths:
       operationId: get_predictions_in_range
       tags:
         - 'Service: Prediction'
+        - 'Reporting'
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/arts'
@@ -544,4 +758,81 @@ paths:
           description: De nieuwe status van de interrupt "spoed-patient"; de velden 'seconds_remaining' en 'description' zullen hierin afwezig zijn.
           schema:
             $ref: '#/definitions/InterruptStatus'
+
+  /v2/capacity/calculate:
+    get:
+      summary: Bereken de capaciteit in behandelpunten over de opgegeven periode
+      tags:
+        - 'Service: Capacity'
+        - 'Scherm: Capacity'
+      operationId: getCapacity
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/t-from'
+        - $ref: '#/parameters/t-to'
+      responses:
+        200:
+          description: De behandelpunten voor de opgegeven periode per tijdsvak
+          schema:
+            $ref: '#/definitions/TreatmentPointOverview'
+
+  /v2/capacity/calculate/details:
+    get:
+      summary: Gedetailleerde output over de capaciteit
+      tags:
+        - 'Service: Capacity'
+        - 'Reporting'
+      operationId: getCapacityReport
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/t-from'
+        - $ref: '#/parameters/t-to'
+      produces:
+        - text/csv
+      responses:
+        200:
+          description: De behandelpunten per patiënt voor de opgegeven periode per tijdsvak
+          schema:
+            $ref: '#/definitions/TreatmentPointDetails'
+
+  /v2/target:
+    get:
+      summary: Geef target informatie
+      tags:
+        - 'Service: Target'
+        - 'Scherm: Target'
+      operationId: getTargetInfo
+      parameters:
+        - name: periode
+          type: string
+          default: dag
+          in: query
+          description: Periode waarover gerapporteerd moet worden
+          enum:
+            - dag
+            - week
+            - maand
+            - jaar
+        - name: dienst
+          type: string
+          in: query
+          description: Dienst waarover gerapporteerd moet worden; indien afwezig wordt over de volledige 24h gerapporteerd.
+          enum:
+            - dag
+            - avond
+            - nacht
+        - $ref: '#/parameters/arts'
+        - name: bestemming
+          type: string
+          in: query
+          description: Bestemming waarover gerapporteerd moet worden; indien afwezig wort over alle bestemmingen gerapporteerd.
+          enum:
+            - ontslag
+            - opname
+
+      responses:
+        200:
+          description: Target informatie voor de opgegeven filters. De informatie is geordend op tijd en bevat maximaal de laatste 30 datapunten.
+          schema:
+            $ref: '#/definitions/Target'
 
