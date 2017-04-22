@@ -24,7 +24,7 @@ produces:
   - application/json
 
 tags:
-  - name: "Service: Visits"
+  - name: "Service: Visitors"
   - name: "Service: Prediction"
   - name: "Service: Rooms"
   - name: "Service: Target"
@@ -63,7 +63,7 @@ definitions:
       * mc: Medium Care
       * lc: Low Care
 
-  VisitStatus:
+  VisitorStatus:
     type: string
     enum:
       - wachtend
@@ -82,7 +82,7 @@ definitions:
       visitors:
         type: array
         items:
-          $ref: '#/definitions/VisitRecord'
+          $ref: '#/definitions/VisitorRecord'
     example:
       {
         "visitors": [
@@ -140,7 +140,7 @@ definitions:
         ]
       }
 
-  VisitRecord:
+  VisitorRecord:
     type: object
     properties:
       bezoek_nummer:
@@ -151,7 +151,7 @@ definitions:
       care:
         $ref: '#/definitions/Care'
       status:
-        $ref: '#/definitions/VisitStatus'
+        $ref: '#/definitions/VisitorStatus'
       queue:
         type: integer
         format: int32
@@ -332,6 +332,24 @@ definitions:
         "message": "Er is een patiënt binnengebracht die al onze aandacht behoeft. Uw behandeling duurt hierdoor mogelijk langer. Bedankt voor uw begrip."
       }
 
+  RoomOverview:
+    type: object
+    required:
+      - rooms
+    example:
+      {
+        "rooms": [
+          "D01.01",
+          "D02.01",
+          "D03.01",
+        ]
+      }
+    properties:
+      rooms:
+        type: array
+        items:
+          type: string
+
 parameters:
   afdeling:
     name: afdeling
@@ -365,11 +383,52 @@ parameters:
       - "ov"
 
 paths:
-  /v2/visits/:
+  /v2/rooms/:
+    get:
+      summary: Haal een overzicht op van de bestaande kamernummers.
+      tags:
+        - 'Service: Rooms'
+        - 'Scherm: MyLive'
+      operationId: getRooms
+      parameters:
+        - $ref: '#/parameters/afdeling'
+      responses:
+        200:
+          description: Een overzicht van de beschikbare kamers.
+          schema:
+            $ref: '#/definitions/RoomOverview'
+
+  /v2/rooms/{kamernummer}:
+    get:
+      summary: Informatie over de patiënt op de opgegeven kamer.
+      tags:
+        - 'Service: Rooms'
+        - 'Scherm: MyLive'
+      operationId: getRoom
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - name: kamernummer
+          type: string
+          description: Een bestaand kamernummer
+          in: path
+      responses:
+        200:
+          description: Gegevens van de bezoeker die momenteel op deze kamer verblijft.
+          schema:
+            $ref: '#/definitions/VisitorRecord'
+        204:
+          description: Er is momenteel geen bezoeker op deze kamer.
+        404:
+          description: Het opgegeven kamernummer bestaat niet.
+        400:
+          description: Een van de parameters is incorrect.
+
+
+  /v2/visitors/:
     get:
       summary: Haal een overzicht op van de huidige bezoekers.
       tags:
-        - 'Service: Visits'
+        - 'Service: Visitors'
         - 'Scherm: Timeline'
       operationId: getTimeline
       parameters:
@@ -390,6 +449,7 @@ paths:
       tags:
         - 'Service: Prediction'
         - 'Scherm: Live'
+        - 'Scherm: MyLive'
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/arts'
