@@ -3,7 +3,7 @@ info:
   title: Door2doc Frontend Services
   version: v2
   description: |
-    Dit is het overzicht van alle beschikbare services waar de huidige frontends op gebaseerd zijn. De endpoints zijn
+    Dit is het overzicht van alle beschikbare services. De endpoints zijn
     zowel gegroepeerd op service als op scherm.
 
     ## Algemene conventies
