@@ -641,7 +641,7 @@ paths:
           schema:
             $ref: '#/definitions/RoomOverview'
 
-  /v2/rooms/{kamernummer}:
+  /v2/rooms/{kamernummer}/:
     get:
       summary: Informatie over de patiënt op de opgegeven kamer.
       tags:
@@ -685,7 +685,7 @@ paths:
         400:
           description: Fout bij het uitlezen van een van de parameters.
 
-  /v2/predict:
+  /v2/predict/:
     get:
       summary: Voorspel de wachttijd op de opgegeven afdeling
       operationId: get_prediction
@@ -705,7 +705,7 @@ paths:
         400:
           description: Fout bij het uitlezen van een van de parameters.
 
-  /v2/predict/range:
+  /v2/predict/range/:
     get:
       summary: Haal een serie aan voorspellingen op
       operationId: get_predictions_in_range
@@ -740,7 +740,7 @@ paths:
         400:
           description: Fout bij het uitlezen van een van de parameters.
 
-  /v2/interrupt/spoed-patient:
+  /v2/interrupt/spoed-patient/:
     get:
       summary: Haal de waarde van de interrupt "spoed-patient" op.
       tags:
@@ -789,7 +789,7 @@ paths:
           schema:
             $ref: '#/definitions/InterruptStatus'
 
-  /v2/capacity/calculate:
+  /v2/capacity/calculate/:
     get:
       summary: Bereken de capaciteit in behandelpunten over de opgegeven periode
       tags:
@@ -806,7 +806,7 @@ paths:
           schema:
             $ref: '#/definitions/TreatmentPointOverview'
 
-  /v2/capacity/calculate/details:
+  /v2/capacity/calculate/details/:
     get:
       summary: Gedetailleerde output over de capaciteit
       tags:
@@ -825,7 +825,7 @@ paths:
           schema:
             $ref: '#/definitions/TreatmentPointDetails'
 
-  /v2/target:
+  /v2/target/:
     get:
       summary: Geef target informatie
       tags:
