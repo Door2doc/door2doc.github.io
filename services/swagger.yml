@@ -338,6 +338,22 @@ definitions:
         "message": "Er is een patiënt binnengebracht die al onze aandacht behoeft. Uw behandeling duurt hierdoor mogelijk langer. Bedankt voor uw begrip."
       }
 
+  RoomDetails:
+    type: object
+    required:
+      - kamernummer
+      - bezet
+    example:
+      {
+        "kamernummer": "TRC1.1",
+        "bezet": true
+      }
+    properties:
+      kamernummer:
+        type: string
+      bezet:
+        type: boolean
+
   RoomOverview:
     type: object
     required:
@@ -345,16 +361,29 @@ definitions:
     example:
       {
         "rooms": [
-          "D01.01",
-          "D02.01",
-          "D03.01",
+          {
+            "kamernummer": "TRC1.1",
+            "bezet": true
+          },
+          {
+            "kamernummer": "TRC2.1",
+            "bezet": true
+          },
+          {
+            "kamernummer": "D01.01",
+            "bezet": false
+          },
+          {
+            "kamernummer": "D02.01",
+            "bezet": false
+          }
         ]
       }
     properties:
       rooms:
         type: array
         items:
-          type: string
+          $ref: '#/definitions/RoomDetails'
 
   TreatmentPointOverview:
     type: object
@@ -546,7 +575,6 @@ definitions:
         items:
           $ref: '#/definitions/TargetInfo'
 
-
 parameters:
   afdeling:
     name: afdeling
@@ -636,7 +664,6 @@ paths:
           description: Het opgegeven kamernummer bestaat niet.
         400:
           description: Een van de parameters is incorrect.
-
 
   /v2/timeline/:
     get:
