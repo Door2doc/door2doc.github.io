@@ -654,6 +654,7 @@ paths:
         - name: kamernummer
           type: string
           description: Een bestaand kamernummer
+          required: true
           in: path
       responses:
         200:
