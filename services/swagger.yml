@@ -634,6 +634,7 @@ paths:
       operationId: getRooms
       parameters:
         - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/tijdstip'
       responses:
         200:
           description: Een overzicht van de beschikbare kamers.
@@ -649,6 +650,7 @@ paths:
       operationId: getRoom
       parameters:
         - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/tijdstip'
         - name: kamernummer
           type: string
           description: Een bestaand kamernummer
