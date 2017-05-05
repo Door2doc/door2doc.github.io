@@ -27,7 +27,7 @@ produces:
   - application/json
 
 tags:
-  - name: "Service: Visitors"
+  - name: "Service: Timeline"
   - name: "Service: Prediction"
   - name: "Service: Rooms"
   - name: "Service: Target"
@@ -94,7 +94,7 @@ definitions:
         "visitors": [
           {
             "bezoek_nummer": "0000320459",
-            "type_arts": "seh",
+            "type_arts": "sha",
             "care": "hc",
             "status": "inbehandeling",
             "queue": 0,
@@ -161,7 +161,7 @@ definitions:
       queue:
         type: integer
         format: int32
-        description: Aantal aanwezige bezoekers die eerder zijn binnengekomen en dezelfde arts nodig hebben.
+        description: Totaal aantal aanwezige bezoekers die dezelfde arts nodig hebben.
         minimum: 0
       specialisme:
         type: string
@@ -213,7 +213,7 @@ definitions:
     example:
       {
         "bezoek_nummer": "0000320459",
-        "type_arts": "seh",
+        "type_arts": "sha",
         "care": "HC",
         "status": "inbehandeling",
         "queue": 0,
@@ -239,7 +239,7 @@ definitions:
     example:
       {
         "timestamp": "2016-08-12T09:32:35.837Z",
-        "arts": "seh",
+        "arts": "sha",
         "d2d": 24,
         "vbt": 160,
         "wachtend": 1,
@@ -247,7 +247,7 @@ definitions:
         "wachtend_arts": 1,
         "aanwezig_arts": 2,
         "in_behandeling_arts": 1,
-        "model": "dz-seh-aa-1:dz-seh-aw-2"
+        "model": "dz-sha-aa-1:dz-sha-aw-2"
       }
     required:
       - timestamp
@@ -365,7 +365,7 @@ definitions:
             "tijdvak": "2017-04-22T12:00:00+0200",
             "behandelpunten": 8,
             "vpk": 5,
-            "seh": 0,
+            "sha": 0,
             "int": 3,
             "chi": 0,
             "ov":  0
@@ -374,7 +374,7 @@ definitions:
             "tijdvak": "2017-04-22T13:00:00+0200",
             "behandelpunten": 10,
             "vpk": 6,
-            "seh": 2,
+            "sha": 2,
             "int": 1,
             "chi": 0,
             "ov":  1
@@ -395,7 +395,7 @@ definitions:
         "tijdvak": "2017-04-22T12:00:00+0200",
         "behandelpunten": 12,
         "vpk": 6,
-        "seh": 2,
+        "sha": 2,
         "int": 4,
         "chi": 0,
         "ov":  0,
@@ -404,7 +404,7 @@ definitions:
       - tijdvak
       - behandelpunten
       - vpk
-      - seh
+      - sha
       - int
       - chi
     properties:
@@ -422,7 +422,7 @@ definitions:
         format: int32
         minimum: 0
         description: Totaal aantal behandelpunten benodigd voor verpleegkundigen voor dit tijdvak
-      seh:
+      sha:
         type: integer
         format: int32
         minimum: 0
@@ -479,7 +479,7 @@ definitions:
         format: int32
         minimum: 0
         description: Totaal aantal behandelpunten benodigd voor verpleegkundigen voor dit tijdvak
-      seh:
+      sha:
         type: integer
         format: int32
         minimum: 0
@@ -591,9 +591,10 @@ parameters:
     type: string
     enum:
       - "chi"
-      - "seh"
+      - "sha"
       - "int"
-      - "ov"
+      - "ova"
+      - "vpk"
 
 paths:
   /v2/rooms/:
@@ -637,11 +638,11 @@ paths:
           description: Een van de parameters is incorrect.
 
 
-  /v2/visitors/:
+  /v2/timeline/:
     get:
       summary: Haal een overzicht op van de huidige bezoekers.
       tags:
-        - 'Service: Visitors'
+        - 'Service: Timeline'
         - 'Scherm: Timeline'
       operationId: getTimeline
       parameters:
