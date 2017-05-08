@@ -595,6 +595,22 @@ parameters:
     description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan
       gedraagt de service zich alsof deze op dat moment werd aangeroepen.
 
+  d-from:
+    name: from
+    type: string
+    format: 'date'
+    in: query
+    required: true
+    description: Datum (zonder tijd) in het verleden; gebruikt om een periode aan te geven. 
+
+  d-to:
+    name: to
+    type: string
+    format: 'date'
+    in: query
+    required: true
+    description: Datum (zonder tijd); gebruikt om een periode aan te geven.
+
   t-from:
     name: from
     type: string
@@ -799,8 +815,11 @@ paths:
       operationId: getCapacity
       parameters:
         - $ref: '#/parameters/afdeling'
-        - $ref: '#/parameters/t-from'
-        - $ref: '#/parameters/t-to'
+        - $ref: '#/parameters/d-from'
+        - $ref: '#/parameters/d-to'
+      produces:
+        - application/json
+        - text/csv
       responses:
         200:
           description: De behandelpunten voor de opgegeven periode per tijdsvak
@@ -816,8 +835,8 @@ paths:
       operationId: getCapacityReport
       parameters:
         - $ref: '#/parameters/afdeling'
-        - $ref: '#/parameters/t-from'
-        - $ref: '#/parameters/t-to'
+        - $ref: '#/parameters/d-from'
+        - $ref: '#/parameters/d-to'
       produces:
         - text/csv
       responses:
