@@ -385,6 +385,43 @@ definitions:
         items:
           $ref: '#/definitions/RoomDetails'
 
+  ArtsWerk:
+    type: object
+    description: Hoeveelheid behandelpunten beschikbaar of benodigd per arts
+    required:
+      - vpk
+      - sha
+      - int
+      - chi
+      - ova
+    properties:
+      vpk:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten beschikbaar of benodigd voor verpleegkundigen
+      sha:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten beschikbaar of benodigd voor SEH artsen
+      int:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten beschikbaar of benodigd voor internisten
+      chi:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten beschikbaar of benodigd voor chirurgen
+      ova:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal behandelpunten beschikbaar of benodigd voor 'overige' artsen
+
+
   TreatmentPointOverview:
     type: object
     example:
@@ -392,41 +429,22 @@ definitions:
         "behandelpunten": [
           {
             "tijdvak": "2017-04-22T12:00:00+0200",
-            "behandelpunten": 8,
-            "vpk": 5,
-            "sha": 0,
-            "int": 3,
-            "chi": 0,
-            "ova": 0
-          },
-          {
-            "tijdvak": "2017-04-22T13:00:00+0200",
-            "behandelpunten": 10,
-            "vpk": 6,
-            "sha": 2,
-            "int": 1,
-            "chi": 0,
-            "ova": 1
+            "benodigd": {
+              "vpk": 5,
+              "sha": 0,
+              "int": 3,
+              "chi": 0,
+              "ova": 0
+            },
+            "beschikbaar": {
+              "vpk": 5,
+              "sha": 0,
+              "int": 3,
+              "chi": 0,
+              "ova": 0
+            }
           }
-        ],
-        "beschikbaar": [
-          {
-            "tijdvak": "2017-04-22T12:00:00+0200",
-            "vpk": 3,
-            "sha": 1,
-            "int": 1,
-            "chi": 0,
-            "ova": 0
-          },
-          {
-            "tijdvak": "2017-04-22T13:00:00+0200",
-            "vpk": 3,
-            "sha": 1,
-            "int": 1,
-            "chi": 0,
-            "ova": 0
-          }
-        ],
+        ]
       }
     properties:
       behandelpunten:
@@ -434,67 +452,22 @@ definitions:
         description: Een lijst van behandelpunt-gegevens, geordend op tijdvak.
         items:
           $ref: '#/definitions/TreatmentPoint'
-      beschikbaar:
-        type: array
-        description: Een lijst van beschikbare capaciteit, geordend op tijdvak.
-        items:
-          $ref: '#/definitions/Capacity'
 
   TreatmentPoint:
     type: object
-    example:
-      {
-        "tijdvak": "2017-04-22T12:00:00+0200",
-        "behandelpunten": 12,
-        "vpk": 6,
-        "sha": 2,
-        "int": 4,
-        "chi": 0,
-        "ova": 0,
-      }
     required:
       - tijdvak
-      - behandelpunten
-      - vpk
-      - sha
-      - int
-      - chi
-      - ova
+      - benodigd
+      - beschikbaar
     properties:
       tijdvak:
         type: string
         format: 'date-time'
         description: Tijdvak voor de berekende behandelpunten.
-      behandelpunten:
-        type: integer
-        format: int32
-        minimum: 0
-        description: Totaal aantal behandelpunten benodigd voor dit tijdvak
-      vpk:
-        type: integer
-        format: int32
-        minimum: 0
-        description: Totaal aantal behandelpunten benodigd voor verpleegkundigen voor dit tijdvak
-      sha:
-        type: integer
-        format: int32
-        minimum: 0
-        description: Totaal aantal behandelpunten benodigd voor SEH artsen voor dit tijdvak
-      int:
-        type: integer
-        format: int32
-        minimum: 0
-        description: Totaal aantal behandelpunten benodigd voor internisten voor dit tijdvak
-      chi:
-        type: integer
-        format: int32
-        minimum: 0
-        description: Totaal aantal behandelpunten benodigd voor chirurgen voor dit tijdvak
-      ova:
-        type: integer
-        format: int32
-        minimum: 0
-        description: Totaal aantal behandelpunten benodigd voor 'overige' artsen voor dit tijdvak
+      benodigd:
+        $ref: '#/definitions/ArtsWerk'
+      beschikbaar:
+        $ref: '#/definitions/ArtsWerk'
 
   Capacity:
     type: object
@@ -548,7 +521,7 @@ definitions:
   TreatmentPointDetails:
     type: array
     items:
-      - $ref: '#/definitions/TreatmentPointDetail'
+      $ref: '#/definitions/TreatmentPointDetail'
 
   TreatmentPointDetail:
     type: object
