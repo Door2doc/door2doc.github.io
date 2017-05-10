@@ -397,7 +397,7 @@ definitions:
             "sha": 0,
             "int": 3,
             "chi": 0,
-            "ov":  0
+            "ova": 0
           },
           {
             "tijdvak": "2017-04-22T13:00:00+0200",
@@ -406,9 +406,27 @@ definitions:
             "sha": 2,
             "int": 1,
             "chi": 0,
-            "ov":  1
+            "ova": 1
           }
-        ]
+        ],
+        "beschikbaar": [
+          {
+            "tijdvak": "2017-04-22T12:00:00+0200",
+            "vpk": 3,
+            "sha": 1,
+            "int": 1,
+            "chi": 0,
+            "ova": 0
+          },
+          {
+            "tijdvak": "2017-04-22T13:00:00+0200",
+            "vpk": 3,
+            "sha": 1,
+            "int": 1,
+            "chi": 0,
+            "ova": 0
+          }
+        ],
       }
     properties:
       behandelpunten:
@@ -416,6 +434,11 @@ definitions:
         description: Een lijst van behandelpunt-gegevens, geordend op tijdvak.
         items:
           $ref: '#/definitions/TreatmentPoint'
+      beschikbaar:
+        type: array
+        description: Een lijst van beschikbare capaciteit, geordend op tijdvak.
+        items:
+          $ref: '#/definitions/Capacity'
 
   TreatmentPoint:
     type: object
@@ -427,7 +450,7 @@ definitions:
         "sha": 2,
         "int": 4,
         "chi": 0,
-        "ov":  0,
+        "ova": 0,
       }
     required:
       - tijdvak
@@ -436,6 +459,7 @@ definitions:
       - sha
       - int
       - chi
+      - ova
     properties:
       tijdvak:
         type: string
@@ -466,11 +490,60 @@ definitions:
         format: int32
         minimum: 0
         description: Totaal aantal behandelpunten benodigd voor chirurgen voor dit tijdvak
-      ov:
+      ova:
         type: integer
         format: int32
         minimum: 0
         description: Totaal aantal behandelpunten benodigd voor 'overige' artsen voor dit tijdvak
+
+  Capacity:
+    type: object
+    example:
+      {
+        "tijdvak": "2017-04-22T12:00:00+0200",
+        "vpk": 6,
+        "sha": 2,
+        "int": 4,
+        "chi": 0,
+        "ova":  0,
+      }
+    required:
+      - tijdvak
+      - vpk
+      - sha
+      - int
+      - chi
+      - ova
+    properties:
+      tijdvak:
+        type: string
+        format: 'date-time'
+        description: Tijdvak voor de berekende capaciteit.
+      vpk:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Beschikbaar aantal behandelpunten voor verpleegkundigen voor dit tijdvak
+      sha:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Beschikbaar aantal behandelpunten voor SEH artsen voor dit tijdvak
+      int:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Beschikbaar aantal behandelpunten voor internisten voor dit tijdvak
+      chi:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Beschikbaar aantal behandelpunten voor chirurgen voor dit tijdvak
+      ova:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Beschikbaar aantal behandelpunten voor 'overige' artsen voor dit tijdvak
 
   TreatmentPointDetails:
     type: array
