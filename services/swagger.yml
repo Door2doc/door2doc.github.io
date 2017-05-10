@@ -428,21 +428,38 @@ definitions:
       {
         "behandelpunten": [
           {
-            "tijdvak": "2017-04-22T12:00:00+0200",
             "benodigd": {
-              "vpk": 5,
-              "sha": 0,
-              "int": 3,
               "chi": 0,
-              "ova": 0
+              "int": 138,
+              "ova": 185,
+              "sha": 277,
+              "vpk": 277
             },
             "beschikbaar": {
-              "vpk": 5,
-              "sha": 0,
-              "int": 3,
               "chi": 0,
-              "ova": 0
-            }
+              "int": 0,
+              "ova": 0,
+              "sha": 120,
+              "vpk": 240
+            },
+            "tijdvak": "2016-01-01T18:00:00+01:00"
+          },
+          {
+            "benodigd": {
+              "chi": 0,
+              "int": 145,
+              "ova": 193,
+              "sha": 290,
+              "vpk": 290
+            },
+            "beschikbaar": {
+              "chi": 0,
+              "int": 0,
+              "ova": 0,
+              "sha": 0,
+              "vpk": 0
+            },
+            "tijdvak": "2016-01-01T19:00:00+01:00"
           }
         ]
       }
