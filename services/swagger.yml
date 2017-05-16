@@ -596,13 +596,13 @@ definitions:
     type: object
     required:
       - t
-      - minuten_aanwezig_percentage
+      - minuten_aanwezig_p80
       - minuten_aanwezig_avg
       - visits
     example:
       {
         "t": "2017-05-22",
-        "minuten_aanwezig_percentage": 67,
+        "minuten_aanwezig_p80": 67,
         "minuten_aanwezig_avg": 156,
         "visits": 40
       }
@@ -611,12 +611,11 @@ definitions:
         type: string
         format: date
         description: Begindatum van de periode waarvoor deze informatie geldig is.
-      minuten_aanwezig_percentage:
+      minuten_aanwezig_p80:
         type: integer
         format: int32
         minimum: 0
-        maximum: 100
-        description: "Het percentage bezoeken waarvan de aanwezigheid <= 180 minuten is."
+        description: "Het verblijftijd van het 80e percentiel."
       minuten_aanwezig_avg:
         type: integer
         format: int32
@@ -934,7 +933,6 @@ paths:
             - dag
             - avond
             - nacht
-        - $ref: '#/parameters/arts'
         - name: bestemming
           type: string
           in: query
@@ -942,6 +940,11 @@ paths:
           enum:
             - ontslag
             - opname
+        - $ref: '#/parameters/arts'
+        - name: ingangsklacht
+          type: string
+          in: query
+          description: Beperk rapportage tot patiënten met deze ingangsklacht.
 
       responses:
         200:
