@@ -915,6 +915,7 @@ paths:
         - 'Scherm: Target'
       operationId: getTargetInfo
       parameters:
+        - $ref: '#/parameters/afdeling'
         - name: periode
           type: string
           default: dag
