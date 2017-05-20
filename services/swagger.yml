@@ -942,6 +942,10 @@ paths:
             - ontslag
             - opname
         - $ref: '#/parameters/arts'
+        - name: specialisme
+          type: string
+          in: query
+          description: Beperk rapportage tot patiënten met dit specialisme.
         - name: ingangsklacht
           type: string
           in: query
