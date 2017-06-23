@@ -198,7 +198,9 @@ definitions:
       minuten_sinds_dokter:
         type: integer
         description: "Voor bezoekers die gezien zijn door een arts: het aantal minuten sinds `gezien`. Anders gelijk aan 0."
-
+      minuten_sinds_beslissing:
+        type: integer
+        description: "Voor bezoekers waar de arts een beslissing over genomen heeft: het aantal minuten sinds `opname`. Anders gelijk aan 0."
     required:
       - bezoek_nummer
       - type_arts
@@ -210,6 +212,7 @@ definitions:
       - minuten_aanwezig
       - minuten_tot_dokter
       - minuten_sinds_dokter
+      - minuten_sinds_beslissing
     example:
       {
         "bezoek_nummer": "0000320459",
@@ -226,7 +229,8 @@ definitions:
         "gezien": "2017-03-13T11:12:00+0200",
         "minuten_aanwezig": 262,
         "minuten_tot_dokter": 200,
-        "minuten_sinds_dokter": 62
+        "minuten_sinds_dokter": 62,
+        "minuten_sinds_beslissing": 0
       }
 
   PredictionList:
