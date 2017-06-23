@@ -23,6 +23,7 @@ definitions:
         "vbt": 160,
         "wachtend": 1,
         "aanwezig": 4,
+        "wachtend_opname": 0,
         "wachtend_arts": 1,
         "aanwezig_arts": 2,
         "in_behandeling_arts": 1,
@@ -35,6 +36,7 @@ definitions:
       - vbt
       - wachtend
       - aanwezig
+      - wachtend_opname,
       - model
       - wachtend_arts
       - aanwezig_arts
@@ -71,6 +73,11 @@ definitions:
         format: int32
         minimum: 0
         description: Totaal aantal patiënten aanwezig op tijdstip t, ongeacht of zij een dokter gezien hebben
+      wachtend_opname:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal patiënten aanwezig op tijdstip t die opgenomen moeten worden, maar dat nog niet zijn
       wachtend_arts:
         type: integer
         format: int32
