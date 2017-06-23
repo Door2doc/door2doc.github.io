@@ -107,7 +107,8 @@ definitions:
             "gezien": "2017-03-13T11:12:00+0200",
             "minuten_aanwezig": 262,
             "minuten_tot_dokter": 200,
-            "minuten_sinds_dokter": 62
+            "minuten_sinds_dokter": 62,
+            "minuten_sinds_beslissing": 0
           },
           {
             "bezoek_nummer": "0000320452",
@@ -124,7 +125,8 @@ definitions:
             "gezien": "2017-03-13T11:12:00+0200",
             "minuten_aanwezig": 42,
             "minuten_tot_dokter": 42,
-            "minuten_sinds_dokter": 0
+            "minuten_sinds_dokter": 0,
+            "minuten_sinds_beslissing": 0
           },
           {
             "bezoek_nummer": "0000320452",
@@ -141,7 +143,8 @@ definitions:
             "gezien": "2017-03-13T11:12:00+0200",
             "minuten_aanwezig": 42,
             "minuten_tot_dokter": 42,
-            "minuten_sinds_dokter": 0
+            "minuten_sinds_dokter": 0,
+            "minuten_sinds_beslissing": 0
           }
         ]
       }
