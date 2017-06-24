@@ -617,14 +617,14 @@ definitions:
     type: object
     required:
       - t
-      - minuten_aanwezig_p80
-      - minuten_aanwezig_avg
+      - p80
+      - avg
       - visits
     example:
       {
         "t": "2017-05-22",
-        "minuten_aanwezig_p80": 67,
-        "minuten_aanwezig_avg": 156,
+        "p80": 67,
+        "avg": 156,
         "visits": 40
       }
     properties:
@@ -632,16 +632,16 @@ definitions:
         type: string
         format: date
         description: Begindatum van de periode waarvoor deze informatie geldig is.
-      minuten_aanwezig_p80:
+      p80:
         type: integer
         format: int32
         minimum: 0
-        description: "Het verblijftijd van het 80e percentiel."
-      minuten_aanwezig_avg:
+        description: "Tijdsduur van het opgevraagde interval van het 80e percentiel."
+      avg:
         type: integer
         format: int32
         minimum: 0
-        description: "De gemiddelde verblijftijd: het aantal minuten van binnenkomst tot nu."
+        description: "Gemiddelde duur van het opgevraagde interval: het aantal minuten van binnenkomst tot nu."
       visits:
         type: integer
         format: int32
@@ -1174,6 +1174,7 @@ paths:
         - name: interval
           type: string
           in: query
+          default: deur-tot-vertrek
           description: Interval waarover target berekend wordt.
           enum:
             - deur-tot-vertrek
