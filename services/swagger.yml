@@ -33,6 +33,7 @@ tags:
   - name: "Service: Target"
   - name: "Service: Interrupt"
   - name: "Service: Capacity"
+  - name: "Service: Settings"
   - name: "Scherm: Live"
   - name: "Scherm: MyLive"
   - name: "Scherm: Timeline"
@@ -435,7 +436,6 @@ definitions:
         minimum: 0
         description: Totaal aantal behandelpunten beschikbaar of benodigd voor 'overige' artsen
 
-
   TreatmentPointOverview:
     type: object
     example:
@@ -651,6 +651,149 @@ definitions:
         items:
           $ref: '#/definitions/TargetInfo'
 
+  Settings:
+    type: object
+    required:
+      - naam
+      - theme
+      - afdelingen
+    properties:
+      naam:
+        type: string
+        description: Naam van het ziekenhuis
+      theme:
+        type: string
+        description: Identifier die gebruikt wordt om het visuele thema te bepalen.
+      afdelingen:
+        $ref: '#/definitions/AfdelingSettingsCollection'
+    example:
+      {
+        "theme": "theme-example",
+        "naam": "Voorbeeld ziekenhuis",
+        "afdelingen": {
+          "seh": {
+            "naam": "Spoedpost",
+            "labels": {
+              "sha": "Arts",
+              "vpk": "Verpleegkundige"
+            },
+            "aantal_kamers": 12,
+            "artsen": ["sha", "vpk"],
+            "features": ["capacity"],
+            "specialismes": [
+              "Cardiologie",
+              "Gynaecologie en Verloskunde",
+              "Klinische geriatrie",
+              "SEH",
+              "Specialismen onbekend",
+            ],
+            "ingangsklachten": [
+              "Humerusfractuur",
+              "Hydradenitis",
+              "Hypercalciumie",
+            ]
+          },
+          "ehh": {
+            "naam": "Eerste-Hart Hulp",
+            "labels": {
+              "sha": "Arts",
+              "vpk": "Verpleegkundige"
+            },
+            "aantal_kamers": 3,
+            "target_vbt": 180,
+            "artsen": ["sha", "vpk"],
+            "features": ["capacity"],
+            "specialismes": [
+              "Cardiologie",
+              "SEH",
+            ],
+            "ingangsklachten": [
+              "Hyperventilatie",
+              "Hypocalciëmie",
+              "Hypoglykemie"
+            ]
+          }
+        }
+      }
+
+  AfdelingSettingsCollection:
+    type: object
+    properties:
+      seh:
+        $ref: '#/definitions/AfdelingSettings'
+        description: Settings voor de SEH
+      ehh:
+        $ref: '#/definitions/AfdelingSettings'
+        description: Settings voor de EHH
+
+
+  AfdelingSettings:
+    type: object
+    required:
+      - naam
+      - artsen
+      - labels
+      - aantal_kamers
+      - features
+      - specialismes
+      - ingangsklachten
+    properties:
+      naam:
+        type: string
+        description: Naam van de afdeling
+      artsen:
+        type: array
+        items:
+          type: string
+          enum:
+            - vpk
+            - sha
+            - int
+            - chi
+            - ova
+        description: Lijst met alle arts-types die voor deze afdeling relevant zijn; omvat `vpk`, `sha`, `int`, `chi`, `ova`.
+      labels:
+        type: object
+        properties:
+          vpk:
+            type: string
+            description: Label voor verpleegkundigen. Afwezig indien `vpk` niet genoemd is in `artsen`.
+          sha:
+            type: string
+            description: Label voor SEH artsen. Afwezig indien `sha` niet genoemd is in `artsen`.
+          int:
+            type: string
+            description: Label voor internisten. Afwezig indien `int` niet genoemd is in `artsen`.
+          chi:
+            type: string
+            description: Label voor chirurgen. Afwezig indien `chi` niet genoemd is in `artsen`.
+          ova:
+            type: string
+            description: Label voor overige artsen. Afwezig indien `ova` niet genoemd is in `artsen`.
+      aantal_kamers:
+        type: integer
+        format: int32
+        min: 0
+        description: Aantal kamers op deze afdeling
+      features:
+        type: array
+        items:
+          type: string
+          enum:
+            - capacity
+          description: Lijst met alle features die voor deze afdeling aanwezg zijn; omvat `capacity`.
+      specialismes:
+        type: array
+        items:
+          type: string
+        description: Lijst met alle specialismes die voor deze afdeling gedefiniëerd zijn.
+      ingangsklachten:
+        type: array
+        items:
+          type: string
+        description: Lijst met veel voorkomende ingangsklachten die voor deze afdeling gedefiniëerd zijn.
+
+
 parameters:
   afdeling:
     name: afdeling
@@ -717,6 +860,22 @@ parameters:
       - "vpk"
 
 paths:
+  /v2/settings/:
+    get:
+      summary: Haal de settings op voor dit ziekenhuis
+      tags:
+        - 'Service: Settings'
+        - 'Scherm: Capacity'
+        - 'Scherm: MyLive'
+        - 'Scherm: Live'
+        - 'Scherm: Timeline'
+        - 'Scherm: Target'
+      operationId: getSettings
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/Settings'
+
   /v2/rooms/:
     get:
       summary: Haal een overzicht op van de bestaande kamernummers.
