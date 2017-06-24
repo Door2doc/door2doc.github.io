@@ -1171,6 +1171,15 @@ paths:
           type: string
           in: query
           description: Beperk rapportage tot patiënten met deze ingangsklacht.
+        - name: interval
+          type: string
+          in: query
+          description: Interval waarover target berekend wordt.
+          enum:
+            - deur-tot-vertrek
+            - deur-tot-dokter
+            - dokter-tot-beslissing
+            - beslissing-tot-opname
 
       responses:
         200:
