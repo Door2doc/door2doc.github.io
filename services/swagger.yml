@@ -253,6 +253,7 @@ definitions:
         "wachtend": 1,
         "aanwezig": 4,
         "wachtend_opname": 0,
+        "kamers_bezet": 5,
         "wachtend_arts": 1,
         "aanwezig_arts": 2,
         "in_behandeling_arts": 1,
@@ -266,6 +267,7 @@ definitions:
       - wachtend
       - aanwezig
       - wachtend_opname
+      - kamers_bezet
       - model
       - wachtend_arts
       - aanwezig_arts
@@ -307,6 +309,11 @@ definitions:
         format: int32
         minimum: 0
         description: Totaal aantal patiënten aanwezig op tijdstip t die opgenomen moeten worden, maar dat nog niet zijn
+      kamers_bezet:
+        type: integer
+        format: int32
+        minimum: 0
+        description: Totaal aantal kamers dat bezet is
       wachtend_arts:
         type: integer
         format: int32
