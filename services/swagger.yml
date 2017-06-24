@@ -841,7 +841,6 @@ definitions:
           type: string
         description: Lijst met veel voorkomende ingangsklachten die voor deze afdeling gedefiniëerd zijn.
 
-
 parameters:
   afdeling:
     name: afdeling
@@ -1127,6 +1126,38 @@ paths:
           description: De behandelpunten per patiënt voor de opgegeven periode per tijdsvak
           schema:
             $ref: '#/definitions/TreatmentPointDetails'
+
+  /v2/capacity/calculate/summary/:
+    get:
+      summary: Samenvatting van de capaciteit over het afgelopen jaar
+      tags:
+        - 'Service: Capacity'
+        - 'Scherm: Capacity'
+      operationId: getCapacitySummary
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - name: referentie
+          type: string
+          in: query
+          description: Bepaalt hoe referentie_nodig wordt berekend; op basis van het gemiddelde, of het zoveelste percentiel
+          default: avg
+          enum:
+            - avg
+            - "60"
+            - "70"
+        - name: bandbreedte
+          type: string
+          in: query
+          default: "75"
+          enum:
+            - "75"
+            - "80"
+            - "90"
+          description: Bepaalt op basis van welk percentiel de bovengrens (en daarmee ook de ondergrens) van de bandbreedte wordt berekend
+      responses:
+        200:
+          description: De capaciteit over het afgelopen jaar per dag/uur
+
 
   /v2/target/:
     get:
