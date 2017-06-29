@@ -1168,6 +1168,14 @@ paths:
       operationId: getTargetInfo
       parameters:
         - $ref: '#/parameters/afdeling'
+        - name: pretty
+          type: string
+          default:
+          in: query
+          description: Pretty printing van het resultaat?
+          enum:
+            -
+            - true
         - name: periode
           type: string
           default: dag
