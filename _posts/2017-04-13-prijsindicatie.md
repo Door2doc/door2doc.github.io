@@ -71,13 +71,18 @@ Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobie
       var rateA = .65,
           rateAB = .85,
           price = 0,
-          feeBasic = 7450,
-          feeNext = 5000,
+          feeBasicA = 7450,
+          feeBasicAB = 12450,
+          feeNextA = 5000,
+          feeNextAB = 5500,
           connectionFee = 0,
           limitVisitors_1 = 20000,
           limitVisitors_2 = 40000,
           ab_included = ab,
           rate = ab_included ? rateAB : rateA;
+          feeBasic = ab_included ? feeBasicAB : feeBasicA;
+          feeNext = ab_included ? feeNextAB : feeNextA;
+
 
       if ( numVisitors > limitVisitors_2 ){
 
