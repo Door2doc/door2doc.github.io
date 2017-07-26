@@ -2,21 +2,21 @@
 layout: post
 title: "Prijsindicatie cloudservice SEH en EHH"
 description: ""
-date: 2017-04-13
+date: 2017-07-26
 tags: []
 comments: false
 share: false
 ---
 
-Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van onze cloudservice voor de Spoedeisende Hulp en Eerste Harthulp. De abonnementsprijs gaat uit van het totaal aantal bezoeken op beide afdelingen en voor alle locaties van uw (samenwerkende) organisatie(s). De prijs daalt bij grotere aantallen (vanaf 20.000 bezoeken op jaarbasis en nogmaals vanaf 40.000).
+Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van onze cloudservice voor de Spoedeisende Hulp (SEH) en Eerste Harthulp (EHH). De abonnementsprijs is gebaseerd op het totaal aantal bezoeken per kalenderjaar op beide afdelingen en voor alle locaties samen van uw organisatie(s). Bij grotere aantallen geldt een korting (vanaf 20.000 bezoeken en nogmaals vanaf 40.000).
 
-Wij rekenen eenmalig kosten voor de aansluiting op onze cloud en bieden daarbij een eluatieperiode van vier maanden aan. Indien u daarna het gebruik van de cloudservice wilt voortzetten, geldt een meerjarig abonnement met maandelijkse facturatie. Updates en onderhoud zijn altijd inbegrepen, onze cloudservice is voortdurend in ontwikkeling.
+Wij rekenen eenmalig kosten voor de aansluiting op onze cloud. Bij de aansluiting is een evaluatieperiode van vier maanden inbegrepen. Indien u tevreden bent en na deze periode het gebruik van de cloudservice wilt voortzetten, sluiten wij een meerjarige Saas-overeenkomst af (abonnement met maandelijkse facturatie). Updates en onderhoud van onze cloudservice zijn altijd inbegrepen, onze software is voortdurend in ontwikkeling.
 
-Het standaardabonnement biedt realtime informatie over verwachte wacht- en verblijftijden voor patiënten in de wachtkamer en de behandelkamers (*Live en myLive tools*). Patiënten zien tevens berichten met uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte.
+Wij bieden twee versies aan van ons abonnement op de cloudservice SEH en EHH.
+* Een abonnement met alleen informatie voor patiënten. Namens het ziekenhuis geven wij patiënten realtime informatie over de verwachte wacht- en verblijftijden op de afdeling, te zien in de wachtkamer en de behandelkamers via beeldschermen van het ziekenhuis (*Live en myLive*). Patiënten zien tevens berichten met algemene uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte en eventuele verstoringen.
+* Een abonnement met de informatie voor patiënten én aanvullende informatie voor professionals in het ziekenhuis (artsen, verpleegkundigen, managers). Hiermee hebben zij realtime grip op de doorstroom (*Timeline*), inzicht in de actuele prestaties (*Target*) en inzicht voor een optimale inzet van verpleegkundigen en artsen (*Capacity*).
 
-Door2doc biedt hierbovenop informatie voor artsen, verpleegkundigen en managers, waarmee zij grip hebben op de acute doorstroom (*Timeline tool*), de actuele realisatie van doelstellingen zien (*Target tool*) en de optimale capaciteitsinzet van de dienstroosters kunnen bepalen (*Capacity tool*).
-
-Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobiele Apple/Android app (verwacht mei 2017) en browser op pc en tablet. Tevens koppelen wij gerichte informatie naar wens met uw ziekenhuiswebsite en landelijke informatiediensten zoals LCMS.
+Onze cloudservice is overal en voor alle professionals binnen het ziekenhuis te benaderen via onze gratis app voor mobiel en tablet (Apple/Android) en de webbrowser op de pc. Tevens ontsluiten wij gerichte informatie naar wens kosteloos voor uw ziekenhuiswebsite en landelijke crisisinformatiediensten zoals LCMS.
 
 #### Voer gegevens in van uw organisatie(s)
 <p>
@@ -32,7 +32,7 @@ Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobie
       <input type="number" id="num-locations" name="num-locations">
     </div>
     <div class="formfield-container checkbox-container">
-      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief tools voor professionals (Timeline, Target, Capacity)</label>
+      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief informatie voor professionals (Timeline, Target, Capacity)</label>
     </div>
     <div class="formfield-container button-container">
       <input type="button" value="Bekijk indicatie" onclick="showCosts()"/>
@@ -74,7 +74,7 @@ Onze realtime informatie is overal in het ziekenhuis op te vragen via onze mobie
           feeBasicA = 7450,
           feeBasicAB = 12450,
           feeNextA = 5000,
-          feeNextAB = 5500,
+          feeNextAB = 6000,
           connectionFee = 0,
           limitVisitors_1 = 20000,
           limitVisitors_2 = 40000,
