@@ -16,7 +16,7 @@ Wij bieden twee versies aan van ons abonnement op de cloudservice SEH en EHH.
 * Een abonnement met alleen informatie voor patiënten. Namens het ziekenhuis geven wij patiënten realtime informatie over de verwachte wacht- en verblijftijden op de afdeling, te zien in de wachtkamer en de behandelkamers via beeldschermen van het ziekenhuis (*Live en myLive*). Patiënten zien tevens berichten met algemene uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte en eventuele verstoringen.
 * Een abonnement met de informatie voor patiënten én aanvullende informatie voor professionals in het ziekenhuis (artsen, verpleegkundigen, managers). Hiermee hebben zij realtime grip op de doorstroom (*Timeline*) en krijgen zij inzicht in de actuele prestaties (*Target*) en een optimale inzet van verpleegkundigen en artsen (*Capacity*).
 
-Onze cloudservice is overal en voor alle professionals binnen het ziekenhuis te benaderen via onze gratis app voor mobiel en tablet (Apple/Android) en de webbrowser op de pc. Tevens ontsluiten wij gerichte informatie naar wens kosteloos voor uw ziekenhuiswebsite en landelijke crisisinformatiediensten zoals LCMS.
+Onze cloudservice is voor alle professionals overal binnen het ziekenhuis te benaderen via onze gratis app voor mobiel en tablet (Apple/Android) en de webbrowser op de pc. Tevens ontsluiten wij gerichte informatie naar wens kosteloos voor uw ziekenhuiswebsite en landelijke crisisinformatiediensten zoals LCMS.
 
 #### Voer gegevens in van uw organisatie(s)
 <p>
