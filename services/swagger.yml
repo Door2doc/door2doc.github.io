@@ -1142,9 +1142,9 @@ paths:
           description: Bepaalt hoe referentie_nodig wordt berekend; op basis van het gemiddelde, of het zoveelste percentiel
           default: avg
           enum:
-            - avg
+            - "avg"
             - "60"
-            - "70"
+            - "75"
         - name: bandbreedte
           type: string
           in: query
@@ -1157,6 +1157,8 @@ paths:
       responses:
         200:
           description: De capaciteit over het afgelopen jaar per dag/uur
+          schema:
+            $ref: '#/definitions/TreatmentPointSummary'
 
 
   /v2/target/:
