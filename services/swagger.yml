@@ -1116,6 +1116,7 @@ paths:
         - 'Reporting'
       operationId: getCapacityReport
       parameters:
+        - $ref: '#/parameters/arts'
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/d-from'
         - $ref: '#/parameters/d-to'
