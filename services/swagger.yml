@@ -102,6 +102,8 @@ definitions:
             "specialisme": "Heelkunde",
             "kamernummer": "D15.01",
             "reden": "Stomp buiktrauma",
+            "leeftijdsgroep": 1,
+            "herkomst": "4",
 
             "binnenkomst": "2017-03-13T10:08:00+0200",
             "naar_kamer": "2017-03-13T10:26:00+0200",
@@ -120,6 +122,8 @@ definitions:
             "specialisme": "Interne geneeskunde",
             "kamernummer": "D17.01",
             "reden": "Algehele malaise",
+            "leeftijdsgroep": 7,
+            "herkomst": "12",
 
             "binnenkomst": "2017-03-13T10:08:00+0200",
             "naar_kamer": "2017-03-13T10:26:00+0200",
@@ -138,6 +142,8 @@ definitions:
             "specialisme": "Interne geneeskunde",
             "kamernummer": "D17.01",
             "reden": "Algehele malaise",
+            "leeftijdsgroep": 4,
+            "herkomst": "10",
 
             "binnenkomst": "2017-03-13T10:08:00+0200",
             "naar_kamer": "2017-03-13T10:26:00+0200",
@@ -205,6 +211,13 @@ definitions:
       minuten_sinds_beslissing:
         type: integer
         description: "Voor bezoekers waar de arts een beslissing over genomen heeft: het aantal minuten sinds `opname`. Anders gelijk aan 0."
+      leeftijdsgroep:
+        type: integer
+        description: "Abstracte indicatie van de leeftijdsgroep van deze bezoeker."
+      herkomst:
+        type: string
+        description: "Code die aangeeft hoe deze patiënt op deze afdeling terecht is gekomen."
+
     required:
       - bezoek_nummer
       - type_arts
@@ -212,6 +225,8 @@ definitions:
       - status
       - queue
       - reden
+      - leeftijdsgroep
+      - herkomst
       - binnenkomst
       - minuten_aanwezig
       - minuten_tot_dokter
@@ -227,6 +242,8 @@ definitions:
         "specialisme": "Heelkunde",
         "kamernummer": "D15.01",
         "reden": "Stomp buiktrauma",
+        "leeftijdsgroep": 4,
+        "herkomst": "10",
 
         "binnenkomst": "2017-03-13T10:08:00+0200",
         "naar_kamer": "2017-03-13T10:26:00+0200",
