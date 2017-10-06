@@ -265,6 +265,7 @@ definitions:
       {
         "timestamp": "2016-08-12T09:32:35.837Z",
         "arts": "sha",
+        "afdeling": "seh",
         "d2d": 24,
         "vbt": 160,
         "wachtend": 1,
@@ -279,6 +280,7 @@ definitions:
     required:
       - timestamp
       - arts
+      - afdeling
       - d2d
       - vbt
       - wachtend
@@ -301,6 +303,9 @@ definitions:
         description: >
           Type arts waarvoor de voorspelling is gemaakt. Als de service is aangeroepen met een `arts` parameter, dan
           is dit de waarde van die parameter.
+      afdeling:
+        type: string
+        description: De afdeling waarvoor de voorspelling is gemaakt
       d2d:
         type: integer
         format: int32
