@@ -27,6 +27,8 @@ produces:
   - application/json
 
 tags:
+  - name: "Project: ZKH"
+  - name: "Project: HAP"
   - name: "Service: Timeline"
   - name: "Service: Prediction"
   - name: "Service: Rooms"
@@ -34,6 +36,7 @@ tags:
   - name: "Service: Interrupt"
   - name: "Service: Capacity"
   - name: "Service: Settings"
+  - name: "Service: Workflow"
   - name: "Scherm: Live"
   - name: "Scherm: MyLive"
   - name: "Scherm: Timeline"
@@ -538,7 +541,7 @@ definitions:
         "sha": 2,
         "int": 4,
         "chi": 0,
-        "ova":  0,
+        "ova":  0
       }
     required:
       - tijdvak
@@ -767,7 +770,6 @@ definitions:
         $ref: '#/definitions/AfdelingSettings'
         description: Settings voor de EHH
 
-
   AfdelingSettings:
     type: object
     required:
@@ -863,6 +865,414 @@ definitions:
           type: string
         description: Lijst met veel voorkomende ingangsklachten die voor deze afdeling gedefiniëerd zijn.
 
+  WorkflowOverzicht:
+    type: object
+    required:
+      - start
+      - einde
+      - afdelingen
+      - periodes
+    properties:
+      start:
+        type: string
+        format: date-time
+        description: Begintijd van dit overzicht
+      einde:
+        type: string
+        format: date-time
+        description: Eindtijd van dit overzicht
+      afdelingen:
+        type: array
+        items:
+          $ref: '#/definitions/WorkflowAfdeling'
+        description: Details van de afdelingen in dit overzicht
+      periodes:
+        type: array
+        description: Periodes (tijdvakken van 1 uur) in dit overzicht
+        items:
+          $ref: '#/definitions/WorkflowPeriode'
+    example:
+      {
+        "start": "2017-10-01T12:00:00+02:00",
+        "einde": "2017-10-01T13:00:00+02:00",
+        "afdelingen": [
+          {
+            "afdeling": "alph",
+            "vertraagd": 0,
+            "wachttijd_min": 0,
+            "wachttijd_max": 0
+          },
+          {
+            "afdeling": "ldd",
+            "vertraagd": 2,
+            "wachttijd_min": 15,
+            "wachttijd_max": 30
+          }
+        ],
+        "periodes": [
+          {
+            "start": "2017-10-01T12:00:00+02:00",
+            "einde": "2017-10-01T13:00:00+02:00",
+            "tijden": [
+              "2017-10-01T12:00:00+02:00",
+              "2017-10-01T12:15:00+02:00",
+              "2017-10-01T12:30:00+02:00",
+              "2017-10-01T12:45:00+02:00"
+            ],
+            "slots": [
+              {
+                "id": "alph/25114200/0",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:00:00+02:00",
+                "einde": "2017-10-01T12:15:00+02:00"
+              },
+              {
+                "id": "alph/25114200/1",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:00:00+02:00",
+                "einde": "2017-10-01T12:15:00+02:00"
+              },
+              {
+                "id": "ldd/25114200/0",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:00:00+02:00",
+                "einde": "2017-10-01T12:15:00+02:00"
+              },
+              {
+                "id": "ldd/25114200/1",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:00:00+02:00",
+                "einde": "2017-10-01T12:15:00+02:00"
+              },
+              {
+                "id": "alph/25114215/0",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:15:00+02:00",
+                "einde": "2017-10-01T12:30:00+02:00"
+              },
+              {
+                "id": "alph/25114215/1",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:15:00+02:00",
+                "einde": "2017-10-01T12:30:00+02:00"
+              },
+              {
+                "id": "ldd/25114215/0",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:15:00+02:00",
+                "einde": "2017-10-01T12:30:00+02:00",
+                "afspraak": {
+                  "id": "S122876",
+                  "urgentie": "U4",
+                  "aangemaakt": "2017-10-01T11:45:00+02:00",
+                  "gearriveerd": "2017-10-01T12:06:00+02:00",
+                  "start": "2017-10-01T12:15:00+02:00",
+                  "einde": "2017-10-01T12:30:00+02:00",
+                  "status": "vertraagd",
+                  "icpc_code": "F70.01",
+                  "icpc_uitleg": "Bacteriële conjunctivitis",
+                  "postcode": "1000 AA",
+                  "leeftijdsgroep": "2"
+                }
+              },
+              {
+                "id": "ldd/25114215/1",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:15:00+02:00",
+                "einde": "2017-10-01T12:30:00+02:00"
+              },
+              {
+                "id": "alph/25114230/0",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:30:00+02:00",
+                "einde": "2017-10-01T12:45:00+02:00",
+                "afspraak": {
+                  "id": "S934280",
+                  "urgentie": "U3",
+                  "aangemaakt": "2017-10-01T11:55:00+02:00",
+                  "gearriveerd": "2017-10-01T12:18:00+02:00",
+                  "start": "2017-10-01T12:30:00+02:00",
+                  "einde": "2017-10-01T12:45:00+02:00",
+                  "status": "gemist",
+                  "icpc_code": "L86.01",
+                  "icpc_uitleg": "HNP (thoracaal/lumbaal)",
+                  "postcode": "1000 AA",
+                  "leeftijdsgroep": "5"
+                }
+              },
+              {
+                "id": "alph/25114230/1",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:30:00+02:00",
+                "einde": "2017-10-01T12:45:00+02:00"
+              },
+              {
+                "id": "ldd/25114230/0",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:30:00+02:00",
+                "einde": "2017-10-01T12:45:00+02:00"
+              },
+              {
+                "id": "ldd/25114230/1",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:30:00+02:00",
+                "einde": "2017-10-01T12:45:00+02:00"
+              },
+              {
+                "id": "alph/25114245/0",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:45:00+02:00",
+                "einde": "2017-10-01T13:00:00+02:00",
+                "afspraak": {
+                  "id": "S980584",
+                  "urgentie": "U3",
+                  "aangemaakt": "2017-10-01T11:47:00+02:00",
+                  "gearriveerd": "2017-10-01T12:50:00+02:00",
+                  "start": "2017-10-01T12:45:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "status": "gepland",
+                  "icpc_code": "L18.01",
+                  "icpc_uitleg": "Fibromyalgie",
+                  "postcode": "1000 AA",
+                  "leeftijdsgroep": "1"
+                }
+              },
+              {
+                "id": "alph/25114245/1",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:45:00+02:00",
+                "einde": "2017-10-01T13:00:00+02:00",
+                "afspraak": {
+                  "id": "S  7727",
+                  "urgentie": "U4",
+                  "aangemaakt": "2017-10-01T12:06:00+02:00",
+                  "gearriveerd": "2017-10-01T12:24:00+02:00",
+                  "start": "2017-10-01T12:45:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "status": "gepland",
+                  "icpc_code": "N88.00",
+                  "icpc_uitleg": "Epilepsie (alle vormen)",
+                  "postcode": "1000 AA",
+                  "leeftijdsgroep": "1"
+                }
+              },
+              {
+                "id": "ldd/25114245/0",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:45:00+02:00",
+                "einde": "2017-10-01T13:00:00+02:00"
+              },
+              {
+                "id": "ldd/25114245/1",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:45:00+02:00",
+                "einde": "2017-10-01T13:00:00+02:00",
+                "afspraak": {
+                  "id": "S 86785",
+                  "urgentie": "U4",
+                  "aangemaakt": "2017-10-01T12:11:00+02:00",
+                  "gearriveerd": "2017-10-01T12:47:00+02:00",
+                  "start": "2017-10-01T12:45:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "status": "vertraagd",
+                  "icpc_code": "U14.00",
+                  "icpc_uitleg": "Symptomen/klachten nieren",
+                  "postcode": "1000 AA",
+                  "leeftijdsgroep": "7"
+                }
+              }
+            ],
+            "u2": [
+              {
+                "id": "alph/25114200/0",
+                "afdeling": "alph",
+                "start": "2017-10-01T12:00:00+02:00",
+                "einde": "2017-10-01T13:00:00+02:00",
+                "afspraak": {
+                  "id": "S764929",
+                  "urgentie": "U2",
+                  "aangemaakt": "2017-10-01T11:27:00+02:00",
+                  "gearriveerd": "2017-10-01T11:38:00+02:00",
+                  "start": "2017-10-01T12:00:00+02:00",
+                  "einde": "2017-10-01T12:15:00+02:00",
+                  "status": "vertraagd",
+                  "icpc_code": "U14.00",
+                  "icpc_uitleg": "Symptomen/klachten nieren",
+                  "postcode": "1000 AA",
+                  "leeftijdsgroep": "9"
+                }
+              },
+              {
+                "id": "ldd/25114200/0",
+                "afdeling": "ldd",
+                "start": "2017-10-01T12:00:00+02:00",
+                "einde": "2017-10-01T13:00:00+02:00",
+                "afspraak": {
+                  "id": "S915097",
+                  "urgentie": "U2",
+                  "aangemaakt": "2017-10-01T11:22:00+02:00",
+                  "gearriveerd": "2017-10-01T11:47:00+02:00",
+                  "start": "2017-10-01T12:00:00+02:00",
+                  "einde": "2017-10-01T12:15:00+02:00",
+                  "status": "vertraagd",
+                  "icpc_code": "S13.00",
+                  "icpc_uitleg": "Beet mens/dier",
+                  "postcode": "1000 AA",
+                  "leeftijdsgroep": "5"
+                }
+              }
+            ]
+          }
+        ]
+      }
+
+  WorkflowAfdeling:
+    type: object
+    required:
+      - id
+      - vertraagd
+      - wachttijd_min
+      - wachttijd_max
+    properties:
+      id:
+        type: string
+        description: ID van deze afdeling
+      vertraagd:
+        type: integer
+        description: Aantal slots dat deze afdeling achterloopt op planning
+      wachttijd_min:
+        type: integer
+        description: Ondergrend wachttijd in minuten
+      wachttijd_max:
+        type: integer
+        description: Bovengrens wachttijd in minuten
+
+  WorkflowPeriode:
+    type: object
+    required:
+      - start
+      - einde
+      - tijden
+      - slots
+      - u2
+    properties:
+      start:
+        type: string
+        format: date-time
+        description: Begintijd van deze periode
+      einde:
+        type: string
+        format: date-time
+        description: Eindtijd van deze periode
+      tijden:
+        type: array
+        description: Lijst van de begintijden van alle tijdvakken binnen deze periode
+        items:
+          type: string
+          format: date-time
+      slots:
+        type: array
+        description: Lijst van alle normale slots binnen deze periode
+        items:
+          $ref: '#/definitions/WorkflowSlot'
+      u2:
+        type: array
+        description: Lijst van alle slots voor urgente afspraken binnen deze periode
+        items:
+          $ref: '#/definitions/WorkflowSlot'
+
+  WorkflowSlot:
+    type: object
+    required:
+      - id
+      - afdeling
+      - start
+      - einde
+    properties:
+      id:
+        type: string
+        description: Uniek ID voor dit slot
+      afdeling:
+        type: string
+        description: ID van de afdeling waar dit slot bij hoort
+      start:
+        type: string
+        format: date-time
+        description: Begintijd van dit slot
+      einde:
+        type: string
+        format: date-time
+        description: Eindtijd van dit slot
+      afspraak:
+        $ref: '#/definitions/WorkflowAfspraak'
+        description: Mogelijke afspraak binnen dit slot
+
+  WorkflowAfspraak:
+    type: object
+    required:
+      - id
+      - urgentie
+      - status
+    properties:
+      id:
+        type: string
+        description: Uniek ID voor deze afspraak
+      urgentie:
+        type: string
+        description: Urgentie-code voor deze afspraak
+      aangemaakt:
+        type: string
+        format: date-time
+        description: Tijdstip waarop deze afspraak is gemaakt
+      gearriveerd:
+        type: string
+        format: date-time
+        description: Tijdstip waarop de patient is gearriveerd
+      start:
+        type: string
+        format: date-time
+        description: Tijdstip waarop deze afspraak daadwerkelijk is begonnen
+      einde:
+        type: string
+        format: date-time
+        description: Tijdstip waarop deze afspraak daadwerkelijk is begonnen
+      status:
+        type: string
+        enum:
+          - "gepland"
+          - "begonnen"
+          - "afgerond"
+          - "vertraagd"
+          - "gemist"
+        description: Status van deze afspraak
+      icpc_code:
+        type: string
+        description: Code voor de diagnose
+      icpc_uitleg:
+        type: string
+        description: Tekstuele verklaring van de ICPC code
+      postcode:
+        type: string
+        description: Postcode van de patient
+      leeftijdsgroep:
+        type: string
+        description: Leeftijdsgroep van de patient
+    example:
+      {
+        "id": "S122876",
+        "urgentie": "U4",
+        "aangemaakt": "2017-10-01T11:45:00+02:00",
+        "gearriveerd": "2017-10-01T12:06:00+02:00",
+        "start": "2017-10-01T12:17:00+02:00",
+        "einde": "2017-10-01T12:28:00+02:00",
+        "status": "afgerond",
+        "icpc_code": "L18.01",
+        "icpc_uitleg": "Fibromyalgie",
+        "postcode": "1000 AA",
+        "leeftijdsgroep": "2"
+      }
+
+
 parameters:
   afdeling:
     name: afdeling
@@ -939,6 +1349,7 @@ paths:
         - 'Scherm: Live'
         - 'Scherm: Timeline'
         - 'Scherm: Target'
+        - 'Project: ZKH'
       operationId: getSettings
       responses:
         200:
@@ -951,6 +1362,7 @@ paths:
       tags:
         - 'Service: Rooms'
         - 'Scherm: MyLive'
+        - 'Project: ZKH'
       operationId: getRooms
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -967,6 +1379,7 @@ paths:
       tags:
         - 'Service: Rooms'
         - 'Scherm: MyLive'
+        - 'Project: ZKH'
       operationId: getRoom
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -994,6 +1407,7 @@ paths:
       tags:
         - 'Service: Timeline'
         - 'Scherm: Timeline'
+        - 'Project: ZKH'
       operationId: getTimeline
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -1014,6 +1428,7 @@ paths:
         - 'Service: Prediction'
         - 'Scherm: Live'
         - 'Scherm: MyLive'
+        - 'Project: ZKH'
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/arts'
@@ -1033,6 +1448,7 @@ paths:
       tags:
         - 'Service: Prediction'
         - 'Reporting'
+        - 'Project: ZKH'
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/arts'
@@ -1069,6 +1485,7 @@ paths:
         - 'Scherm: Timeline'
         - 'Scherm: Live'
         - 'Scherm: MyLive'
+        - 'Project: ZKH'
       operationId: getSpoedPatient
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -1085,6 +1502,7 @@ paths:
       tags:
         - 'Service: Interrupt'
         - 'Scherm: Timeline'
+        - 'Project: ZKH'
       operationId: setSpoedPatient
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -1101,6 +1519,7 @@ paths:
       tags:
         - 'Service: Interrupt'
         - 'Scherm: Timeline'
+        - 'Project: ZKH'
       operationId: unsetSpoedPatient
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -1116,6 +1535,7 @@ paths:
       tags:
         - 'Service: Capacity'
         - 'Scherm: Capacity'
+        - 'Project: ZKH'
       operationId: getCapacity
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -1136,6 +1556,7 @@ paths:
       tags:
         - 'Service: Capacity'
         - 'Reporting'
+        - 'Project: ZKH'
       operationId: getCapacityReport
       parameters:
         - $ref: '#/parameters/arts'
@@ -1156,6 +1577,7 @@ paths:
       tags:
         - 'Service: Capacity'
         - 'Scherm: Capacity'
+        - 'Project: ZKH'
       operationId: getCapacitySummary
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -1183,13 +1605,13 @@ paths:
           schema:
             $ref: '#/definitions/TreatmentPointSummary'
 
-
   /v2/target/:
     get:
       summary: Geef target informatie
       tags:
         - 'Service: Target'
         - 'Scherm: Target'
+        - 'Project: ZKH'
       operationId: getTargetInfo
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -1250,3 +1672,27 @@ paths:
           schema:
             $ref: '#/definitions/Target'
 
+  /v2/workflow/overzicht/:
+    get:
+      summary: Overzicht van de huidige planning voor de HAP
+      tags:
+        - 'Service: Workflow'
+        - 'Project: HAP'
+      operationId: getOverview
+      parameters:
+        - $ref: '#/parameters/tijdstip'
+        - name: periodes
+          type: integer
+          in: query
+          description: Aantal periodes die worden getoond in het overzicht
+          default: 5
+        - name: offset
+          type: integer
+          in: query
+          description: Aantal periodes voor of achteruit t.o.v. de parameter `t`
+          default: 0
+      responses:
+        200:
+          description: Het overzicht bestaande uit `periodes` periodes
+          schema:
+            $ref: '#/definitions/WorkflowOverzicht'
