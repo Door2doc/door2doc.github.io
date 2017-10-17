@@ -1272,7 +1272,6 @@ definitions:
         "leeftijdsgroep": "2"
       }
 
-
 parameters:
   afdeling:
     name: afdeling
@@ -1671,6 +1670,17 @@ paths:
           description: Target informatie voor de opgegeven filters. De informatie is geordend op tijd en bevat maximaal de laatste 30 datapunten.
           schema:
             $ref: '#/definitions/Target'
+
+  /ws/workflow/changes:
+    get:
+      summary: Websocket voor notificaties van wijzigingen
+      tags:
+        - 'Service: Workflow'
+        - 'Project: HAP'
+      responses:
+        200:
+          description: Bij iedere wijziging wordt het ID van de laatst gewijzigde afspraak verstuurd.
+
 
   /v2/workflow/overzicht/:
     get:
