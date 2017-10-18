@@ -29,6 +29,7 @@ produces:
 tags:
   - name: "Project: ZKH"
   - name: "Project: HAP"
+  - name: "Service: Domain"
   - name: "Service: Capacity"
   - name: "Service: Interrupt"
   - name: "Service: Prediction"
@@ -755,6 +756,37 @@ definitions:
         }
       }
 
+  HAPSettings:
+    type: object
+    required:
+      - naam
+      - theme
+      - afdelingen
+    properties:
+      naam:
+        type: string
+        description: Volledige naam van deze huisartsenpost
+      theme:
+        type: string
+        description: Identifier die gebruikt wordt om het visuele thema te bepalen.
+      afdelingen:
+        type: object
+        additionalProperties:
+          type: object
+    example:
+      {
+        "naam": "Huisartsenpost",
+        "theme": "hap",
+        "afdelingen": {
+          "afd1": {
+            "naam": "Afdeling 1"
+          },
+          "afd2": {
+            "naam": "Afdeling 2"
+          }
+        }
+      }
+
   AfdelingSettingsCollection:
     type: object
     properties:
@@ -1297,6 +1329,17 @@ definitions:
       }
 
 parameters:
+  project:
+    name: project
+    type: string
+    in: query
+    required: false
+    default: "zkh"
+    description: Het project waarvoor de data opgevraagd wordt
+    enum:
+      - zkh
+      - hap
+
   afdeling:
     name: afdeling
     type: string
@@ -1362,6 +1405,25 @@ parameters:
       - "vpk"
 
 paths:
+  /v2/domains/:
+    get:
+      summary: Vraag de beschikbare domeinen op voor de huidige gebruiker
+      description: In tegenstelling tot de overige services is deze alleen beschikbaar op https://app.door2doc.net/services/v2/domains/
+      tags:
+        - 'Service: Domain'
+        - 'Project: ZKH'
+        - 'Project: HAP'
+      operationId: getDomains
+      parameters:
+        - $ref: "#/parameters/project"
+      responses:
+        200:
+          schema:
+            type: array
+            items:
+              type: string
+            example: ["demo.door2doc.net", "zkh.door2doc.net"]
+
   /v2/settings/:
     get:
       summary: Haal de settings op voor dit ziekenhuis
@@ -1373,6 +1435,18 @@ paths:
         200:
           schema:
             $ref: '#/definitions/Settings'
+
+  /v2/settings/hap/:
+    get:
+      summary: Haal de settings op voor deze huisartsenpost
+      tags:
+        - 'Service: Settings'
+        - 'Project: HAP'
+      operationId: getSettingsHAP
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/HAPSettings'
 
   /v2/rooms/:
     get:
