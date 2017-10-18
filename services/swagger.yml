@@ -29,19 +29,14 @@ produces:
 tags:
   - name: "Project: ZKH"
   - name: "Project: HAP"
-  - name: "Service: Timeline"
+  - name: "Service: Capacity"
+  - name: "Service: Interrupt"
   - name: "Service: Prediction"
   - name: "Service: Rooms"
-  - name: "Service: Target"
-  - name: "Service: Interrupt"
-  - name: "Service: Capacity"
   - name: "Service: Settings"
+  - name: "Service: Target"
+  - name: "Service: Timeline"
   - name: "Service: Workflow"
-  - name: "Scherm: Live"
-  - name: "Scherm: MyLive"
-  - name: "Scherm: Timeline"
-  - name: "Scherm: Target"
-  - name: "Scherm: Capacity"
   - name: "Reporting"
 
 definitions:
@@ -1372,11 +1367,6 @@ paths:
       summary: Haal de settings op voor dit ziekenhuis
       tags:
         - 'Service: Settings'
-        - 'Scherm: Capacity'
-        - 'Scherm: MyLive'
-        - 'Scherm: Live'
-        - 'Scherm: Timeline'
-        - 'Scherm: Target'
         - 'Project: ZKH'
       operationId: getSettings
       responses:
@@ -1389,7 +1379,6 @@ paths:
       summary: Haal een overzicht op van de bestaande kamernummers.
       tags:
         - 'Service: Rooms'
-        - 'Scherm: MyLive'
         - 'Project: ZKH'
       operationId: getRooms
       parameters:
@@ -1406,7 +1395,6 @@ paths:
       summary: Informatie over de patiënt op de opgegeven kamer.
       tags:
         - 'Service: Rooms'
-        - 'Scherm: MyLive'
         - 'Project: ZKH'
       operationId: getRoom
       parameters:
@@ -1434,7 +1422,6 @@ paths:
       summary: Haal een overzicht op van de huidige bezoekers.
       tags:
         - 'Service: Timeline'
-        - 'Scherm: Timeline'
         - 'Project: ZKH'
       operationId: getTimeline
       parameters:
@@ -1454,8 +1441,6 @@ paths:
       operationId: get_prediction
       tags:
         - 'Service: Prediction'
-        - 'Scherm: Live'
-        - 'Scherm: MyLive'
         - 'Project: ZKH'
       parameters:
         - $ref: '#/parameters/afdeling'
@@ -1510,9 +1495,6 @@ paths:
       summary: Haal de waarde van de interrupt "spoed-patient" op.
       tags:
         - 'Service: Interrupt'
-        - 'Scherm: Timeline'
-        - 'Scherm: Live'
-        - 'Scherm: MyLive'
         - 'Project: ZKH'
       operationId: getSpoedPatient
       parameters:
@@ -1529,7 +1511,6 @@ paths:
       summary: Activeer de interrupt "spoed-patient".
       tags:
         - 'Service: Interrupt'
-        - 'Scherm: Timeline'
         - 'Project: ZKH'
       operationId: setSpoedPatient
       parameters:
@@ -1546,7 +1527,6 @@ paths:
       summary: Deactiveer de interrupt "spoed-patient".
       tags:
         - 'Service: Interrupt'
-        - 'Scherm: Timeline'
         - 'Project: ZKH'
       operationId: unsetSpoedPatient
       parameters:
@@ -1562,7 +1542,6 @@ paths:
       summary: Bereken de capaciteit in behandelpunten over de opgegeven periode
       tags:
         - 'Service: Capacity'
-        - 'Scherm: Capacity'
         - 'Project: ZKH'
       operationId: getCapacity
       parameters:
@@ -1604,7 +1583,6 @@ paths:
       summary: Samenvatting van de capaciteit over het afgelopen jaar
       tags:
         - 'Service: Capacity'
-        - 'Scherm: Capacity'
         - 'Project: ZKH'
       operationId: getCapacitySummary
       parameters:
@@ -1638,7 +1616,6 @@ paths:
       summary: Geef target informatie
       tags:
         - 'Service: Target'
-        - 'Scherm: Target'
         - 'Project: ZKH'
       operationId: getTargetInfo
       parameters:
