@@ -868,11 +868,16 @@ definitions:
   WorkflowOverzicht:
     type: object
     required:
+      - t
       - start
       - einde
       - afdelingen
       - periodes
     properties:
+      t:
+        type: string
+        format: date-time
+        description: Tijdstip waarvoor dit overzicht is aangevraagd
       start:
         type: string
         format: date-time
@@ -893,6 +898,7 @@ definitions:
           $ref: '#/definitions/WorkflowPeriode'
     example:
       {
+        "t": "2017-10-18T13:32:00+02:00",
         "start": "2017-10-01T12:00:00+02:00",
         "einde": "2017-10-01T13:00:00+02:00",
         "afdelingen": [
@@ -924,43 +930,50 @@ definitions:
                 "id": "alph/25114200/0",
                 "afdeling": "alph",
                 "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T12:15:00+02:00"
+                "einde": "2017-10-01T12:15:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "alph/25114200/1",
                 "afdeling": "alph",
                 "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T12:15:00+02:00"
+                "einde": "2017-10-01T12:15:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "ldd/25114200/0",
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T12:15:00+02:00"
+                "einde": "2017-10-01T12:15:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "ldd/25114200/1",
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T12:15:00+02:00"
+                "einde": "2017-10-01T12:15:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "alph/25114215/0",
                 "afdeling": "alph",
                 "start": "2017-10-01T12:15:00+02:00",
-                "einde": "2017-10-01T12:30:00+02:00"
+                "einde": "2017-10-01T12:30:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "alph/25114215/1",
                 "afdeling": "alph",
                 "start": "2017-10-01T12:15:00+02:00",
-                "einde": "2017-10-01T12:30:00+02:00"
+                "einde": "2017-10-01T12:30:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "ldd/25114215/0",
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:15:00+02:00",
                 "einde": "2017-10-01T12:30:00+02:00",
+                "achterwacht": false,
                 "afspraak": {
                   "id": "S122876",
                   "urgentie": "U4",
@@ -979,13 +992,15 @@ definitions:
                 "id": "ldd/25114215/1",
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:15:00+02:00",
-                "einde": "2017-10-01T12:30:00+02:00"
+                "einde": "2017-10-01T12:30:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "alph/25114230/0",
                 "afdeling": "alph",
                 "start": "2017-10-01T12:30:00+02:00",
                 "einde": "2017-10-01T12:45:00+02:00",
+                "achterwacht": false,
                 "afspraak": {
                   "id": "S934280",
                   "urgentie": "U3",
@@ -1004,25 +1019,29 @@ definitions:
                 "id": "alph/25114230/1",
                 "afdeling": "alph",
                 "start": "2017-10-01T12:30:00+02:00",
-                "einde": "2017-10-01T12:45:00+02:00"
+                "einde": "2017-10-01T12:45:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "ldd/25114230/0",
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:30:00+02:00",
-                "einde": "2017-10-01T12:45:00+02:00"
+                "einde": "2017-10-01T12:45:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "ldd/25114230/1",
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:30:00+02:00",
-                "einde": "2017-10-01T12:45:00+02:00"
+                "einde": "2017-10-01T12:45:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "alph/25114245/0",
                 "afdeling": "alph",
                 "start": "2017-10-01T12:45:00+02:00",
                 "einde": "2017-10-01T13:00:00+02:00",
+                "achterwacht": false,
                 "afspraak": {
                   "id": "S980584",
                   "urgentie": "U3",
@@ -1042,6 +1061,7 @@ definitions:
                 "afdeling": "alph",
                 "start": "2017-10-01T12:45:00+02:00",
                 "einde": "2017-10-01T13:00:00+02:00",
+                "achterwacht": false,
                 "afspraak": {
                   "id": "S  7727",
                   "urgentie": "U4",
@@ -1060,13 +1080,15 @@ definitions:
                 "id": "ldd/25114245/0",
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:45:00+02:00",
-                "einde": "2017-10-01T13:00:00+02:00"
+                "einde": "2017-10-01T13:00:00+02:00",
+                "achterwacht": false
               },
               {
                 "id": "ldd/25114245/1",
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:45:00+02:00",
                 "einde": "2017-10-01T13:00:00+02:00",
+                "achterwacht": false,
                 "afspraak": {
                   "id": "S 86785",
                   "urgentie": "U4",
@@ -1088,6 +1110,7 @@ definitions:
                 "afdeling": "alph",
                 "start": "2017-10-01T12:00:00+02:00",
                 "einde": "2017-10-01T13:00:00+02:00",
+                "achterwacht": false,
                 "afspraak": {
                   "id": "S764929",
                   "urgentie": "U2",
@@ -1107,6 +1130,7 @@ definitions:
                 "afdeling": "ldd",
                 "start": "2017-10-01T12:00:00+02:00",
                 "einde": "2017-10-01T13:00:00+02:00",
+                "achterwacht": false,
                 "afspraak": {
                   "id": "S915097",
                   "urgentie": "U2",
@@ -1188,6 +1212,7 @@ definitions:
       - afdeling
       - start
       - einde
+      - achterwacht
     properties:
       id:
         type: string
@@ -1203,6 +1228,10 @@ definitions:
         type: string
         format: date-time
         description: Eindtijd van dit slot
+      achterwacht:
+        type: boolean
+        description: true voor niet-reguliere slots
+
       afspraak:
         $ref: '#/definitions/WorkflowAfspraak'
         description: Mogelijke afspraak binnen dit slot
