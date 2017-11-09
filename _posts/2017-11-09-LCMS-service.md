@@ -14,7 +14,7 @@ Via de beveiligde koppeling heeft het ziekenhuis doorlopend inzicht in de actuel
 
 Door2doc neemt de informatie van het ziekenhuis tevens op in een masterlink voor de GHOR, zodat het Hoofd Informatie (HIN) de informatie van _alle aangesloten ziekenhuizen_ in een keer direct in LCMS beschikbaar kan maken.
 
-De informatie die Door2doc namens het ziekenhuis aanlevert is in LCMS zichtbaar via de kaartfunctie LCMS Plot.
+De informatie die Door2doc namens het ziekenhuis aanlevert, is in LCMS zichtbaar via de kaartfunctie LCMS Plot.
 
 ### Jaarlijkse kosten LCMS-service
 * De kosten per jaar per ziekenhuisorganisatie zijn € 5.450,- (inbegrepen indien het ziekenhuis reeds een abonnement op onze [cloudservice SEH/EHH](https://docs.door2doc.com/2017-07-26/prijsindicatie) heeft)
