@@ -8,14 +8,12 @@ comments: false
 share: false
 ---
 
-Door2doc levert via haar koppeling met het ZIS naar wens namens het ziekenhuis automatisch realtime capaciteitsinformatie aan voor het LCMS (landelijk crisis management systeem). Dit betreft informatie over het actuele en het totale aantal beschikbare behandelkamers/bedden op de SEH en de IC. De informatie komt automatisch tot stand op basis van de registratie in het ZIS, er zijn geen extra handelingen nodig.
+In geval zich een crisis voordoet, is actuele informatie van groot belang voor een optimale coördinatie in de keten en de regio. Met de LCMS-service levert Door2doc namens het ziekenhuis realtime capaciteitsinformatie aan voor het LCMS (landelijk crisis management systeem) via onze koppeling met het ZIS. Het betreft informatie over het aantal actueel beschikbare behandelkamers/bedden op de SEH en de IC, die gebruikt kan worden voor optimale verdeling van slachtoffers. De aanlevering van de informatie gebeurt automatisch en doorlopend op basis van de registratie in het ZIS, er zijn geen extra handelingen nodig.
 
-Via de koppeling heeft het ziekenhuis doorlopend de capinformatie tot haar beschikking in het LCMS. De infomraite blijft afegschermd voor zkh alleen totdat In het geval zich een crisis voordoet. He ziekenhuis besluiten deze informatie ook naar extern beschikbaar te maken voor andere organisaties en coordinatoren in de keten en regio. Daarnaast krijgt de HON van de GHOR de mogelijkheid om in deze situatie de informatie voor alle deelnemende ziekenhuizen beschikbaar te maken.
+Via de beveiligde koppeling heeft het ziekenhuis doorlopend inzicht in de actuele capaciteitsinformatie van de SEH en IC. Op deze manier wordt zo veel mogelijk gegarandeerd dat de informatie juist is en direct beschikaar in geval van crisissituaties. De informatie is standaard alleen toegankelijk voor het ziekenhuis. Bij een crisis stelt het ziekenhuis via LCMS de informatie extern beschikbaar voor coördinatie met andere organisaties in de keten en regio. Daarnaast krijgt het hoofd informatie (HIN) van de GHOR de mogelijkheid om in deze situatie de informatie voor alle ziekenhuizen aangesloten op de LCMS-service beschikbaar te maken.
 
 De informatie d2d namens zikenehuis is in LCMS zichtbaar via de kaartfunctie LCMS Plot.
 
-###Jaarlijkse kosten LCMS-service
-* Kosten per jaar per ziekenhuisorganisatie: € 5.450,-
-
-De kosten voor de LCMS-service zijn inbegrepen indien het ziekenhuis een abonnement op de [link!!] cloudservice heeft.
+### Jaarlijkse kosten LCMS-service
+* De kosten per jaar per ziekenhuisorganisatie zijn: € 5.450,- (inbegrepen indien het ziekenhuis reeds een abonnement op onze [link!!] cloudservice SEH/EHH heeft)
 
