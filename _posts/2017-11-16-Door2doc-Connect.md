@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "LCMS-service: automatische capaciteitsinformatie voor coördinatie bij crisis"
+title: "Door2doc Connect: automatische capaciteitsinformatie voor acute keten"
 description: ""
-date: 2017-11-09
+date: 2017-11-16
 tags: []
 comments: false
 share: false
