@@ -17,7 +17,7 @@ Door2doc neemt de informatie van het ziekenhuis tevens op in een masterlink voor
 De informatie die Door2doc namens het ziekenhuis aanlevert, is in LCMS zichtbaar via de kaartfunctie LCMS Plot.
 
 ### Jaarlijkse abonnementskosten Door2doc Connect
-* De abonnementskosten per jaar per ziekenhuisorganisatie zijn € 825,-
+* De abonnementskosten per jaar per ziekenhuisorganisatie zijn **€ 825,-**
 * Eenmalige aansluitkosten € 3.850,- (inclusief abonnement eerste jaar)
 * Door2doc Connect is inbegrepen indien het ziekenhuis reeds een abonnement op [Door2doc SEH/EHH](http://docs.door2doc.com/2017-11-16/prijsindicatie) heeft
 
