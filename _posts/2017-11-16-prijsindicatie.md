@@ -8,7 +8,7 @@ comments: false
 share: false
 ---
 
-Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van Door2doc voor de Spoedeisende Hulp (SEH) en Eerste Harthulp (EHH).
+Bedankt voor uw belangstelling voor de [informatiediensten](http://docs.door2doc.com/2017-11-17/Door2doc/) van Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van Door2doc voor de Spoedeisende Hulp (SEH) en Eerste Harthulp (EHH).
 
 Wij bieden twee versies aan van ons abonnement voor de SEH en EHH.
 * Een abonnement met alleen informatie voor patiënten. Namens het ziekenhuis geven wij patiënten realtime informatie over de verwachte wacht- en verblijftijden op de afdeling, te zien in de wachtkamer en de behandelkamers via beeldschermen van het ziekenhuis (*Live en myLive*). Patiënten zien tevens berichten met algemene uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte en eventuele verstoringen.
