@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Door2doc Connect: automatische capaciteitsinformatie voor acute keten"
+title: "Door2doc Connect: capaciteitsinformatie acute keten"
 description: ""
 date: 2017-11-16
 tags: []
