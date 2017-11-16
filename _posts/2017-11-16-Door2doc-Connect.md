@@ -16,6 +16,7 @@ Door2doc neemt de informatie van het ziekenhuis tevens op in een masterlink voor
 
 De informatie die Door2doc namens het ziekenhuis aanlevert, is in LCMS zichtbaar via de kaartfunctie LCMS Plot.
 
-### Jaarlijkse kosten LCMS-service
-* De kosten per jaar per ziekenhuisorganisatie zijn € 5.450,- (inbegrepen indien het ziekenhuis reeds een abonnement op onze [cloudservice SEH/EHH](http://docs.door2doc.com/2017-07-26/prijsindicatie) heeft)
+### Jaarlijkse kosten Door2doc Connect
+* De kosten per jaar per ziekenhuisorganisatie zijn € 825,-. Eenmalige aansluitkosten € 3850,-.
+* Door2doc Connect is inbegrepen indien het ziekenhuis reeds een abonnement op [Door2doc SEH/EHH](http://docs.door2doc.com/2017-11-16/prijsindicatie) heeft
 
