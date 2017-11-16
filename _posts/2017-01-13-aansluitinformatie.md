@@ -1,15 +1,19 @@
 ---
 layout: post
-title: "Aansluitinformatie cloudservice"
+title: "Aansluitinformatie Door2doc"
 description: ""
 date: 2017-01-13
 tags: []
 comments: false
 share: false
 ---
-Deze pagina geeft een overzicht van de benodigde activiteiten om uw organisatie aan te sluiten op onze cloud, inclusief de bijbehorende verantwoordelijkheid. 
+Door2doc is een Saas-product. Wij hebben alleen een doorlopende datastroom nodig om realtime informatie voor patienten en professionals in het ziekenhuis mogelijk te maken. Er is geen installatie vereist.
+
+Door2doc gebruikt uitsluitend informatie over bezoeken op de SEH/EHH, wij verwerken geen identificerende informatie over patiënten. [Technische informatie dataprotocol Door2doc](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/).
 
 De totale benodigde tijd om de aansluiting te realiseren bedraagt enkele weken, afhankelijk van de beschikbaarheid bij de afdeling ICT in uw organisatie.
+
+Deze pagina geeft een overzicht van de aansluitactiviteiten voor Door2doc SEH/EHH, inclusief de bijbehorende verantwoordelijkheid.
 
 | Activiteit | Verantwoordelijk |
 |:--------|:-------:|
@@ -22,5 +26,5 @@ De totale benodigde tijd om de aansluiting te realiseren bedraagt enkele weken, 
 | Creëren voorspellende modellen wacht- en verblijftijden | Door2doc |
 | Aansluiting accorderen | Opdrachtgever |
 
-[Technische informatie dataprotocol Door2doc](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/). Door2doc gebruikt uitsluitend informatie over bezoeken op de SEH/EHH, wij verwerken geen identificerende informatie over patiënten.
+
 
