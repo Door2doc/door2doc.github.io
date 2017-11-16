@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Door2doc Connect: capaciteit acute keten"
+title: "Door2doc Connect: capaciteit in de acute keten"
 description: ""
 date: 2017-11-16
 tags: []
