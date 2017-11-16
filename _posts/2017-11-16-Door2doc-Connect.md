@@ -21,7 +21,7 @@ De informatie die Door2doc namens het ziekenhuis aanlevert, is in LCMS zichtbaar
 Alle EPD's iom ICT zkh.
 Binnen twee weken.
 
-### Jaarlijkse abonnementskosten Door2doc Connect
+#### Jaarlijkse abonnementskosten Door2doc Connect
 * De abonnementskosten per jaar per ziekenhuisorganisatie zijn **€ 825,-**
 * Eenmalige aansluitkosten € 3.850,- (inclusief abonnement eerste jaar)
-* Door2doc Connect is inbegrepen indien het ziekenhuis reeds een abonnement op [Door2doc SEH/EHH](http://docs.door2doc.com/2017-11-16/prijsindicatie) heeft
+* Door2doc Connect is inbegrepen indien het ziekenhuis een abonnement op [Door2doc SEH/EHH](http://docs.door2doc.com/2017-11-16/prijsindicatie) heeft
