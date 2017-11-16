@@ -2,7 +2,7 @@
 layout: post
 title: "Aansluitinformatie Door2doc"
 description: ""
-date: 2017-01-13
+date: 2017-11-16
 tags: []
 comments: false
 share: false
