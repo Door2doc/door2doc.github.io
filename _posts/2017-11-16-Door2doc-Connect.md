@@ -14,7 +14,7 @@ Door2doc Connect geeft het ziekenhuis de beschikking over een continue realtime 
 
 Door2doc Connect werkt op alle bestaande ZIS/EPD-systemen, steeds in overleg met uw afdeling ICT. Afhankelijk van de medewerking van uw organisatie is realisatie van de aansluiting op Door2doc Connect binnen twee weken mogelijk.
 
-#### Jaarlijkse abonnementskosten Door2doc Connect
-* De abonnementskosten per jaar per ziekenhuisorganisatie zijn **€ 825,-**
+#### Abonnementskosten Door2doc Connect
+* De jaarlijkse abonnementskosten per ziekenhuisorganisatie zijn **€ 825,-**
 * Eenmalige aansluitkosten € 3.850,- (inclusief abonnement eerste jaar)
 * Abonnement op Door2doc Connect is inbegrepen indien het ziekenhuis een abonnement op [Door2doc SEH/EHH](http://docs.door2doc.com/2017-11-16/prijsindicatie) heeft
