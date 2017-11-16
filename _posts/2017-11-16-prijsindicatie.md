@@ -1,22 +1,22 @@
 ---
 layout: post
-title: "Prijsindicatie cloudservice SEH en EHH"
+title: "Prijsindicatie Door2doc SEH/EHH"
 description: ""
-date: 2017-07-26
+date: 2017-11-16
 tags: []
 comments: false
 share: false
 ---
 
-Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van onze cloudservice voor de Spoedeisende Hulp (SEH) en Eerste Harthulp (EHH). De abonnementsprijs is gebaseerd op het totaal aantal bezoeken per kalenderjaar op beide afdelingen en voor alle locaties samen van uw organisatie(s). Bij grotere aantallen geldt een korting (vanaf 20.000 bezoeken en nogmaals vanaf 40.000).
+Bedankt voor uw belangstelling voor Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van Door2doc voor de Spoedeisende Hulp (SEH) en Eerste Harthulp (EHH).
 
-Wij rekenen eenmalig kosten voor de aansluiting op onze cloud. Bij de aansluiting is een evaluatieperiode van vier maanden inbegrepen. Indien u tevreden bent en na deze periode het gebruik van de cloudservice wilt voortzetten, sluiten wij een meerjarige Saas-overeenkomst af (abonnement met maandelijkse facturatie). Updates en onderhoud van onze cloudservice zijn altijd inbegrepen, onze software is voortdurend in ontwikkeling.
-
-Wij bieden twee versies aan van ons abonnement op de cloudservice SEH en EHH.
+Wij bieden twee versies aan van ons abonnement voor de SEH en EHH.
 * Een abonnement met alleen informatie voor patiënten. Namens het ziekenhuis geven wij patiënten realtime informatie over de verwachte wacht- en verblijftijden op de afdeling, te zien in de wachtkamer en de behandelkamers via beeldschermen van het ziekenhuis (*Live en myLive*). Patiënten zien tevens berichten met algemene uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte en eventuele verstoringen.
 * Een abonnement met de informatie voor patiënten én aanvullende informatie voor professionals in het ziekenhuis (artsen, verpleegkundigen, managers). Hiermee hebben zij realtime grip op de doorstroom (*Timeline*) en krijgen zij inzicht in de actuele prestaties (*Target*) en een optimale inzet van verpleegkundigen en artsen (*Capacity*).
 
-Onze cloudservice is voor alle professionals overal binnen het ziekenhuis te benaderen via onze gratis app voor mobiel en tablet (Apple/Android) en de webbrowser op de pc. Tevens ontsluiten wij gerichte informatie naar wens kosteloos voor uw ziekenhuiswebsite en landelijke crisisinformatiediensten [zoals LCMS](http://docs.door2doc.com/2017-11-09/LCMS-service).
+Door2doc SEH/EHH is voor alle professionals overal binnen het ziekenhuis te benaderen via onze gratis app voor mobiel en tablet ([Apple](https://itunes.apple.com/us/app/door2doc-grip-op-wachttijd/id1237548513?l=nl&ls=1&mt=8)/[Android](https://play.google.com/store/apps/details?id=com.door2doc.app)) en de webbrowser op de pc. Tevens ontsluiten wij gerichte informatie naar wens kosteloos voor uw ziekenhuiswebsite en landelijke crisisinformatiediensten [via Door2doc Connect](http://docs.door2doc.com/2017-11-09/LCMS-service).
+
+De abonnementsprijs is gebaseerd op het totaal aantal bezoeken per kalenderjaar op beide afdelingen en voor alle locaties samen van uw organisatie(s). Bij grotere aantallen geldt een korting (vanaf 20.000 bezoeken en nogmaals vanaf 40.000). Wij rekenen eenmalig kosten voor de [aansluiting](http://docs.door2doc.com/2017-11-16/aansluitinformatie/) op onze cloud. Bij de aansluitkosten is een evaluatieperiode van vier maanden inbegrepen voor het abonnement. Indien u tevreden bent en na deze periode het gebruik van Door2doc SEH/EHH wilt voortzetten, sluiten wij een meerjarige Saas-overeenkomst af voor het abonnement (maandelijkse facturatie). Updates en onderhoud van onze cloudservice zijn altijd inbegrepen, onze software is voortdurend in ontwikkeling.
 
 #### Voer gegevens in van uw organisatie(s)
 <p>
