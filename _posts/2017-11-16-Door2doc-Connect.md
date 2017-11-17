@@ -12,7 +12,7 @@ Actuele informatie is van groot belang voor een optimale coördinatie in de kete
 
 Door2doc Connect geeft het ziekenhuis de beschikking over een continue realtime informatiestroom, die automatisch verloopt op basis van de registratie in het ZIS/EPD. Er zijn dus geen extra handelingen nodig. Op deze manier wordt zo veel mogelijk gegarandeerd dat de informatie juist is en direct beschikbaar, bijvoorbeeld voor een optimale verdeling van slachtoffers in geval van een crisissituatie.
 
-Door2doc Connect werkt op alle bestaande ZIS/EPD-systemen, steeds in overleg met uw afdeling ICT. De aansluiting op Door2doc Connect duurt ongeveer twee weken.
+Door2doc Connect werkt op alle bestaande ZIS/EPD-systemen, steeds in overleg met uw afdeling ICT. De aansluiting op Door2doc Connect duurt enkele weken.
 
 #### Abonnementskosten Door2doc Connect
 * Jaarlijkse abonnementskosten per ziekenhuisorganisatie zijn **€ 825,-**
