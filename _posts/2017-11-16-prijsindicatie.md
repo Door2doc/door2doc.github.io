@@ -68,7 +68,7 @@ De abonnementsprijs is gebaseerd op het totaal aantal bezoeken per kalenderjaar 
 //  reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
     function calculateCosts(numVisitors, numLocations, ab) {
    
-      var rateA = .65,
+      var rateA = .55,
           rateAB = .85,
           price = 0,
           feeBasicA = 7450,
