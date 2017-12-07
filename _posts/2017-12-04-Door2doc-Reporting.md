@@ -22,6 +22,7 @@ Op maat infobehoefte uw ziekenhuis, op basis van de informatie die in onze cloud
 Training anayleses naar wens, gezamenlijk inzichten trends. Visueel. 
 
 #### Abonnementskosten Door2doc Reporting
-* De abonnementskosten voor één gebruiker van het ziekenhuis zijn **€ 100,-** per maand (€ 1.200,- per jaar), daarna voor iedere volgende gebruiker € 50,- per maand (€ 600,- per jaar)
+* De abonnementskosten voor één gebruiker van het ziekenhuis zijn **€ 100,-** per maand (€ 1.200,- per jaar)
+* Daarna voor iedere volgende gebruiker € 50,- per maand (€ 600,- per jaar)
 * Eenmalige aansluit- en inrichtingskosten inclusief een trainingssessie: € 5.500,-
 * Deze dienst is alleen beschikbaar in combinatie met een abonnement op [Door2doc SEH/EHH](http://docs.door2doc.com/2017-12-07/prijsindicatie)
