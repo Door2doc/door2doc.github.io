@@ -11,15 +11,14 @@ In Door2doc SEH/EHH kunnen professionals in het ziekenhuis doorlopend de actuele
 
 Door2doc Reporting is altijd up-to-date en overal beschikbaar, ook buiten het ziekenhuis. Dit realiseren we door de gegevens in onze cloud te koppelen met [Tableau Online](https://www.tableau.com/online/). Via de webpagina en app van Tableau Online heeft u overal toegang tot de managementinformatie. Tableau staat bekend om de prachtige visuele inzichten die eenvoudig in allerlei bronnen van data te maken zijn. Wij gebruiken het zelf veelvuldig in onze analyses.
 
-Op maat infobehoefte uw ziekenhuis, op basis van de informatie die in onze cloud beschikbaar is. obv rt beschikabee data in onze cloud. Denk aan:
-* Seizoenspatronen, trends weekdag. 
-* aantallemn doorlooptijden
-* maandelijkse rapportages
-* gemidd pct en normen
-* capaciteitsinformatie
-* herkomst bestemming ingklachten
+Wij maken rapportages op maat naar gelang de informatiebehoefte van uw ziekenhuis op basis van de gegevens die in onze cloud beschikbaar zijn. Denk hierbij aan:
+* aantallen, wachttijden en verblijftijden
+* maandelijkse rapportages per specialisme, ontslagbestemming, etc.
+* gemiddelden, percentielen en percentages binnen norm
+* capaciteitsinformatie 
+* seizoenspatronen en andere trends
 
-Training anayleses naar wens, gezamenlijk inzichten trends. Visueel. 
+Uiteraard zijn we u ook graag van dienst bij meer specifieke analyses en trainingen om zelf visuele rapportages aan te maken en inzichten in de data op te doen.
 
 #### Abonnementskosten Door2doc Reporting
 * De abonnementskosten voor één gebruiker van het ziekenhuis zijn **€ 100,-** per maand (€ 1.200,- per jaar)
