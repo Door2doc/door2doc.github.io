@@ -28,7 +28,7 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
       <label for="num-visitors">Aantal bezoeken SEH en EHH per jaar:</label>
       <input type="number" id="num-visitors" name="num-visitors">
     </div>
-
+  
     <div class="formfield-container textfield-container">
       <label for="num-visitors">Aantal locaties:</label>
       <input type="number" id="num-locations" name="num-locations">
@@ -36,11 +36,14 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
     <div class="formfield-container checkbox-container">
       <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief informatie voor professionals (Timeline, Target, Capacity)</label>
     </div>
+    <div class="formfield-container checkbox-container">
+      <label><input type="checkbox" id="checkbox-online-info" name="checkbox-online-info">Inclusief online managementinformatie, persoonlijk toegankelijk (twee gebruikers)</label>
+    </div>
     <div class="formfield-container button-container">
       <input type="button" value="Bekijk indicatie" onclick="showCosts()"/>
     </div>
   </form>
-
+  
   <div id="kosten-indicatie-result">
     <div class="result-container">
       <span class="label">Indicatie abonnementskosten: </span>
@@ -49,97 +52,107 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
       <span class="result" id="result"></span>
       <span> per jaar)</span>
     </div>
-
+  
     <div class="result-container">
       <span class="label">Eenmalige aansluitkosten inclusief vier maanden evaluatieperiode: </span>
       <span class="result" id="connectionFee"></span>
     </div>
   </div>
-
-<script>
-    document.getElementById("kosten-indicatie").addEventListener("keypress", function(ev) {
-      if (ev.keyCode == 13) {
-        showCosts();
+  
+  <script>
+      document.getElementById("kosten-indicatie").addEventListener("keypress", function(ev) {
+          if (ev.keyCode == 13) {
+              showCosts();
+          }
+      });
+  
+      function numberWithCommas(x) {
+          return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       }
-    });
-    
-    function numberWithCommas(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-    
-//  reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
-    function calculateCosts(numVisitors, numLocations, ab) {
-   
-      var rateA = .55,
-          rateAB = .85,
-          price = 0,
-          feeBasicA = 7450,
-          feeBasicAB = 12450,
-          feeNextA = 5000,
-          feeNextAB = 6000,
-          connectionFee = 0,
-          limitVisitors_1 = 20000,
-          limitVisitors_2 = 40000,
-          ab_included = ab,
-          rate = ab_included ? rateAB : rateA;
+  
+      //  reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
+      function calculateCosts(numVisitors, numLocations, ab, oi) {
+  
+          var rateA = .55,
+              rateAB = .85,
+              price = 0,
+              feeBasicA = 7450,
+              feeBasicAB = 12450,
+              feeNextA = 5000,
+              feeNextAB = 6000,
+              feeOI = 1800,
+              connectionFee = 0,
+              connectionFeeOI = 5500,
+              limitVisitors_1 = 20000,
+              limitVisitors_2 = 40000,
+              ab_included = ab,
+              oi_included = oi,
+              rate = ab_included ? rateAB : rateA;
           feeBasic = ab_included ? feeBasicAB : feeBasicA;
           feeNext = ab_included ? feeNextAB : feeNextA;
-
-
-      if ( numVisitors > limitVisitors_2 ){
-
-        price = parseInt(numVisitors - limitVisitors_2) * rate * (1-0.4) + limitVisitors_1 * rate * (1.8);
-
-      } else if (numVisitors > limitVisitors_1) {
-
-        price = parseInt(numVisitors - limitVisitors_1) * rate * (1-0.2) + limitVisitors_1 * rate;
-
-      } else {
-
-        price = numVisitors * rate;
-
+  
+  
+  
+          if ( numVisitors > limitVisitors_2 ){
+  
+              price = parseInt(numVisitors - limitVisitors_2) * rate * (1-0.4) + limitVisitors_1 * rate * (1.8);
+  
+          } else if (numVisitors > limitVisitors_1) {
+  
+              price = parseInt(numVisitors - limitVisitors_1) * rate * (1-0.2) + limitVisitors_1 * rate;
+  
+          } else {
+  
+              price = numVisitors * rate;
+  
+          }
+  
+          if(numLocations > 1) {
+  
+              connectionFee = feeBasic + (numLocations - 1) * feeNext;
+  
+          } else {
+  
+              connectionFee = feeBasic;
+  
+          }
+  
+          if(oi_included) {
+              price += feeOI;
+              connectionFee += connectionFeeOI;
+          }
+  
+          return ({"price":price, "connectionFee":connectionFee});
       }
-
-      if(numLocations > 1) {
-
-        connectionFee = feeBasic + (numLocations - 1) * feeNext;
-
-      } else {
-
-        connectionFee = feeBasic;
-
+  
+      function showCosts() {
+  
+          var inputVisitors = parseInt(document.getElementById('num-visitors').value),
+              inputLocations = parseInt(document.getElementById('num-locations').value),
+              ab_included = Boolean(document.getElementById('checkbox-ab').checked),
+              online_info_included = Boolean(document.getElementById('checkbox-online-info').checked);
+  
+          if (inputVisitors == "") {
+              inputVisitors = 0;
+          }
+  
+          if (inputLocations == "") {
+              inputLocations = 0;
+          }
+  
+          var result = calculateCosts(parseInt(inputVisitors), parseInt(inputLocations), ab_included, online_info_included),
+              unit = '€',
+              cents = ',-';
+  
+          document.getElementById('result').textContent        = unit + " " + numberWithCommas(parseInt(result.price)) + cents;
+          document.getElementById('resultMonth').textContent   = unit + " " + numberWithCommas(parseInt(result.price / 12)) + cents;
+          document.getElementById('connectionFee').textContent  = unit + " " + numberWithCommas(parseInt(result.connectionFee)) + cents;
+  
+          var resultContainer = document.getElementById('kosten-indicatie-result');
+  
+          if (resultContainer) {
+              resultContainer.className = 'show';
+          }
       }
-
-      return ({"price":price, "connectionFee":connectionFee});
-    }    
-
-    function showCosts() {
-
-      var inputVisitors = parseInt(document.getElementById('num-visitors').value),
-          inputLocations = parseInt(document.getElementById('num-locations').value),
-          ab_included = Boolean(document.getElementById('checkbox-ab').checked);
-
-      if (inputVisitors == "") {
-        inputVisitors = 0;
-      }
-
-      if (inputLocations == "") {
-        inputLocations = 0;
-      }
-      
-      var result = calculateCosts(parseInt(inputVisitors), parseInt(inputLocations), ab_included),
-          unit = '€',
-          cents = ',-';
-      
-        document.getElementById('result').textContent        = unit + " " + numberWithCommas(parseInt(result.price)) + cents;
-        document.getElementById('resultMonth').textContent   = unit + " " + numberWithCommas(parseInt(result.price / 12)) + cents;
-        document.getElementById('connectionFee').textContent  = unit + " " + numberWithCommas(parseInt(result.connectionFee)) + cents;
-
-        var resultContainer = document.getElementById('kosten-indicatie-result');
-      
-        if (resultContainer) {
-          resultContainer.className = 'show';
-        }
-    }
-    
-</script>
+  
+  </script>
