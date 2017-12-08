@@ -37,7 +37,7 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
       <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief informatie voor professionals (Timeline, Target, Capacity)</label>
     </div>
     <div class="formfield-container checkbox-container">
-      <label><input type="checkbox" id="checkbox-online-info" name="checkbox-online-info">Inclusief online managementinformatie (twee gebruikers)</label>
+      <label><input type="checkbox" id="checkbox-online-info" name="checkbox-online-info">Inclusief online managementinformatie (toegang voor twee gebruikers)</label>
     </div>
     <div class="formfield-container button-container">
       <input type="button" value="Bekijk indicatie" onclick="showCosts()"/>
