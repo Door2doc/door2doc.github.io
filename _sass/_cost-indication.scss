@@ -49,6 +49,12 @@
         margin-left: 155px;
       }
     }
+
+    &.checkbox-container {
+      + .checkbox-container {
+        margin-top: -1em;
+      }
+    }
   }
 }
 
