@@ -15,8 +15,8 @@ Wij maken rapportages op maat naar gelang de informatiebehoefte van uw ziekenhui
 * aantallen, wachttijden en verblijftijden
 * maandelijkse rapportages per specialisme, ontslagbestemming, etc.
 * gemiddelden, percentielen en percentages binnen normen
-* capaciteitsinformatie
-* seizoenspatronen en andere trends
+* capaciteitsbehoefte verpleegkundigen, met seizoenspatronen en andere trends
+* idem voor behandelkamers
 
 Uiteraard zijn we u ook graag van dienst bij meer specifieke analyses en met trainingen om zelf visuele rapportages aan te maken en meer inzicht in de data te verwerven.
 
