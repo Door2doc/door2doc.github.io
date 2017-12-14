@@ -46,9 +46,8 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
   
   <div id="kosten-indicatie-result">
     <div class="result-container">
-      <span class="label">Indicatie abonnementskosten: </span>
+      <span class="label">Indicatie abonnementskosten per maand: </span>
       <strong class="result" id="resultMonth"></strong>
-      <span> per maand (</span>
       <span class="result" id="result"></span>
       <span> per jaar)</span>
     </div>
