@@ -26,15 +26,12 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
   <form action="" id="kosten-indicatie">
     <div class="formfield-container textfield-container">
       <label for="num-visitors">Aantal bezoeken SEH en EHH per jaar:</label>
-      <input type="number" id="num-visitors" name="num-visitors">
+      <input type="number" id="num-visitors" name="num-visitors" value="">
     </div>
   
     <div class="formfield-container textfield-container">
       <label for="num-visitors">Aantal locaties:</label>
-      <input type="number" id="num-locations" name="num-locations">
-    </div>
-    <div class="formfield-container checkbox-container">
-      <label><input type="checkbox" id="checkbox-ab" name="checkbox-ab">Inclusief informatie voor professionals (Timeline, Target, Capacity)</label>
+      <input type="number" id="num-locations" name="num-locations" value="">
     </div>
     <div class="formfield-container checkbox-container">
       <label><input type="checkbox" id="checkbox-online-info" name="checkbox-online-info">Inclusief online managementinformatie (toegang voor twee gebruikers)</label>
@@ -46,16 +43,9 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
   
   <div id="kosten-indicatie-result">
     <div class="result-container">
-      <span class="label">Indicatie abonnementskosten: </span>
-      <strong class="result" id="resultMonth"></strong>
-      <span> per maand (</span>
-      <span class="result" id="result"></span>
-      <span> per jaar)</span>
-    </div>
-  
-    <div class="result-container">
-      <span class="label">Eenmalige aansluitkosten inclusief vier maanden evaluatieperiode: </span>
-      <span class="result" id="connectionFee"></span>
+      <span>Prijsindicatie Door2doc SEH/EHH: </span><strong class="result" id="resultTotalMonth"></strong> per maand.<br>
+      <span>- Abonnementskosten </span><span class="result" id="resultMonth"></span><span> per maand (</span><span class="result" id="result"></span><span> per jaar)</span><br>
+      <span>- Aansluitkosten </span><span class="result" id="connectionFeeMonth"></span><span>per maand (</span><span class="result" id="connectionFee"></span><span> in totaal) bij contractduur van 4 jaar.</span>
     </div>
   </div>
   
@@ -71,25 +61,18 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
       }
   
       //  reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
-      function calculateCosts(numVisitors, numLocations, ab, oi) {
+      function calculateCosts(numVisitors, numLocations, oi) {
   
-          var rateA = .55,
-              rateAB = .85,
-              price = 0,
-              feeBasicA = 7450,
-              feeBasicAB = 12450,
-              feeNextA = 5000,
-              feeNextAB = 6000,
+          var rate = .75,
+              feeBasic = 12450,
+              feeNext = 6000,
               feeOI = 1800,
+              price = 0,
               connectionFee = 0,
               connectionFeeOI = 5500,
               limitVisitors_1 = 20000,
               limitVisitors_2 = 40000,
-              ab_included = ab,
-              oi_included = oi,
-              rate = ab_included ? rateAB : rateA;
-          feeBasic = ab_included ? feeBasicAB : feeBasicA;
-          feeNext = ab_included ? feeNextAB : feeNextA;
+              oi_included = oi;
   
   
   
@@ -129,7 +112,6 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
   
           var inputVisitors = parseInt(document.getElementById('num-visitors').value),
               inputLocations = parseInt(document.getElementById('num-locations').value),
-              ab_included = Boolean(document.getElementById('checkbox-ab').checked),
               online_info_included = Boolean(document.getElementById('checkbox-online-info').checked);
   
           if (inputVisitors == "") {
@@ -140,13 +122,15 @@ De abonnementsprijs van Door2doc SEH/EHH is gebaseerd op het totaal aantal bezoe
               inputLocations = 0;
           }
   
-          var result = calculateCosts(parseInt(inputVisitors), parseInt(inputLocations), ab_included, online_info_included),
+          var result = calculateCosts(parseInt(inputVisitors), parseInt(inputLocations), online_info_included),
               unit = '€',
               cents = ',-';
   
           document.getElementById('result').textContent        = unit + " " + numberWithCommas(parseInt(result.price)) + cents;
           document.getElementById('resultMonth').textContent   = unit + " " + numberWithCommas(parseInt(result.price / 12)) + cents;
+          document.getElementById('connectionFeeMonth').textContent  = unit + " " + numberWithCommas(parseInt(result.connectionFee / 48)) + cents;
           document.getElementById('connectionFee').textContent  = unit + " " + numberWithCommas(parseInt(result.connectionFee)) + cents;
+          document.getElementById('resultTotalMonth').textContent        = unit + " " + numberWithCommas(parseInt(result.price / 12 + result.connectionFee / 48)) + cents;
   
           var resultContainer = document.getElementById('kosten-indicatie-result');
   
