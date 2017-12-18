@@ -9,7 +9,7 @@ share: false
 ---
 Door2doc helpt ziekenhuizen en huisartsenposten om grip te krijgen op werkdruk in de acute zorg door de inzet van capaciteit optimaal af te stemmen op de capaciteitsbehoefte. Een optimale balans tussen beschikbare en benodigde capaciteit helpt prestaties te verbeteren, werkdruk gelijkmatiger te maken en voorkomt onnodige capaciteitsuitbreidingen.
 
-Wij adviseren in de vorm van heldere rapportages met veel visuele inzichten en altijd in samenwerking met mensen van uw organisatie. Het betreft onder andere de volgende onderwerpen:
+Wij adviseren in de vorm van heldere rapportages met veel visuele inzichten en altijd in samenwerking met mensen van uw organisatie.
 * Optimale inzet van verpleegkundigen en artsen op de SEH via onze beproefde methodiek van werklast volgens behandelpunten
 * Optimale capaciteit behandelruimten voor veilige zorg, nu en in de toekomst
 * Gelijkmatige werkdruk en meest productieve inzet van triagisten op de huisartsenpost gegeven de piekpatronen in het callcenter
