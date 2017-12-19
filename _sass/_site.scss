@@ -54,6 +54,10 @@ body {
       color: lighten($base-color, 60);
     }
 
+    img {
+      max-width: 373px;
+    }
+
   }
 
   &-nav {
