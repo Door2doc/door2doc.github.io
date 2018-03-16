@@ -703,7 +703,8 @@ definitions:
             "naam": "Spoedpost",
             "labels": {
               "sha": "Arts",
-              "vpk": "Verpleegkundige"
+              "vpk": "Verpleegkundige",
+              "ova": "Overige artsen"
             },
             "aantal_kamers": 12,
             "targets": {
@@ -712,7 +713,7 @@ definitions:
               "dokter_tot_beslissing": 90,
               "beslissing_tot_opname": 60
             },
-            "artsen": ["sha", "vpk"],
+            "artsen": ["sha", "vpk", "ova"],
             "features": ["capacity"],
             "specialismes": [
               "Cardiologie",
@@ -725,7 +726,10 @@ definitions:
               "Humerusfractuur",
               "Hydradenitis",
               "Hypercalciumie",
-            ]
+            ],
+            "capacity": {
+              "artsen": ["sha", "vpk"]
+            },
           },
           "ehh": {
             "naam": "Eerste-Hart Hulp",
@@ -873,7 +877,6 @@ definitions:
           - deur_tot_dokter
           - dokter_tot_beslissing
           - beslissing-tot-opname
-
       features:
         type: array
         items:
@@ -891,6 +894,26 @@ definitions:
         items:
           type: string
         description: Lijst met veel voorkomende ingangsklachten die voor deze afdeling gedefiniëerd zijn.
+      capacity:
+        $ref: '#/definitions/CapacitySettings'
+        description: Instellingen voor capacity
+
+  CapacitySettings:
+    type: object
+    required:
+      - artsen
+    properties:
+      artsen:
+        type: array
+        items:
+          type: string
+          enum:
+            - vpk
+            - sha
+            - int
+            - chi
+            - ova
+        description: Lijst met alle arts-types die voor de Capacity feature relevant zijn
 
   WorkflowOverzicht:
     type: object
@@ -1802,4 +1825,4 @@ paths:
         200:
           description: Het verstuurde bericht
           schema:
-            type: string 
+            type: string
