@@ -362,6 +362,7 @@ paths:
         - Service definitie
       parameters:
         - name: vestiging
+          in: query
           type: string
           required: true
           description: Vestiging waar deze import op van toepassing is. Neem contact met ons op voor de juiste waardes per ziekenhuis.
@@ -389,6 +390,7 @@ paths:
         - Service definitie
       parameters:
         - name: vestiging
+          in: query
           type: string
           required: true
           description: Vestiging waar deze import op van toepassing is. Neem contact met ons op voor de juiste waardes per ziekenhuis.
@@ -416,6 +418,7 @@ paths:
         - Service definitie
       parameters:
         - name: vestiging
+          in: query
           type: string
           required: true
           description: Vestiging waar deze import op van toepassing is. Neem contact met ons op voor de juiste waardes per ziekenhuis.
