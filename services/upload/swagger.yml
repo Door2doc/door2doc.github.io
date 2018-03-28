@@ -95,10 +95,9 @@ info:
 
     # 5. De API
 
-    De API is hieronder terug te vinden en bestaat uit drie endpoints:
+    De API is hieronder terug te vinden en bestaat uit twee endpoints:
 
-    * /services/v1/upload/seh – upload bezoeken aan de SEH
-    * /services/v1/upload/ehh – upload bezoeken aan de EHH
+    * /services/v1/upload/bezoeken – upload bezoeken
     * /services/v1/upload/diagnostische_orders – upload diagnostische orders
 
     De API is [hier](http://docs.door2doc.com/services/upload/swagger.yml) beschikbaar als OpenAPI v2.0 definitie.
@@ -354,41 +353,21 @@ definitions:
 
 
 paths:
-  /services/v1/upload/seh:
+  /services/v1/upload/bezoeken:
     post:
-      summary: Verwerk één of meer records van bezoeken aan de SEH.
-      operationId: post_seh_events
+      summary: Verwerk één of meer records van bezoeken.
+      operationId: post_events
       tags:
         - Service definitie
       parameters:
-        - name: vestiging
+        - name: afdeling
           in: query
           type: string
-          required: true
-          description: Vestiging waar deze import op van toepassing is. Neem contact met ons op voor de juiste waardes per ziekenhuis.
-        - name: records
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/BezoekRecordList'
-
-      responses:
-        200:
-          description: De records zijn succesvol verwerkt. Het retourbericht bevat aanvullende informatie over de verwerking.
-          schema:
-            $ref: '#/definitions/Verwerking'
-        400:
-          description: Er was een probleem met één of meerdere records. Het retourbericht bevat aanvullende informatie.
-          schema:
-            $ref: '#/definitions/Probleem'
-
-  /services/v1/upload/ehh:
-    post:
-      summary: Verwerk één of meer records van bezoeken aan de EHH.
-      operationId: post_ehh_events
-      tags:
-        - Service definitie
-      parameters:
+          required: true 
+          description: "Afdeling waar deze import op van toepassing is: de SEH of de EHH"
+          enum:
+            - seh
+            - ehh
         - name: vestiging
           in: query
           type: string
@@ -417,6 +396,14 @@ paths:
       tags:
         - Service definitie
       parameters:
+        - name: afdeling
+          in: query
+          type: string
+          required: true 
+          description: "Afdeling waar deze import op van toepassing is: de SEH of de EHH"
+          enum:
+            - seh
+            - ehh
         - name: vestiging
           in: query
           type: string
