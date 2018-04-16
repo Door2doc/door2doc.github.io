@@ -46,7 +46,7 @@ De abonnementsprijs van Door2doc SEH/EHH is afhankelijk van het totaal aantal be
       <span>- abonnementskosten </span><strong><span class="result" id="resultMonth"></span></strong><span> per maand (</span><span class="result" id="result"></span><span> per jaar)</span><br>
       <span>- kosten voor de aansluiting en inrichting </span><span class="result" id="connectionFee"></span>
     
-  </div>
+  
   
   <script>
       document.getElementById("kosten-indicatie").addEventListener("keypress", function(ev) {
