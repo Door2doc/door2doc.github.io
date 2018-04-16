@@ -269,6 +269,7 @@ definitions:
           "text_verrichting": "Verrichting...",
           "code_verrichting": "18",
           "dt_aanvraag": "2016-10-07T13:52:00+0200",
+          "dt_aanvang": "2016-10-07T15:00:00+0200",
           "dt_resultaat": "2016-10-08T08:00:00+0200",
           "code_specialisme": "11"
         }
@@ -302,6 +303,11 @@ definitions:
         type: string
         format: date-time
         description: Datum/Tijd waarop de order is aangevraagd.
+
+      dt_aanvang:
+        type: string
+        format: date-time
+        description: Datum/Tijd waarop is begonnen de order te verwerken.
 
       dt_resultaat:
         type: string
@@ -368,7 +374,7 @@ paths:
           enum:
             - seh
             - ehh
-        - name: vestiging
+        - name: locatie
           in: query
           type: string
           required: true
@@ -404,7 +410,7 @@ paths:
           enum:
             - seh
             - ehh
-        - name: vestiging
+        - name: locatie
           in: query
           type: string
           required: true
