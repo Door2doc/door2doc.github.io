@@ -42,9 +42,9 @@ De abonnementsprijs van Door2doc SEH/EHH is afhankelijk van het totaal aantal be
   
   <div id="kosten-indicatie-result">
     <div class="result-container">
-      <span>Prijsindicatie Door2doc SEH/EHH (exclusief BTW):<br>
-      <span>- abonnementskosten </span><strong><span class="result" id="resultMonth"></strong></span><span> per maand (</span><span class="result" id="result"></span><span> per jaar)</span><br>
-      <span>- kosten voor de aansluiting en inrichting <span class="result" id="connectionFee"></span>
+      <span>Prijsindicatie Door2doc SEH/EHH: </span><strong class="result" id="resultTotalMonth"></strong> per maand (exclusief BTW)<br>
+      <span>- abonnementskosten </span><span class="result" id="resultMonth"></span><span> per maand (</span><span class="result" id="result"></span><span> per jaar)</span><br>
+      <span>- aansluitkosten </span><span class="result" id="connectionFeeMonth"></span><span> per maand bij contractduur van 4 jaar (</span><span class="result" id="connectionFee"></span><span> in totaal)</span>
     </div>
   </div>
   
@@ -127,6 +127,7 @@ De abonnementsprijs van Door2doc SEH/EHH is afhankelijk van het totaal aantal be
   
           document.getElementById('result').textContent        = unit + " " + numberWithCommas(parseInt(result.price)) + cents;
           document.getElementById('resultMonth').textContent   = unit + " " + numberWithCommas(parseInt(result.price / 12)) + cents;
+          document.getElementById('connectionFeeMonth').textContent  = unit + " " + numberWithCommas(parseInt(result.connectionFee / 48)) + cents;
           document.getElementById('connectionFee').textContent  = unit + " " + numberWithCommas(parseInt(result.connectionFee)) + cents;
           document.getElementById('resultTotalMonth').textContent        = unit + " " + numberWithCommas(parseInt(result.price / 12 + result.connectionFee / 48)) + cents;
   
