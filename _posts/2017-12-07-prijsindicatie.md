@@ -42,11 +42,11 @@ De abonnementsprijs van Door2doc SEH/EHH is afhankelijk van het totaal aantal be
   
   <div id="kosten-indicatie-result">
     <div class="result-container">
-      <span>Prijsindicatie Door2doc SEH/EHH (bedragen exclusief BTW):<br>
+      <span>Prijsindicatie Door2doc SEH/EHH (bedragen exclusief BTW):</span><br>
       <span>- abonnementskosten </span><strong><span class="result" id="resultMonth"></span></strong><span> per maand (</span><span class="result" id="result"></span><span> per jaar)</span><br>
       <span>- kosten voor de aansluiting en inrichting </span><span class="result" id="connectionFee"></span>
-    
-  
+    </div>
+  </div>
   
   <script>
       document.getElementById("kosten-indicatie").addEventListener("keypress", function(ev) {
