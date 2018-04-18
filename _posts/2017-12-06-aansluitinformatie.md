@@ -13,16 +13,14 @@ Door2doc gebruikt uitsluitend informatie over bezoeken op de SEH/EHH, wij verwer
 
 Deze pagina geeft een overzicht van de aansluitactiviteiten voor Door2doc SEH/EHH, inclusief de bijbehorende verantwoordelijkheid.
 
-| Activiteit | Verantwoordelijk |
+| Activiteit | Verantwoordelijke |
 |:--------|:-------:|
 | Aanleveren historische dataset SEH/EHH-bezoeken | ICT |
 | Valideren registratie van brongegevens op SEH/EHH | Door2doc |
 |Inrichten realtime data-ontsluiting via onze [upload service](http://docs.door2doc.com/swagger/?url=/services/upload/swagger.yml#!/Service_definitie/) | ICT |
 | Aanbieden van realtime data over HTTPS (TLS) aan onze cloud | ICT |
-| Beoordelen stabiliteit en kwaliteit van de datastroom | Door2doc |
-| In kaart brengen hoofdlijnen organisatie van zorgverlening | Door2doc |
-| Creëren voorspellende modellen wacht- en verblijftijden | Door2doc |
-| Aansluiting accorderen | Opdrachtgever |
+| Valideren datastroom en beoordelen stabiliteit | Door2doc |
+| Valideren van (realtime) informatie in Door2doc | Opdrachtgever |
 
 
 
