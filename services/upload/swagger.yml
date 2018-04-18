@@ -56,7 +56,7 @@ info:
     van de Door2doc software zal zijn.
 
     Idealiter wordt de service aangeroepen bij iedere wijziging. Indien dit niet mogelijk is, adviseert Door2doc
-    om één keer minuut de huidige status door te geven.
+    om één keer per minuut de huidige status door te geven.
 
     # 3. Beveiliging
 
