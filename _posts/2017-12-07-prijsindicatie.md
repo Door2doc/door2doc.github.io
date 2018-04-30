@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Prijsindicatie Door2doc SEH/EHH"
+title: "Prijsindicatie Door2doc SEH"
 description: ""
 date: 2017-12-07
 tags: []
@@ -8,23 +8,23 @@ comments: false
 share: false
 ---
 
-Bedankt voor uw belangstelling voor de [informatiediensten](http://docs.door2doc.com/2017-12-09/Door2doc/) van Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van Door2doc voor de Spoedeisende Hulp (SEH) en Eerste Harthulp (EHH).
+Bedankt voor uw belangstelling voor de [informatiediensten](http://docs.door2doc.com/2017-12-09/Door2doc/) van Door2doc. Op deze pagina kunt u een prijsindicatie opvragen van Door2doc voor de Spoedeisende Hulp (SEH).
 
-Het abonnement Door2doc SEH/EHH bevat het volgende:
+Het abonnement Door2doc SEH bevat het volgende:
 * Actuele informatie voor patiënten over wachttijden en drukte. Namens het ziekenhuis geven wij patiënten realtime informatie over de verwachte wacht- en verblijftijden op de afdeling, te zien in de wachtkamer en de behandelkamers via beeldschermen van het ziekenhuis. Patiënten zien tevens berichten met algemene uitleg over de gang van zaken op de afdeling en ontvangen informatie over de actuele drukte en eventuele verstoringen.
 * Doorlopende informatie over de doorstroom, realtime prestaties en de [meest productieve inzet](http://docs.door2doc.com/2017-12-08/Grip-op-werkdruk/) van verpleegkundigen en artsen. Alle professionals (artsen, verpleegkundigen, managers/bestuurders) hebben overal binnen het ziekenhuis toegang tot de actuele informatie via onze gratis app voor mobiel en tablet ([Apple](https://itunes.apple.com/nl/app/door2doc/id1237548513?mt=8)/[Android](https://play.google.com/store/apps/details?id=com.door2doc.app)) en de webbrowser op de pc.
 * Tevens delen wij actuele informatie over wachttijden en capaciteit naar wens kosteloos met huisartsen, ambulancediensten en patiënten via uw ziekenhuiswebsite. Wij verzorgen namens het ziekenhuis ook kwaliteits- en keteninformatie via [Door2doc Connect](http://docs.door2doc.com/2017-12-05/Door2doc-Connect).
 
-In combinatie met het abonnement leveren wij online managementinformatie via de aanvullende dienst [Door2doc Reporting](http://docs.door2doc.com/2017-12-04/Door2doc-Reporting). Hiermee beschikt u over vaste rapportages over de prestaties en trends op de SEH en EHH, een ideaal hulpmiddel voor structurele (en automatische) evaluatie van verbeterprojecten en andere veranderingen op de afdeling. De managementinformatie is alleen persoonlijk toegankelijk, altijd up-to-date en overal beschikbaar, ook buiten het ziekenhuis.
+In combinatie met het abonnement leveren wij online managementinformatie via de aanvullende dienst [Door2doc Reporting](http://docs.door2doc.com/2017-12-04/Door2doc-Reporting). Hiermee beschikt u over vaste rapportages over de prestaties en trends op de SEH, een ideaal hulpmiddel voor structurele (en automatische) evaluatie van verbeterprojecten en andere veranderingen op de afdeling. De managementinformatie is alleen persoonlijk toegankelijk, altijd up-to-date en overal beschikbaar, ook buiten het ziekenhuis.
 
-De abonnementsprijs van Door2doc SEH/EHH is afhankelijk van het totaal aantal bezoeken per kalenderjaar op de SEH/EHH (er geldt een korting vanaf 20.000 bezoeken en nogmaals vanaf 40.000). Wij brengen hiernaast kosten in rekening voor de [aansluiting op onze cloud](http://docs.door2doc.com/2017-12-06/aansluitinformatie/) en de inrichtingswerkzaamheden, op basis van het aantal locaties van uw organisatie. Facturatie van de abonnements- en aansluitkosten geschiedt maandelijks op basis van een meerjarige SaaS-overeenkomst (Software as a Service). Updates en onderhoud zijn altijd inbegrepen, onze software is voortdurend in ontwikkeling.
+De abonnementsprijs van Door2doc SEH is afhankelijk van het totaal aantal bezoeken per kalenderjaar op de SEH (er geldt een korting vanaf 20.000 bezoeken en nogmaals vanaf 40.000). Wij brengen hiernaast kosten in rekening voor de [aansluiting op onze cloud](http://docs.door2doc.com/2017-12-06/aansluitinformatie/) en de inrichtingswerkzaamheden, op basis van het aantal locaties van uw organisatie. Facturatie van de abonnements- en aansluitkosten geschiedt maandelijks op basis van een meerjarige SaaS-overeenkomst (Software as a Service). Updates en onderhoud zijn altijd inbegrepen, onze software is voortdurend in ontwikkeling (wij werken aan een vergelijkbare dienst voor de Eerste Harthulp).
 
 #### Voer gegevens in van uw organisatie
 <p>
 
   <form action="" id="kosten-indicatie">
     <div class="formfield-container textfield-container">
-      <label for="num-visitors">Aantal bezoeken SEH en EHH per jaar:</label>
+      <label for="num-visitors">Aantal bezoeken SEH per jaar:</label>
       <input type="number" id="num-visitors" name="num-visitors" value="">
     </div>
   
@@ -42,7 +42,7 @@ De abonnementsprijs van Door2doc SEH/EHH is afhankelijk van het totaal aantal be
   
   <div id="kosten-indicatie-result">
     <div class="result-container">
-      <span>Prijsindicatie Door2doc SEH/EHH (bedragen exclusief BTW):</span><br>
+      <span>Prijsindicatie Door2doc SEH (alle bedragen exclusief BTW):</span><br>
       <span>- abonnementskosten </span><strong><span class="result" id="resultMonth"></span></strong><span> per maand (</span><span class="result" id="result"></span><span> per jaar)</span><br>
       <span>- kosten voor de aansluiting en inrichting </span><span class="result" id="connectionFee"></span>
     </div>
