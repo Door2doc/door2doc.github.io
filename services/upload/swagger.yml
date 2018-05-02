@@ -144,6 +144,7 @@ definitions:
           "code_herkomst": "4",
           "code_vervoerder": "0",
           "code_ontslagbestemming": "AX",
+          "code_opnameafdeling": "B3",
           "code_opnamespecialisme": "11",
           "cat_leeftijd": "197"
         },
