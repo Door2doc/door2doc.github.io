@@ -38,6 +38,7 @@ tags:
   - name: "Service: Target"
   - name: "Service: Timeline"
   - name: "Service: Workflow"
+  - name: "Service: Workflow Simulatie"
   - name: "Reporting"
 
 definitions:
@@ -1198,6 +1199,62 @@ definitions:
         }
       }
 
+  WorkflowSimulation:
+    type: object
+    required:
+      - t
+      - locaties
+      - grid
+      - score
+    properties:
+      t:
+        type: string
+        format: date-time
+        description: Huidige tijd volgens de simulatie
+      locaties:
+        type: array
+        items:
+          $ref: '#/definitions/WorkflowLocatie'
+        description: Details van de locaties in dit overzicht
+      grid:
+        $ref: '#/definitions/WorkflowGrid'
+      event:
+        description: Eerstvolgende afspraak die ingepland moet worden. Afwezig indien de simulatie afgelopen is.
+        type: object
+        properties:
+          urgentie:
+            description: Urgentie van de afspraak
+            type: string
+            enum:
+              - U1
+              - U2
+              - U3
+              - U4
+              - U5
+          ingangsklachten:
+            description: Genoemde ingangsklachten
+            type: array
+            items:
+              - type: string
+          postcode:
+            type: string
+            description: Postcode van de patient
+          leeftijdsgroep:
+            type: string
+            description: Leeftijdsgroep van de patient
+      score:
+        description: Huidige score van de simulatie. Let op dat de bezettingsgraad al terug te vinden is in de grid status.
+        type: object
+        properties:
+          verkeerd_gepland:
+            type: integer
+            format: int32
+            description: Aantal afspraken die buiten de gestelde tijd gepland zijn
+          wachttijd:
+            type: integer
+            format: int32
+            description: Gemiddelde wachttijd van de patiënt.
+
   WorkflowWachtkamer:
     type: object
     required:
@@ -1404,9 +1461,11 @@ definitions:
       icpc_code:
         type: string
         description: Code voor de diagnose
-      icpc_uitleg:
-        type: string
-        description: Tekstuele verklaring van de ICPC code
+      ingangsklachten:
+        description: Genoemde ingangsklachten
+        type: array
+        items:
+          - type: string
       postcode:
         type: string
         description: Postcode van de patient
@@ -1718,6 +1777,56 @@ paths:
           schema:
             $ref: '#/definitions/InterruptStatus'
 
+  /v3/interrupt/spoed-patient/:
+    get:
+      summary: Haal de waarde van de interrupt "spoed-patient" op.
+      tags:
+        - 'Service: Interrupt'
+        - 'Project: ZKH'
+      operationId: getSpoedPatientV3
+      parameters:
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+      responses:
+        200:
+          description: De status van de interrupt "spoed-patient". Indien de interrupt uit staat, is het veld 'seconds_remaining' afwezig.
+          schema:
+            $ref: '#/definitions/InterruptStatus'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
+
+    put:
+      summary: Activeer de interrupt "spoed-patient".
+      tags:
+        - 'Service: Interrupt'
+        - 'Project: ZKH'
+      operationId: setSpoedPatientVV3
+      parameters:
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+      responses:
+        200:
+          description: De nieuwe status van de interrupt "spoed-patient".
+          schema:
+            $ref: '#/definitions/InterruptStatus'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
+
+    delete:
+      summary: Deactiveer de interrupt "spoed-patient".
+      tags:
+        - 'Service: Interrupt'
+        - 'Project: ZKH'
+      operationId: unsetSpoedPatientV3
+      parameters:
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+      responses:
+        200:
+          description: De nieuwe status van de interrupt "spoed-patient"; de velden 'seconds_remaining' en 'description' zullen hierin afwezig zijn.
+          schema:
+            $ref: '#/definitions/InterruptStatus'
+
   /v2/capacity/calculate/:
     get:
       summary: Bereken de capaciteit in behandelpunten over de opgegeven periode
@@ -1925,3 +2034,57 @@ paths:
           description: Het verstuurde bericht
           schema:
             type: string
+
+  /v2/workflow/simulatie/:
+    post:
+      summary: Begin een nieuwe simulatie
+      tags:
+        - 'Service: Workflow Simulatie'
+        - 'Project: HAP'
+      operationId: newSimulation
+      parameters:
+        - $ref: '#/parameters/t-from'
+        - $ref: '#/parameters/t-to'
+      responses:
+        302:
+          description: De nieuwe simulatie is aangemaakt, en verwijst door naar de aangemaakte simulatie.
+          type: string
+          format: url
+
+  /v2/workflow/simulatie/{simulatie_id}:
+    get:
+      summary: Toon de huidige status van de simulatie
+      tags:
+        - 'Service: Workflow Simulatie'
+        - 'Project: HAP'
+      operationId: getSimulation
+      parameters:
+        - name: simulatie_id
+          in: path
+          type: string
+          description: Uniek ID van de simulatie
+      responses:
+        200:
+          description: Status van de simulatie
+          schema:
+            $ref: '#/definitions/WorkflowSimulation'
+
+    post:
+      summary: Plan de openstaande afspraak in
+      tags:
+        - 'Service: Workflow Simulatie'
+        - 'Project: HAP'
+      parameters:
+        - name: simulatie_id
+          in: path
+          type: string
+          description: Uniek ID van de simulatie
+        - name: slot_id
+          in: query
+          type: string
+          description: ID van het slot waar de afspraak gepland moet worden
+      responses:
+        200:
+          description: Status van de simulatie
+          schema:
+            $ref: '#/definitions/WorkflowSimulation'
