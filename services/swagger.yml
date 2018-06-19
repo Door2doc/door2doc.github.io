@@ -200,18 +200,23 @@ definitions:
         description: Datum/Tijd waarop de bezoeker is geregistreerd voor opname.
       minuten_aanwezig:
         type: integer
+        format: int32
         description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
       minuten_tot_dokter:
         type: integer
+        format: int32
         description: "De huidige deur-tot-doktertijd; indien de bezoeker gezien is: het aantal minuten van binnenkomst tot `gezien`; anders gelijk aan `minuten_aanwezig`."
       minuten_sinds_dokter:
         type: integer
+        format: int32
         description: "Voor bezoekers die gezien zijn door een arts: het aantal minuten sinds `gezien`. Anders gelijk aan 0."
       minuten_sinds_beslissing:
         type: integer
+        format: int32
         description: "Voor bezoekers waar de arts een beslissing over genomen heeft: het aantal minuten sinds `opname`. Anders gelijk aan 0."
       leeftijdsgroep:
         type: integer
+        format: int32
         description: "Abstracte indicatie van de leeftijdsgroep van deze bezoeker."
       herkomst:
         type: string
@@ -594,6 +599,7 @@ definitions:
         description: Datum/Tijd waarop de bezoeker is binnengekomen.
       minuten_aanwezig:
         type: integer
+        format: int32
         description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
       patientgroep:
         type: string
@@ -773,7 +779,7 @@ definitions:
       theme:
         type: string
         description: Identifier die gebruikt wordt om het visuele thema te bepalen.
-      afdelingen:
+      locaties:
         type: object
         additionalProperties:
           type: object
@@ -781,12 +787,12 @@ definitions:
       {
         "naam": "Huisartsenpost",
         "theme": "hap",
-        "afdelingen": {
-          "afd1": {
-            "naam": "Afdeling 1"
+        "locaties": {
+          "alph": {
+            "naam": "Alphen a/d Rijn"
           },
-          "afd2": {
-            "naam": "Afdeling 2"
+          "lumc": {
+            "naam": "LUMC"
           }
         }
       }
@@ -796,10 +802,8 @@ definitions:
     properties:
       seh:
         $ref: '#/definitions/AfdelingSettings'
-        description: Settings voor de SEH
       ehh:
         $ref: '#/definitions/AfdelingSettings'
-        description: Settings voor de EHH
 
   AfdelingSettings:
     type: object
@@ -849,7 +853,7 @@ definitions:
       aantal_kamers:
         type: integer
         format: int32
-        min: 0
+        minimum: 0
         description: Aantal kamers op deze afdeling
       targets:
         type: object
@@ -859,19 +863,19 @@ definitions:
           deur_tot_vertrek:
             type: integer
             format: int32
-            min: 0
+            minimum: 0
           deur_tot_dokter:
             type: integer
             format: int32
-            min: 0
+            minimum: 0
           dokter_tot_beslissing:
             type: integer
             format: int32
-            min: 0
+            minimum: 0
           beslissing-tot-opname:
             type: integer
             format: int32
-            min: 0
+            minimum: 0
         required:
           - deur_tot_vertrek
           - deur_tot_dokter
@@ -896,7 +900,6 @@ definitions:
         description: Lijst met veel voorkomende ingangsklachten die voor deze afdeling gedefiniëerd zijn.
       capacity:
         $ref: '#/definitions/CapacitySettings'
-        description: Instellingen voor capacity
 
   CapacitySettings:
     type: object
@@ -919,15 +922,324 @@ definitions:
     type: object
     required:
       - t
-      - start
-      - einde
-      - afdelingen
-      - periodes
+      - locaties
+      - grid
     properties:
       t:
         type: string
         format: date-time
         description: Tijdstip waarvoor dit overzicht is aangevraagd
+      locaties:
+        type: array
+        items:
+          $ref: '#/definitions/WorkflowLocatie'
+        description: Details van de locaties in dit overzicht
+      grid:
+        $ref: '#/definitions/WorkflowGrid'
+    example:
+      {
+        "t": "2017-10-18T13:32:00+02:00",
+        "locaties": [
+          {
+            "locatie": "alph",
+            "vertraagd": 0,
+            "wachttijd_min": 0,
+            "wachttijd_max": 0
+          },
+          {
+            "locatie": "ldd",
+            "vertraagd": 2,
+            "wachttijd_min": 15,
+            "wachttijd_max": 30
+          }
+        ],
+        "grid": {
+          "start": "2017-10-01T12:00:00+02:00",
+          "einde": "2017-10-01T13:00:00+02:00",
+          "slot_duur": 15,
+          "periodes": [
+            {
+              "start": "2017-10-01T12:00:00+02:00",
+              "einde": "2017-10-01T13:00:00+02:00",
+              "tijden": [
+                "2017-10-01T12:00:00+02:00",
+                "2017-10-01T12:15:00+02:00",
+                "2017-10-01T12:30:00+02:00",
+                "2017-10-01T12:45:00+02:00"
+              ],
+              "bezetting": {
+                "lumc": 25,
+                "ldd": 12,
+                "alph": 92
+              },
+              "slots": [
+                {
+                  "id": "alph/25114200/0",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:00:00+02:00",
+                  "einde": "2017-10-01T12:15:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "alph/25114200/1",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:00:00+02:00",
+                  "einde": "2017-10-01T12:15:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "ldd/25114200/0",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:00:00+02:00",
+                  "einde": "2017-10-01T12:15:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "ldd/25114200/1",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:00:00+02:00",
+                  "einde": "2017-10-01T12:15:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "alph/25114215/0",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:15:00+02:00",
+                  "einde": "2017-10-01T12:30:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "alph/25114215/1",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:15:00+02:00",
+                  "einde": "2017-10-01T12:30:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "ldd/25114215/0",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:15:00+02:00",
+                  "einde": "2017-10-01T12:30:00+02:00",
+                  "type_arts": "huisarts",
+                  "afspraak": {
+                    "id": "S122876",
+                    "urgentie": "U4",
+                    "aangemaakt": "2017-10-01T11:45:00+02:00",
+                    "gearriveerd": "2017-10-01T12:06:00+02:00",
+                    "start": "2017-10-01T12:15:00+02:00",
+                    "einde": "2017-10-01T12:30:00+02:00",
+                    "status": "vertraagd",
+                    "icpc_code": "F70.01",
+                    "icpc_uitleg": "Bacteriële conjunctivitis",
+                    "postcode": "1000 AA",
+                    "leeftijdsgroep": "2"
+                  }
+                },
+                {
+                  "id": "ldd/25114215/1",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:15:00+02:00",
+                  "einde": "2017-10-01T12:30:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "alph/25114230/0",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:30:00+02:00",
+                  "einde": "2017-10-01T12:45:00+02:00",
+                  "type_arts": "huisarts",
+                  "afspraak": {
+                    "id": "S934280",
+                    "urgentie": "U3",
+                    "aangemaakt": "2017-10-01T11:55:00+02:00",
+                    "gearriveerd": "2017-10-01T12:18:00+02:00",
+                    "start": "2017-10-01T12:30:00+02:00",
+                    "einde": "2017-10-01T12:45:00+02:00",
+                    "status": "gemist",
+                    "icpc_code": "L86.01",
+                    "icpc_uitleg": "HNP (thoracaal/lumbaal)",
+                    "postcode": "1000 AA",
+                    "leeftijdsgroep": "5"
+                  }
+                },
+                {
+                  "id": "alph/25114230/1",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:30:00+02:00",
+                  "einde": "2017-10-01T12:45:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "ldd/25114230/0",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:30:00+02:00",
+                  "einde": "2017-10-01T12:45:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "ldd/25114230/1",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:30:00+02:00",
+                  "einde": "2017-10-01T12:45:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "alph/25114245/0",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:45:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "type_arts": "huisarts",
+                  "afspraak": {
+                    "id": "S980584",
+                    "urgentie": "U3",
+                    "aangemaakt": "2017-10-01T11:47:00+02:00",
+                    "gearriveerd": "2017-10-01T12:50:00+02:00",
+                    "start": "2017-10-01T12:45:00+02:00",
+                    "einde": "2017-10-01T13:00:00+02:00",
+                    "status": "gepland",
+                    "icpc_code": "L18.01",
+                    "icpc_uitleg": "Fibromyalgie",
+                    "postcode": "1000 AA",
+                    "leeftijdsgroep": "1"
+                  }
+                },
+                {
+                  "id": "alph/25114245/1",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:45:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "type_arts": "huisarts",
+                  "afspraak": {
+                    "id": "S  7727",
+                    "urgentie": "U4",
+                    "aangemaakt": "2017-10-01T12:06:00+02:00",
+                    "gearriveerd": "2017-10-01T12:24:00+02:00",
+                    "start": "2017-10-01T12:45:00+02:00",
+                    "einde": "2017-10-01T13:00:00+02:00",
+                    "status": "gepland",
+                    "icpc_code": "N88.00",
+                    "icpc_uitleg": "Epilepsie (alle vormen)",
+                    "postcode": "1000 AA",
+                    "leeftijdsgroep": "1"
+                  }
+                },
+                {
+                  "id": "ldd/25114245/0",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:45:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "type_arts": "huisarts"
+                },
+                {
+                  "id": "ldd/25114245/1",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:45:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "type_arts": "huisarts",
+                  "afspraak": {
+                    "id": "S 86785",
+                    "urgentie": "U4",
+                    "aangemaakt": "2017-10-01T12:11:00+02:00",
+                    "gearriveerd": "2017-10-01T12:47:00+02:00",
+                    "start": "2017-10-01T12:45:00+02:00",
+                    "einde": "2017-10-01T13:00:00+02:00",
+                    "status": "vertraagd",
+                    "icpc_code": "U14.00",
+                    "icpc_uitleg": "Symptomen/klachten nieren",
+                    "postcode": "1000 AA",
+                    "leeftijdsgroep": "7"
+                  }
+                }
+              ],
+              "u2": [
+                {
+                  "id": "alph/25114200/0",
+                  "locatie": "alph",
+                  "start": "2017-10-01T12:00:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "type_arts": "huisarts",
+                  "afspraak": {
+                    "id": "S764929",
+                    "urgentie": "U2",
+                    "aangemaakt": "2017-10-01T11:27:00+02:00",
+                    "gearriveerd": "2017-10-01T11:38:00+02:00",
+                    "start": "2017-10-01T12:00:00+02:00",
+                    "einde": "2017-10-01T12:15:00+02:00",
+                    "status": "vertraagd",
+                    "icpc_code": "U14.00",
+                    "icpc_uitleg": "Symptomen/klachten nieren",
+                    "postcode": "1000 AA",
+                    "leeftijdsgroep": "9"
+                  }
+                },
+                {
+                  "id": "ldd/25114200/0",
+                  "locatie": "ldd",
+                  "start": "2017-10-01T12:00:00+02:00",
+                  "einde": "2017-10-01T13:00:00+02:00",
+                  "type_arts": "huisarts",
+                  "afspraak": {
+                    "id": "S915097",
+                    "urgentie": "U2",
+                    "aangemaakt": "2017-10-01T11:22:00+02:00",
+                    "gearriveerd": "2017-10-01T11:47:00+02:00",
+                    "start": "2017-10-01T12:00:00+02:00",
+                    "einde": "2017-10-01T12:15:00+02:00",
+                    "status": "vertraagd",
+                    "icpc_code": "S13.00",
+                    "icpc_uitleg": "Beet mens/dier",
+                    "postcode": "1000 AA",
+                    "leeftijdsgroep": "5"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+
+  WorkflowWachtkamer:
+    type: object
+    required:
+      - t
+      - locaties
+    properties:
+      t:
+        type: string
+        format: date-time
+        description: Tijdstip waarvoor dit overzicht is aangevraagd
+      locaties:
+        type: array
+        items:
+          $ref: '#/definitions/WorkflowLocatie'
+        description: Details van de locaties in dit overzicht
+    example:
+      {
+        "t": "2017-10-18T13:32:00+02:00",
+        "locaties": [
+          {
+            "locatie": "alph",
+            "vertraagd": 0,
+            "wachttijd_min": 0,
+            "wachttijd_max": 0
+          },
+          {
+            "locatie": "ldd",
+            "vertraagd": 2,
+            "wachttijd_min": 15,
+            "wachttijd_max": 30
+          }
+        ]
+      }
+
+  WorkflowGrid:
+    type: object
+    required:
+      - start
+      - einde
+      - slot_duur
+      - periodes
+    properties:
       start:
         type: string
         format: date-time
@@ -936,271 +1248,17 @@ definitions:
         type: string
         format: date-time
         description: Eindtijd van dit overzicht
-      afdelingen:
-        type: array
-        items:
-          $ref: '#/definitions/WorkflowAfdeling'
-        description: Details van de afdelingen in dit overzicht
+      slot_duur:
+        type: integer
+        format: int32
+        description: Duur van één slot in minuten
       periodes:
         type: array
         description: Periodes (tijdvakken van 1 uur) in dit overzicht
         items:
           $ref: '#/definitions/WorkflowPeriode'
-    example:
-      {
-        "t": "2017-10-18T13:32:00+02:00",
-        "start": "2017-10-01T12:00:00+02:00",
-        "einde": "2017-10-01T13:00:00+02:00",
-        "afdelingen": [
-          {
-            "afdeling": "alph",
-            "vertraagd": 0,
-            "wachttijd_min": 0,
-            "wachttijd_max": 0
-          },
-          {
-            "afdeling": "ldd",
-            "vertraagd": 2,
-            "wachttijd_min": 15,
-            "wachttijd_max": 30
-          }
-        ],
-        "periodes": [
-          {
-            "start": "2017-10-01T12:00:00+02:00",
-            "einde": "2017-10-01T13:00:00+02:00",
-            "tijden": [
-              "2017-10-01T12:00:00+02:00",
-              "2017-10-01T12:15:00+02:00",
-              "2017-10-01T12:30:00+02:00",
-              "2017-10-01T12:45:00+02:00"
-            ],
-            "slots": [
-              {
-                "id": "alph/25114200/0",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T12:15:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "alph/25114200/1",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T12:15:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "ldd/25114200/0",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T12:15:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "ldd/25114200/1",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T12:15:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "alph/25114215/0",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:15:00+02:00",
-                "einde": "2017-10-01T12:30:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "alph/25114215/1",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:15:00+02:00",
-                "einde": "2017-10-01T12:30:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "ldd/25114215/0",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:15:00+02:00",
-                "einde": "2017-10-01T12:30:00+02:00",
-                "achterwacht": false,
-                "afspraak": {
-                  "id": "S122876",
-                  "urgentie": "U4",
-                  "aangemaakt": "2017-10-01T11:45:00+02:00",
-                  "gearriveerd": "2017-10-01T12:06:00+02:00",
-                  "start": "2017-10-01T12:15:00+02:00",
-                  "einde": "2017-10-01T12:30:00+02:00",
-                  "status": "vertraagd",
-                  "icpc_code": "F70.01",
-                  "icpc_uitleg": "Bacteriële conjunctivitis",
-                  "postcode": "1000 AA",
-                  "leeftijdsgroep": "2"
-                }
-              },
-              {
-                "id": "ldd/25114215/1",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:15:00+02:00",
-                "einde": "2017-10-01T12:30:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "alph/25114230/0",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:30:00+02:00",
-                "einde": "2017-10-01T12:45:00+02:00",
-                "achterwacht": false,
-                "afspraak": {
-                  "id": "S934280",
-                  "urgentie": "U3",
-                  "aangemaakt": "2017-10-01T11:55:00+02:00",
-                  "gearriveerd": "2017-10-01T12:18:00+02:00",
-                  "start": "2017-10-01T12:30:00+02:00",
-                  "einde": "2017-10-01T12:45:00+02:00",
-                  "status": "gemist",
-                  "icpc_code": "L86.01",
-                  "icpc_uitleg": "HNP (thoracaal/lumbaal)",
-                  "postcode": "1000 AA",
-                  "leeftijdsgroep": "5"
-                }
-              },
-              {
-                "id": "alph/25114230/1",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:30:00+02:00",
-                "einde": "2017-10-01T12:45:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "ldd/25114230/0",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:30:00+02:00",
-                "einde": "2017-10-01T12:45:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "ldd/25114230/1",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:30:00+02:00",
-                "einde": "2017-10-01T12:45:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "alph/25114245/0",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:45:00+02:00",
-                "einde": "2017-10-01T13:00:00+02:00",
-                "achterwacht": false,
-                "afspraak": {
-                  "id": "S980584",
-                  "urgentie": "U3",
-                  "aangemaakt": "2017-10-01T11:47:00+02:00",
-                  "gearriveerd": "2017-10-01T12:50:00+02:00",
-                  "start": "2017-10-01T12:45:00+02:00",
-                  "einde": "2017-10-01T13:00:00+02:00",
-                  "status": "gepland",
-                  "icpc_code": "L18.01",
-                  "icpc_uitleg": "Fibromyalgie",
-                  "postcode": "1000 AA",
-                  "leeftijdsgroep": "1"
-                }
-              },
-              {
-                "id": "alph/25114245/1",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:45:00+02:00",
-                "einde": "2017-10-01T13:00:00+02:00",
-                "achterwacht": false,
-                "afspraak": {
-                  "id": "S  7727",
-                  "urgentie": "U4",
-                  "aangemaakt": "2017-10-01T12:06:00+02:00",
-                  "gearriveerd": "2017-10-01T12:24:00+02:00",
-                  "start": "2017-10-01T12:45:00+02:00",
-                  "einde": "2017-10-01T13:00:00+02:00",
-                  "status": "gepland",
-                  "icpc_code": "N88.00",
-                  "icpc_uitleg": "Epilepsie (alle vormen)",
-                  "postcode": "1000 AA",
-                  "leeftijdsgroep": "1"
-                }
-              },
-              {
-                "id": "ldd/25114245/0",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:45:00+02:00",
-                "einde": "2017-10-01T13:00:00+02:00",
-                "achterwacht": false
-              },
-              {
-                "id": "ldd/25114245/1",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:45:00+02:00",
-                "einde": "2017-10-01T13:00:00+02:00",
-                "achterwacht": false,
-                "afspraak": {
-                  "id": "S 86785",
-                  "urgentie": "U4",
-                  "aangemaakt": "2017-10-01T12:11:00+02:00",
-                  "gearriveerd": "2017-10-01T12:47:00+02:00",
-                  "start": "2017-10-01T12:45:00+02:00",
-                  "einde": "2017-10-01T13:00:00+02:00",
-                  "status": "vertraagd",
-                  "icpc_code": "U14.00",
-                  "icpc_uitleg": "Symptomen/klachten nieren",
-                  "postcode": "1000 AA",
-                  "leeftijdsgroep": "7"
-                }
-              }
-            ],
-            "u2": [
-              {
-                "id": "alph/25114200/0",
-                "afdeling": "alph",
-                "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T13:00:00+02:00",
-                "achterwacht": false,
-                "afspraak": {
-                  "id": "S764929",
-                  "urgentie": "U2",
-                  "aangemaakt": "2017-10-01T11:27:00+02:00",
-                  "gearriveerd": "2017-10-01T11:38:00+02:00",
-                  "start": "2017-10-01T12:00:00+02:00",
-                  "einde": "2017-10-01T12:15:00+02:00",
-                  "status": "vertraagd",
-                  "icpc_code": "U14.00",
-                  "icpc_uitleg": "Symptomen/klachten nieren",
-                  "postcode": "1000 AA",
-                  "leeftijdsgroep": "9"
-                }
-              },
-              {
-                "id": "ldd/25114200/0",
-                "afdeling": "ldd",
-                "start": "2017-10-01T12:00:00+02:00",
-                "einde": "2017-10-01T13:00:00+02:00",
-                "achterwacht": false,
-                "afspraak": {
-                  "id": "S915097",
-                  "urgentie": "U2",
-                  "aangemaakt": "2017-10-01T11:22:00+02:00",
-                  "gearriveerd": "2017-10-01T11:47:00+02:00",
-                  "start": "2017-10-01T12:00:00+02:00",
-                  "einde": "2017-10-01T12:15:00+02:00",
-                  "status": "vertraagd",
-                  "icpc_code": "S13.00",
-                  "icpc_uitleg": "Beet mens/dier",
-                  "postcode": "1000 AA",
-                  "leeftijdsgroep": "5"
-                }
-              }
-            ]
-          }
-        ]
-      }
 
-  WorkflowAfdeling:
+  WorkflowLocatie:
     type: object
     required:
       - id
@@ -1210,15 +1268,18 @@ definitions:
     properties:
       id:
         type: string
-        description: ID van deze afdeling
+        description: ID van deze locatie
       vertraagd:
         type: integer
-        description: Aantal slots dat deze afdeling achterloopt op planning
+        format: int32
+        description: Aantal slots dat deze locatie achterloopt op planning
       wachttijd_min:
         type: integer
-        description: Ondergrend wachttijd in minuten
+        format: int32
+        description: Ondergrens wachttijd in minuten
       wachttijd_max:
         type: integer
+        format: int32
         description: Bovengrens wachttijd in minuten
 
   WorkflowPeriode:
@@ -1226,6 +1287,7 @@ definitions:
     required:
       - start
       - einde
+      - bezetting
       - tijden
       - slots
       - u2
@@ -1238,6 +1300,14 @@ definitions:
         type: string
         format: date-time
         description: Eindtijd van deze periode
+      bezetting:
+        type: object
+        additionalProperties:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+        description: Bezettingspercentage per locatie in de range 0-100
       tijden:
         type: array
         description: Lijst van de begintijden van alle tijdvakken binnen deze periode
@@ -1259,17 +1329,17 @@ definitions:
     type: object
     required:
       - id
-      - afdeling
+      - locatie
       - start
       - einde
-      - achterwacht
+      - type_arts
     properties:
       id:
         type: string
         description: Uniek ID voor dit slot
-      afdeling:
+      locatie:
         type: string
-        description: ID van de afdeling waar dit slot bij hoort
+        description: ID van de locatie waar dit slot bij hoort
       start:
         type: string
         format: date-time
@@ -1278,13 +1348,20 @@ definitions:
         type: string
         format: date-time
         description: Eindtijd van dit slot
-      achterwacht:
+      type_arts:
+        type: string
+        description: Type arts voor dit slot
+        enum:
+          - huisarts
+          - achterwacht
+          - nurse-practitioner
+          - visite-arts
+      geblokkeerd:
         type: boolean
-        description: true voor niet-reguliere slots
-
+        description: Indien dit slot geblokkeerd is, kunnen er geen afspraken geboekt worden
+        default: false
       afspraak:
         $ref: '#/definitions/WorkflowAfspraak'
-        description: Mogelijke afspraak binnen dit slot
 
   WorkflowAfspraak:
     type: object
@@ -1372,6 +1449,13 @@ parameters:
     enum:
       - "seh"
       - "ehh"
+
+  locatie:
+    name: locatie
+    type: string
+    in: query
+    required: true
+    description: De locatie waarvoor deze informatie wordt opgevraagd.
 
   tijdstip:
     name: t
@@ -1773,6 +1857,21 @@ paths:
           description: Target informatie voor de opgegeven filters. De informatie is geordend op tijd en bevat maximaal de laatste 30 datapunten.
           schema:
             $ref: '#/definitions/Target'
+
+  /v2/workflow/wachtkamer/:
+    get:
+      summary: Wachtkamer informatie voor de HAP
+      tags:
+        - 'Service: Workflow'
+        - 'Project: HAP'
+      operationId: getWorkflowWachtkamer
+      parameters:
+        - $ref: '#/parameters/tijdstip'
+      responses:
+        200:
+          description: Wachtkamer informatie voor alle locaties in deze HAP.
+          schema:
+            $ref: '#/definitions/WorkflowWachtkamer'
 
   /v2/workflow/overzicht/:
     get:
