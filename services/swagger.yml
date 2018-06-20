@@ -1390,6 +1390,7 @@ definitions:
       - start
       - einde
       - type_arts
+      - status
     properties:
       id:
         type: string
@@ -1413,10 +1414,17 @@ definitions:
           - achterwacht
           - nurse-practitioner
           - visite-arts
-      geblokkeerd:
-        type: boolean
-        description: Indien dit slot geblokkeerd is, kunnen er geen afspraken geboekt worden
-        default: false
+      status:
+        type: string
+        description: Status van dit slot. Een open slot kan gevuld worden met een afspraak. Een bezet slot heeft een afspraak. Een geblokkeerd slot kan niet gevuld worden met een afspraak. Een beschikbaar slot is niet zichtbaar, maar kan worden bijgeplust.
+        enum:
+          - open
+          - bezet
+          - geblokkeerd
+          - beschikbaar
+      text:
+        type: string
+        description: Toelichting op dit slot
       afspraak:
         $ref: '#/definitions/WorkflowAfspraak'
 
@@ -1465,7 +1473,7 @@ definitions:
         description: Genoemde ingangsklachten
         type: array
         items:
-          - type: string
+          type: string
       postcode:
         type: string
         description: Postcode van de patient
