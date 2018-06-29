@@ -30,6 +30,8 @@ info:
 
     Ieder bezoek doorloopt een aantal fases. Voor de Door2doc software zijn de volgende fases relevant:
 
+    * Aanmelding - het moment waarop het bezoek voor het eerst wordt opgenomen in het systeem, bijvoorbeeld op
+      basis van een telefonische aanmelding.
     * Binnenkomst - het moment waarop de bezoeker arriveert; dit is het moment waarop de demografische
       en behandelingsinformatie bekend wordt.
     * Triage - het moment waarop de triage heeft plaatsgevonden; op dit moment zou de ingangsklacht, triagecode en
@@ -37,9 +39,14 @@ info:
     * Naar behandelkamer - het moment waarop de bezoeker naar een behandelkamer gaat; vanaf dit moment is het
       kamernummer bekend.
     * Eerste contact arts - het moment waarop de arts voor het eerst contact heeft met de patiënt.
-    * Gereed voor opname - voor patiënten die opgenomen moeten worden: het moment waarop dit bekend is.
+    * Afdeling gebeld - voor patiënten die opgenomen moeten worden: het eerste moment waarop de afdeling is gebeld
+      om de patiënt op te halen van de SEH.
+    * Gereed voor opname - voor patiënten die opgenomen moeten worden: het moment waarop de patiënt zover is.
     * Vertrek - voor patiënten die opgenomen moeten worden: het moment waarop ze daadwerkelijk opgenomen worden.
       Voor de overige patiënten: het moment waarop de SEH verlaten.
+
+    Hier tussendoor kunnen de volgende handelingen worden uitgevoerd:
+    
     * Diagnostiek - aanvraag en uitslag van de diagnostiek.
 
     Om updates over hetzelfde bezoek aan elkaar te kunnen relateren, dient ieder bezoek van een uniek ID voorzien te
@@ -121,6 +128,7 @@ definitions:
       [
         {
           "bezoek_id": "A12345",
+          "dt_aangemeld": "2016-10-07T13:00:00+0200",
           "dt_binnenkomst": "2016-10-07T13:00:00+0200",
           "code_ingangsklacht": "PAC",
           "code_specialisme": "9",
@@ -134,7 +142,8 @@ definitions:
           "dt_aanvang_triage": "2016-10-07T13:08:47+0200",
           "dt_naar_behandelkamer": "2016-10-07T13:10:12+0200",
           "dt_eerste_contact_arts": "2016-10-07T13:42:00+0200",
-          "dt_gereed_voor_opname": "2016-10-07T14:02:17+0200",
+          "dt_afdeling_gebeld": "2016-10-07T13:50:00+0200",
+          "dt_gereed_opname": "2016-10-07T14:02:17+0200",
           "dt_vertrek": "2016-10-07T14:04:17+0200",
           "behandelkamer": "D18",
           "bed": "2",
@@ -155,6 +164,7 @@ definitions:
     example:
       {
         "bezoek_id": "123456AAA",
+        "dt_aangemeld": "2016-10-07T13:05:23+0200",
         "dt_binnenkomst": "2016-10-07T13:08:47+0200",
         "dt_naar_behandelkamer": "2016-10-07T13:10:12+0200",
         "dt_eerste_contact_arts": "2016-10-07T13:42:00+0200",
@@ -174,6 +184,11 @@ definitions:
         type: string
         description: Uniek ID voor dit bezoek. Dit is *geen* patiënt nummer; meerdere bezoeken door dezelfde
           bezoeker resulteren in verschillende IDs.
+
+      dt_aangemeld:
+        type: string
+        format: date-time
+        description: Datum/Tijd waarop de patiënt voor het eerst is aangemeld.
 
       dt_binnenkomst:
         type: string
@@ -195,10 +210,15 @@ definitions:
         format: date-time
         description: Datum/Tijd van het eerste contact van de patiënt met de behandelend arts.
 
-      dt_gereed_voor_opname:
+      dt_afdeling_gebeld:
         type: string
         format: date-time
-        description: Datum/Tijd waarop de patiënt gereed is voor opname.
+        description: Voor patiënten die moeten worden opgenomen: datum/tijd waarop de afdeling is gebeld om de patient op te halen van de SEH.
+
+      dt_gereed_opname:
+        type: string
+        format: date-time
+        description: Voor patiënten die moeten worden opgenomen: datum/tijd waarop de patiënt gereed is voor opname.
 
       dt_vertrek:
         type: string
