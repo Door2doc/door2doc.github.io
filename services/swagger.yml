@@ -1,12 +1,12 @@
 swagger: "2.0"
 info:
   title: Door2doc Frontend Services
-  version: v2
-  description: |
-    Dit is het overzicht van alle beschikbare services. De endpoints zijn
-    zowel gegroepeerd op service als op scherm.
+  version: v2,v3
+  description: >
+    Dit is het overzicht van alle beschikbare services. De endpoints zijn zowel gegroepeerd op service als op scherm.
 
     ## Algemene conventies
+
     Alle datum/tijd velden volgen het formaat van [RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14).
     Dit formaat is voorzien van tijdzone-informatie die niet noodzakelijkerwijs overeenkomt met de huidige tijdzone van de gebruiker.
 

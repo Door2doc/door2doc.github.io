@@ -182,8 +182,7 @@ definitions:
     properties:
       bezoek_id:
         type: string
-        description: Uniek ID voor dit bezoek. Dit is *geen* patiënt nummer; meerdere bezoeken door dezelfde
-          bezoeker resulteren in verschillende IDs.
+        description: Uniek ID voor dit bezoek. Dit is *geen* patiënt nummer; meerdere bezoeken door dezelfde bezoeker resulteren in verschillende IDs.
 
       dt_aangemeld:
         type: string
@@ -213,12 +212,12 @@ definitions:
       dt_afdeling_gebeld:
         type: string
         format: date-time
-        description: Voor patiënten die moeten worden opgenomen: datum/tijd waarop de afdeling is gebeld om de patient op te halen van de SEH.
+        description: "Voor patiënten die moeten worden opgenomen: datum/tijd waarop de afdeling is gebeld om de patient op te halen van de SEH."
 
       dt_gereed_opname:
         type: string
         format: date-time
-        description: Voor patiënten die moeten worden opgenomen: datum/tijd waarop de patiënt gereed is voor opname.
+        description: "Voor patiënten die moeten worden opgenomen: datum/tijd waarop de patiënt gereed is voor opname."
 
       dt_vertrek:
         type: string
@@ -390,7 +389,7 @@ paths:
         - name: afdeling
           in: query
           type: string
-          required: true 
+          required: true
           description: "Afdeling waar deze import op van toepassing is: de SEH of de EHH"
           enum:
             - seh
@@ -426,7 +425,7 @@ paths:
         - name: afdeling
           in: query
           type: string
-          required: true 
+          required: true
           description: "Afdeling waar deze import op van toepassing is: de SEH of de EHH"
           enum:
             - seh
