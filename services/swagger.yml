@@ -1692,6 +1692,7 @@ paths:
         - $ref: "#/parameters/project"
       responses:
         200:
+          description: De domeinen deze gebruiker toegang toe heeft.
           schema:
             type: array
             items:
@@ -1704,9 +1705,10 @@ paths:
       tags:
         - 'Service: Settings'
         - 'Project: ZKH'
-      operationId: getSettings
+      operationId: getSettingsV2
       responses:
         200:
+          description: De settings voor dit ziekennhuis
           schema:
             $ref: '#/definitions/Settings'
 
@@ -1716,9 +1718,10 @@ paths:
       tags:
         - 'Service: Settings'
         - 'Project: HAP'
-      operationId: getSettingsHAP
+      operationId: getSettingsHAPV2
       responses:
         200:
+          description: De settings voor deze huisartsenpost
           schema:
             $ref: '#/definitions/HAPSettings'
 
@@ -1731,6 +1734,7 @@ paths:
       operationId: getSettings
       responses:
         200:
+          description: De settings voor dit ziekenhuis
           schema:
             $ref: '#/definitions/SettingsV3'
 
@@ -1743,6 +1747,7 @@ paths:
       operationId: getSettingsHAP
       responses:
         200:
+          description: De settings voor deze huisartsenpost
           schema:
             $ref: '#/definitions/HAPSettings'
 
@@ -1752,7 +1757,7 @@ paths:
       tags:
         - 'Service: Rooms'
         - 'Project: ZKH'
-      operationId: getRooms
+      operationId: getRoomsV2
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/tijdstip'
@@ -1768,8 +1773,53 @@ paths:
       tags:
         - 'Service: Rooms'
         - 'Project: ZKH'
+      operationId: getRoomV2
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/tijdstip'
+        - name: kamernummer
+          type: string
+          description: Een bestaand kamernummer
+          required: true
+          in: path
+      responses:
+        200:
+          description: Gegevens van de bezoeker die momenteel op deze kamer verblijft.
+          schema:
+            $ref: '#/definitions/VisitorRecord'
+        204:
+          description: Er is momenteel geen bezoeker op deze kamer.
+        404:
+          description: Het opgegeven kamernummer bestaat niet.
+        400:
+          description: Een van de parameters is incorrect.
+
+  /v3/rooms/:
+    get:
+      summary: Haal een overzicht op van de bestaande kamernummers.
+      tags:
+        - 'Service: Rooms'
+        - 'Project: ZKH'
+      operationId: getRooms
+      parameters:
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/tijdstip'
+      responses:
+        200:
+          description: Een overzicht van de beschikbare kamers.
+          schema:
+            $ref: '#/definitions/RoomOverview'
+
+  /v3/rooms/{kamernummer}/:
+    get:
+      summary: Informatie over de patiënt op de opgegeven kamer.
+      tags:
+        - 'Service: Rooms'
+        - 'Project: ZKH'
       operationId: getRoom
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/tijdstip'
         - name: kamernummer
@@ -1795,8 +1845,27 @@ paths:
       tags:
         - 'Service: Timeline'
         - 'Project: ZKH'
+      operationId: getTimelineV2
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/tijdstip'
+      responses:
+        200:
+          description: Een arbitrair geordende lijst van alle bezoekers die op dit moment aanwezig zijn.
+          schema:
+            $ref: '#/definitions/Timeline'
+        400:
+          description: Fout bij het uitlezen van een van de parameters.
+
+  /v3/timeline/:
+    get:
+      summary: Haal een overzicht op van de huidige bezoekers.
+      tags:
+        - 'Service: Timeline'
+        - 'Project: ZKH'
       operationId: getTimeline
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/tijdstip'
       responses:
@@ -2180,8 +2249,6 @@ paths:
       responses:
         302:
           description: De nieuwe simulatie is aangemaakt, en verwijst door naar de aangemaakte simulatie.
-          type: string
-          format: url
 
   /v2/workflow/simulatie/{simulatie_id}:
     get:
