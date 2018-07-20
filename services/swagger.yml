@@ -780,7 +780,7 @@ definitions:
       theme:
         type: string
         description: Identifier die gebruikt wordt om het visuele thema te bepalen.
-      afdelingen:
+      locaties:
         type: object
         additionalProperties:
           $ref: '#/definitions/LocatieSettings'
@@ -860,7 +860,7 @@ definitions:
     required:
       - naam
       - theme
-      - afdelingen
+      - locaties
     properties:
       naam:
         type: string
