@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   title: Aansluitinformatie Upload Service Door2doc
-  version: 1.0
+  version: "1.0"
 
   description: |
     Om de correcte informatie te kunnen presenteren, dient de Door2doc software op de hoogte te zijn van relevante
