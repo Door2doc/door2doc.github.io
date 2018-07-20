@@ -2108,8 +2108,75 @@ paths:
       tags:
         - 'Service: Target'
         - 'Project: ZKH'
+      operationId: getTargetInfoV2
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - name: pretty
+          type: string
+          in: query
+          description: Pretty printing van het resultaat?
+          enum:
+            - true
+        - name: periode
+          type: string
+          default: dag
+          in: query
+          description: Periode waarover gerapporteerd moet worden
+          enum:
+            - dag
+            - week
+            - maand
+            - jaar
+        - name: dienst
+          type: string
+          in: query
+          description: Dienst waarover gerapporteerd moet worden; indien afwezig wordt over de volledige 24h gerapporteerd.
+          enum:
+            - dag
+            - avond
+            - nacht
+        - name: bestemming
+          type: string
+          in: query
+          description: Bestemming waarover gerapporteerd moet worden; indien afwezig wort over alle bestemmingen gerapporteerd.
+          enum:
+            - ontslag
+            - opname
+        - $ref: '#/parameters/arts'
+        - name: specialisme
+          type: string
+          in: query
+          description: Beperk rapportage tot patiënten met dit specialisme.
+        - name: ingangsklacht
+          type: string
+          in: query
+          description: Beperk rapportage tot patiënten met deze ingangsklacht.
+        - name: interval
+          type: string
+          in: query
+          default: deur-tot-vertrek
+          description: Interval waarover target berekend wordt.
+          enum:
+            - deur-tot-vertrek
+            - deur-tot-dokter
+            - dokter-tot-beslissing
+            - beslissing-tot-opname
+
+      responses:
+        200:
+          description: Target informatie voor de opgegeven filters. De informatie is geordend op tijd en bevat maximaal de laatste 30 datapunten.
+          schema:
+            $ref: '#/definitions/Target'
+
+  /v3/target/:
+    get:
+      summary: Geef target informatie
+      tags:
+        - 'Service: Target'
+        - 'Project: ZKH'
       operationId: getTargetInfo
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - name: pretty
           type: string
