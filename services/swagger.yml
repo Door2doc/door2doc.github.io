@@ -767,6 +767,94 @@ definitions:
         }
       }
 
+  SettingsV3:
+    type: object
+    required:
+      - naam
+      - theme
+      - locaties
+    properties:
+      naam:
+        type: string
+        description: Naam van het ziekenhuis
+      theme:
+        type: string
+        description: Identifier die gebruikt wordt om het visuele thema te bepalen.
+      afdelingen:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/LocatieSettings'
+    example:
+      {
+        "theme": "theme-example",
+        "naam": "Voorbeeld ziekenhuis",
+        "locaties": {
+          "loc": {
+            "naam": "Voorbeeld locatie",
+            "afdelingen": {
+              "seh": {
+                "naam": "Spoedpost",
+                "labels": {
+                  "sha": "Arts",
+                  "vpk": "Verpleegkundige",
+                  "ova": "Overige artsen"
+                },
+                "aantal_kamers": 12,
+                "targets": {
+                  "deur_tot_vertrek": 180,
+                  "deur_tot_dokter": 30,
+                  "dokter_tot_beslissing": 90,
+                  "beslissing_tot_opname": 60
+                },
+                "artsen": ["sha", "vpk", "ova"],
+                "features": ["capacity"],
+                "specialismes": [
+                  "Cardiologie",
+                  "Gynaecologie en Verloskunde",
+                  "Klinische geriatrie",
+                  "SEH",
+                  "Specialismen onbekend",
+                ],
+                "ingangsklachten": [
+                  "Humerusfractuur",
+                  "Hydradenitis",
+                  "Hypercalciumie",
+                ],
+                "capacity": {
+                  "artsen": ["sha", "vpk"]
+                },
+              },
+              "ehh": {
+                "naam": "Eerste-Hart Hulp",
+                "labels": {
+                  "sha": "Arts",
+                  "vpk": "Verpleegkundige"
+                },
+                "aantal_kamers": 3,
+                "targets": {
+                  "deur_tot_vertrek": 90,
+                  "deur_tot_dokter": 15,
+                  "dokter_tot_beslissing": 45,
+                  "beslissing_tot_opname": 30
+                },
+                "target_vbt": 180,
+                "artsen": ["sha", "vpk"],
+                "features": ["capacity"],
+                "specialismes": [
+                  "Cardiologie",
+                  "SEH",
+                ],
+                "ingangsklachten": [
+                  "Hyperventilatie",
+                  "Hypocalciëmie",
+                  "Hypoglykemie"
+                ]
+              }
+            }
+          }
+        }
+      }
+
   HAPSettings:
     type: object
     required:
@@ -797,6 +885,18 @@ definitions:
           }
         }
       }
+
+  LocatieSettings:
+    type: object
+    required:
+      - naam
+      - afdelingen
+    properties:
+      naam:
+        type: string
+        description: Naam van de locatie
+      afdelingen:
+        $ref: '#/definitions/AfdelingSettingsCollection'
 
   AfdelingSettingsCollection:
     type: object
@@ -1611,6 +1711,30 @@ paths:
             $ref: '#/definitions/Settings'
 
   /v2/settings/hap/:
+    get:
+      summary: Haal de settings op voor deze huisartsenpost
+      tags:
+        - 'Service: Settings'
+        - 'Project: HAP'
+      operationId: getSettingsHAP
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/HAPSettings'
+
+  /v3/settings/:
+    get:
+      summary: Haal de settings op voor dit ziekenhuis
+      tags:
+        - 'Service: Settings'
+        - 'Project: ZKH'
+      operationId: getSettings
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/SettingsV3'
+
+  /v3/settings/hap/:
     get:
       summary: Haal de settings op voor deze huisartsenpost
       tags:
