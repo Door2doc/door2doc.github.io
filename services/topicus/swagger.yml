@@ -5,36 +5,38 @@ info:
 
   description: |
 
-    # Uitwisselingen
+    # Communicatie-stromen
 
-    1. Afspraken vanuit Topicus. Zodra afspraken worden aangemaakt of gewijzigd in Topicus, worden deze via het
-       `upload` endpoint naar Door2doc gestuurd.
-    2. Afspraak voorstellen. Zodra er een afspraak wordt gepland, wordt bij Door2doc een voorstel voor deze afspraak
-       opgehaald via het `voorstel` endpoint.
+    Tussen Topicus en Door2doc worden de volgende gegevens uitgewisseld:
 
-    # Discussiepunten
+    1. Afspraken -- Topicus is de bron van deze data, en pusht deze naar door2doc
+    2. Afspraakvoorstellen -- Door2doc is de bron van deze data, Topicus vraagt de voorstellen op bij door2doc
+    3. Blokkades -- Door2doc is de bron van deze data, Topicus vraagt blokkades op bij door2doc
 
-    * Wie gaat er over het openstellen/blokkeren van slots
-    * Indien door2doc: hoe gaan we om met tweezijdige communicatie
+    In alle gevallen is Topicus de initiator van de communicatie -- hetzij door middel van push (bij afspraken), hetzij door middel
+    van pull (bij de overige stromen). 
+
+    Afspraken worden gepusht bij iedere wijziging in een of meer van de velden die in dit document worden beschreven. Afspraakvoorstellen 
+    worden gepullt zodra er een afspraakvoorstel nodig is. Blokkades worden gepullt wanneer Topicus maar wil.
 
     # Beveiliging
 
     De beveiliging van de communicatie-stroom naar door2doc bestaat uit de volgende niveaus:
 
     1. HTTPS:  alle verkeer _moet_ over HTTPS plaatsvinden.
-    2. Whitelisten IP range: uploads zijn alleen toegestaan van een gewhiteliste set IP ranges
-    3. Authenticatie: alle requests naar deze service zijn geauthenticeerd met HTTP Basic Authenticatie
+    2. Authenticatie: alle requests naar deze service zijn geauthenticeerd met HTTP Basic Authenticatie
 
     # Technische constraints
 
     De service gaat uit van _at least once delivery_; dit betekent dat exact dezelfde afspraak meerdere malen geupload
     mag worden. Met andere woorden: bij het minste vermoeden dat een afspraak niet goed is geupload, kan deze opnieuw
-    worden geupload.
+    worden geupload. Dit betekent dat de upload van afspraken ook gebruikt kan worden om historische data te uploaden en/of 
+    periodieke totaaloverzichten te pushen. 
 
 basePath: /
 schemes:
   - https
-host: upload.door2doc.net
+host: integrtation.door2doc.net
 
 consumes:
   - application/json
@@ -69,7 +71,6 @@ definitions:
         "hap": "shr",
         "locatie": "al",
         "call_id": "1375545151",
-        "d2d_id": "41242",
         "triage_urgentie": "U2",
         "afsluit_urgentie": "U2",
         "zelfverwijzer": false,
@@ -107,9 +108,6 @@ definitions:
           - vh
       call_id:
         description: uniek ID voor deze afspraak
-        type: string
-      d2d_id:
-        description: indien beschikbaar, een ID dat eerder door door2doc is afgegeven, bijvoorbeeld op basis van het afspraak voorstel
         type: string
       triage_urgentie:
         description: urgentie zoals bepaald door triagist
@@ -156,7 +154,7 @@ definitions:
         type: bool
         default: false
       dt_laatste_keer_HA:
-        description: laatste keer waarop het dossier is geopend
+        description: laatste keer waarop het dossier is geopend door de huisarts
         type: string
         format: date-time
       dt_contact_begin:
@@ -305,15 +303,31 @@ definitions:
       - hap
       - lokatie
       - call_id
-      - d2d_id
-      - dt_voorstel
+      - gem_duur
+      - voorstellen
     example:
       {
         "hap": "shr",
         "locatie": "lu",
         "call_id": "1375545151",
-        "d2d_id": "217837",
-        "dt_voorstel": "2018-07-16T04:30:00+02:00"
+        "gem_duur": 13,
+        "voorstellen": [
+          {
+            "dt_slot": "2018-07-16T04:30:00+02:00",
+            "locatie": "lu",
+            "opmerking": "",
+          },
+          {
+            "dt_slot": "2018-07-16T06:30:00+02:00",
+            "locatie": "lu",
+            "opmerking": "",
+          },
+          {
+            "dt_slot": "2018-07-16T04:15:00+02:00",
+            "locatie": "ld",
+            "opmerking": "Andere locatie in voorstel",
+          },
+        ]
       }
     properties:
       hap:
@@ -333,13 +347,36 @@ definitions:
       call_id:
         description: uniek ID voor deze afspraak
         type: string
-      d2d_id:
-        description: referentie ID vanuit door2doc voor deze afspraak.
-        type: string
-      dt_voorstel:
-        description: voorstel voor datum/tijd voor deze afspraak
-        type: string
-        format: date-time
+      gem_duur:
+        description: gemiddelde historische duur in minuten van een consult met deze kenmerken
+        type: number
+        format: int32
+        minimum: 0 
+      voorstellen:
+        description: lijst met nul of meer afspraakvoorstellen, geordend op preferentie
+        type: array
+        items:
+          type: object
+          required:
+            - dt_slot
+            - locatie
+            - opmerking
+          properties:
+            dt_slot:
+              description: voorgestelde tijd om het consult in te plannen
+              type: string
+              format: datetime
+            locatie:
+              description: voorgestelde locatie om het consult in te plannen, niet noodzakelijkerwijs dezelfde locatie als uitgevraagd
+              type: string
+              enum: 
+                - al
+                - ld
+                - lu
+                - vh
+            opmerking:
+              description: eventuele opmerking ten behoeve van de triagist bij dit voorstel
+              type: string 
 
 paths:
   /services/v3/upload/hap/:
@@ -414,6 +451,6 @@ paths:
 
       responses:
         200:
-          description: Een afspraak-voorstel op basis van aangeleverde informatie.
+          description: Een top N van afspraak-voorstellen op basis van aangeleverde informatie.
           schema:
             $ref: '#/definitions/VoorstelResponse'
