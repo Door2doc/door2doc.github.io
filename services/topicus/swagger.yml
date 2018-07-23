@@ -1,4 +1,4 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   title: Aansluitinformatie Gegevensuitwisseling HAP
   version: 1.0
@@ -7,17 +7,17 @@ info:
 
     # Communicatie-stromen
 
-    Tussen Topicus en Door2doc worden de volgende gegevens uitgewisseld:
-
     1. Afspraken -- Topicus is de bron van deze data, en pusht deze naar door2doc
     2. Afspraakvoorstellen -- Door2doc is de bron van deze data, Topicus vraagt de voorstellen op bij door2doc
-    3. Blokkades -- Door2doc is de bron van deze data, Topicus vraagt blokkades op bij door2doc
+    3. Blokkades/extra slots -- Door2doc is de bron van deze data, Topicus vraagt blokkades en extra slots op bij
+    door2doc
 
     In alle gevallen is Topicus de initiator van de communicatie -- hetzij door middel van push (bij afspraken), hetzij door middel
     van pull (bij de overige stromen). 
 
     Afspraken worden gepusht bij iedere wijziging in een of meer van de velden die in dit document worden beschreven. Afspraakvoorstellen 
-    worden gepullt zodra er een afspraakvoorstel nodig is. Blokkades worden gepullt wanneer Topicus maar wil.
+    worden gepullt zodra er een afspraakvoorstel nodig is. Blokkades en extra slots worden gepullt wanneer Topicus maar
+    wil.
 
     # Beveiliging
 
@@ -31,426 +31,548 @@ info:
     De service gaat uit van _at least once delivery_; dit betekent dat exact dezelfde afspraak meerdere malen geupload
     mag worden. Met andere woorden: bij het minste vermoeden dat een afspraak niet goed is geupload, kan deze opnieuw
     worden geupload. Dit betekent dat de upload van afspraken ook gebruikt kan worden om historische data te uploaden en/of 
-    periodieke totaaloverzichten te pushen. 
+    periodieke totaaloverzichten te pushen.
 
-basePath: /
-schemes:
-  - https
-host: integrtation.door2doc.net
+servers:
+  - url: https://integration.door2doc.net
+    description: Live integratie-server van door2doc
+  - url: https://integration-qa.door2doc.net
+    description: Integratie-server voor het testen van integraties.
 
-consumes:
-  - application/json
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
 
-produces:
-  - application/json
+  schemas:
+    HAP:
+      description: Unieke identifier van een huisartsenpost
+      type: string
+      enum:
+        - shr
+        - dddb
 
-securityDefinitions:
-  basicAuth:
-    type: basic
+    Locatie:
+      description: Unieke identifier van een locatie van een huisartsenpost
+      type: string
+      enum:
+        - al
+        - ld
+        - lu
+        - vh
 
-definitions:
-  Afspraken:
-    type: object
-    required:
-      - afspraken
-    properties:
-      afspraken:
-        type: array
-        items:
-          $ref: '#/definitions/Afspraak'
-  Afspraak:
-    type: object
-    required:
-      - hap
-      - lokatie
-      - call_id
-      - zelfverwijzer
-      - dt_aanname
-    example:
-      {
-        "hap": "shr",
-        "locatie": "al",
-        "call_id": "1375545151",
-        "triage_urgentie": "U2",
-        "afsluit_urgentie": "U2",
-        "zelfverwijzer": false,
-        "dt_aanname": "2018-04-17T07:41:05+0200",
-        "dt_aankomst": "2018-04-17T08:18:56+0200",
-        "dt_gepland": "2018-04-17T08:20:00+0200",
-        "urgent_gepland": false,
-        "dt_laatste_keer_HA": "2018-04-17T08:36:26+0200",
-        "dt_contact_begin": "2018-04-17T08:27:41+0200",
-        "dt_contact_eind": "2018-04-17T08:36:26+0200",
-        "dt_afronding": "2018-04-17T08:36:26+0200",
-        "type_arts": "huisarts",
-        "leeftijd": 30,
-        "postcode": "2352",
-        "ingangsklachten": [
-          "Koorts volwassene",
-          "Keelpijn"
-        ],
-        "code_icpc": "R76"
-      }
-    properties:
-      hap:
-        description: unieke identifier voor de HAP
-        type: string
-        enum:
-          - shr
-          - dddb
-      locatie:
-        description: unieke identifier voor de locatie
-        type: string
-        enum:
-          - al
-          - ld
-          - lu
-          - vh
-      call_id:
-        description: uniek ID voor deze afspraak
-        type: string
-      triage_urgentie:
-        description: urgentie zoals bepaald door triagist
-        type: string
-        enum:
-          - U0
-          - U1
-          - U2
-          - U3
-          - U4
-          - U5
-      afsluit_urgentie:
-        description: urgentie zoals achteraf bepaald
-        type: string
-        enum:
-          - U0
-          - U1
-          - U2
-          - U3
-          - U4
-          - U5
-      urgentie_gewijzigd:
-        description: true indien de urgentie is gewijzigd sinds het oorspronkelijke aanmaken van deze call
-        type: bool
-        default: false
-      zelfverwijzer:
-        description: true indien de bezoeker aan de balie verschenen is in plaats van via een telefonische afspraak is binnengekomen
-        type: bool
-        default: false
-      dt_aanname:
-        description: datum/tijd waarop deze afspraak is aangemaakt
-        type: string
-        format: date-time
-      dt_aankomst:
-        description: datum/tijd waarop deze afspraak is gearriveerd
-        type: string
-        format: date-time
-      dt_gepland:
-        description: datum/tijd waarvoor deze afspraak is gepland te starten
-        type: string
-        format: date-time
-      urgent_gepland:
-        description: true indien er geen expliciete afspraak is ingepland, maar de patient urgent moet worden gezien
-        type: bool
-        default: false
-      dt_laatste_keer_HA:
-        description: laatste keer waarop het dossier is geopend door de huisarts
-        type: string
-        format: date-time
-      dt_contact_begin:
-        description: datum/tijd waarop de afspraak is begonnen
-        type: string
-        format: date-time
-      dt_contact_eind:
-        description: datum/tijd waarop de afspraak is afgelopen
-        type: string
-        format: date-time
-      dt_afronding:
-        description: datum/tijd waarop de afspraak is afgerond
-        type: string
-        format: date-time
-      type_arts:
-        description: type arts dat deze afspraak afhandelt
-        type: string
-        enum:
-          - huisarts
-          - nurse-practitioner
-      leeftijd:
-        description: ondergrens van de leeftijdscategorie van de patiënt in 5-jaars groepen
-        type: integer
-        format: int32
-        minimum: 0
-        maximum: 120
-      postcode:
-        description: eerste vier cijfers van de postcode
-        type: string
-        pattern: '^\d\d\d\d$'
-      ingangsklachten:
-        description: lijst met ingangsklachten
-        type: array
-        items:
+    TriageUrgentie:
+      description: Triage-code zoals bepaald door de triagist
+      type: string
+      enum:
+        - U0
+        - U1
+        - U2
+        - U3
+        - U4
+        - U5
+
+    Afspraken:
+      type: object
+      required:
+        - afspraken
+      properties:
+        afspraken:
+          type: array
+          items:
+            $ref: '#/components/schemas/Afspraak'
+    Afspraak:
+      type: object
+      required:
+        - hap
+        - lokatie
+        - call_id
+        - zelfverwijzer
+        - dt_aanname
+      example:
+        {
+          "hap": "shr",
+          "locatie": "al",
+          "call_id": "1375545151",
+          "triage_urgentie": "U2",
+          "afsluit_urgentie": "U2",
+          "zelfverwijzer": false,
+          "dt_aanname": "2018-04-17T07:41:05+0200",
+          "dt_aankomst": "2018-04-17T08:18:56+0200",
+          "dt_gepland": "2018-04-17T08:20:00+0200",
+          "urgent_gepland": false,
+          "dt_laatste_keer_HA": "2018-04-17T08:36:26+0200",
+          "dt_contact_begin": "2018-04-17T08:27:41+0200",
+          "dt_contact_eind": "2018-04-17T08:36:26+0200",
+          "dt_afronding": "2018-04-17T08:36:26+0200",
+          "type_arts": "huisarts",
+          "leeftijd": 30,
+          "postcode": "2352",
+          "ingangsklachten": [
+            "Koorts volwassene",
+            "Keelpijn"
+          ],
+          "code_icpc": "R76"
+        }
+      properties:
+        hap:
+          $ref: '#/components/schemas/HAP'
+        locatie:
+          $ref: '#/components/schemas/Locatie'
+        call_id:
+          description: uniek ID voor deze afspraak
           type: string
-      code_icpc:
-        description: ICPC code van de uitgevoerde verrichting
-        type: string
-        pattern: '^[A-Z]\d\d(\.\d)?$'
+        triage_urgentie:
+          $ref: '#/components/schemas/TriageUrgentie'
+        afsluit_urgentie:
+          description: urgentie zoals achteraf bepaald
+          type: string
+          enum:
+            - U0
+            - U1
+            - U2
+            - U3
+            - U4
+            - U5
+        urgentie_gewijzigd:
+          description: true indien de urgentie is gewijzigd sinds het oorspronkelijke aanmaken van deze call
+          type: bool
+          default: false
+        zelfverwijzer:
+          description: true indien de bezoeker aan de balie verschenen is in plaats van via een telefonische afspraak is binnengekomen
+          type: bool
+          default: false
+        dt_aanname:
+          description: datum/tijd waarop deze afspraak is aangemaakt
+          type: string
+          format: date-time
+        dt_aankomst:
+          description: datum/tijd waarop deze afspraak is gearriveerd
+          type: string
+          format: date-time
+        dt_gepland:
+          description: datum/tijd waarvoor deze afspraak is gepland te starten
+          type: string
+          format: date-time
+        urgent_gepland:
+          description: true indien er geen expliciete afspraak is ingepland, maar de patient urgent moet worden gezien
+          type: bool
+          default: false
+        dt_laatste_keer_HA:
+          description: laatste keer waarop het dossier is geopend door de huisarts
+          type: string
+          format: date-time
+        dt_contact_begin:
+          description: datum/tijd waarop de afspraak is begonnen
+          type: string
+          format: date-time
+        dt_contact_eind:
+          description: datum/tijd waarop de afspraak is afgelopen
+          type: string
+          format: date-time
+        dt_afronding:
+          description: datum/tijd waarop de afspraak is afgerond
+          type: string
+          format: date-time
+        type_arts:
+          description: type arts dat deze afspraak afhandelt
+          type: string
+          enum:
+            - huisarts
+            - nurse-practitioner
+        leeftijd:
+          description: ondergrens van de leeftijdscategorie van de patiënt in 5-jaars groepen
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 120
+        postcode:
+          description: eerste vier cijfers van de postcode
+          type: string
+          pattern: '^\d\d\d\d$'
+        ingangsklachten:
+          description: lijst met ingangsklachten
+          type: array
+          items:
+            type: string
+        code_icpc:
+          description: ICPC code van de uitgevoerde verrichting
+          type: string
+          pattern: '^[A-Z]\d\d(\.\d)?$'
 
-  Verwerking:
-    type: object
-    required:
-      - call_ids
-    example:
-      {
-        "call_ids": ["12345231", "5329"]
-      }
-    properties:
-      call_ids:
-        description: Lijst van succesvol verwerkte call IDs.
-        type: array
-        items:
+    Verwerking:
+      type: object
+      required:
+        - call_ids
+      example:
+        {
+          "call_ids": ["12345231", "5329"]
+        }
+      properties:
+        call_ids:
+          description: Lijst van succesvol verwerkte call IDs.
+          type: array
+          items:
+            type: string
+
+    VoorstelRequest:
+      type: object
+      required:
+        - hap
+        - lokatie
+        - call_id
+        - zelfverwijzer
+        - triage_urgentie
+        - dt_aanname
+        - type_arts
+        - leeftijd
+        - ingangsklachten
+      example:
+        {
+          "hap": "shr",
+          "locatie": "al",
+          "call_id": "1375545151",
+          "triage_urgentie": "U2",
+          "zelfverwijzer": false,
+          "dt_aanname": "2018-04-17T07:41:05+0200",
+          "type_arts": "huisarts",
+          "leeftijd": 30,
+          "postcode": "2352",
+          "ingangsklachten": [
+            "Koorts volwassene",
+            "Keelpijn"
+          ]
+        }
+      properties:
+        hap:
+          $ref: '#/components/schemas/HAP'
+        locatie:
+          $ref: '#/components/schemas/Locatie'
+          description: unieke identifier voor de locatie
+        call_id:
+          description: uniek ID voor deze afspraak
+          type: string
+        triage_urgentie:
+          $ref: '#/components/schemas/TriageUrgentie'
+        zelfverwijzer:
+          description: true indien de bezoeker aan de balie verschenen is in plaats van via een telefonische afspraak is binnengekomen
+          type: bool
+          default: false
+        dt_aanname:
+          description: datum/tijd waarop deze afspraak is aangemaakt
+          type: string
+          format: date-time
+        type_arts:
+          description: type arts dat deze afspraak afhandelt
+          type: string
+          enum:
+            - huisarts
+            - nurse-practitioner
+        leeftijd:
+          description: ondergrens van de leeftijdscategorie van de patiënt in 5-jaars groepen
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 120
+        postcode:
+          description: eerste vier cijfers van de postcode
+          type: string
+          pattern: '^\d\d\d\d$'
+        ingangsklachten:
+          description: lijst met ingangsklachten
+          type: array
+          items:
+            type: string
+
+    VoorstelResponse:
+      type: object
+      required:
+        - hap
+        - lokatie
+        - call_id
+        - gem_duur
+        - voorstellen
+      example:
+        {
+          "hap": "shr",
+          "locatie": "lu",
+          "call_id": "1375545151",
+          "gem_duur": 13,
+          "voorstellen": [
+            {
+              "dt_slot": "2018-07-16T04:30:00+02:00",
+              "locatie": "lu",
+              "opmerking": "",
+            },
+            {
+              "dt_slot": "2018-07-16T06:30:00+02:00",
+              "locatie": "lu",
+              "opmerking": "",
+            },
+            {
+              "dt_slot": "2018-07-16T04:15:00+02:00",
+              "locatie": "ld",
+              "opmerking": "Andere locatie in voorstel",
+            },
+          ]
+        }
+      properties:
+        hap:
+          description: unieke identifier voor de HAP
+          type: string
+          enum:
+            - shr
+            - dddb
+        locatie:
+          description: unieke identifier voor de locatie
+          type: string
+          enum:
+            - al
+            - ld
+            - lu
+            - vh
+        call_id:
+          description: uniek ID voor deze afspraak
+          type: string
+        gem_duur:
+          description: gemiddelde historische duur in minuten van een consult met deze kenmerken
+          type: number
+          format: int32
+          minimum: 0
+        voorstellen:
+          description: lijst met nul of meer afspraakvoorstellen, geordend op preferentie
+          type: array
+          items:
+            type: object
+            required:
+              - dt_slot
+              - locatie
+              - opmerking
+            properties:
+              dt_slot:
+                description: voorgestelde tijd om het consult in te plannen
+                type: string
+                format: datetime
+              locatie:
+                description: voorgestelde locatie om het consult in te plannen, niet noodzakelijkerwijs dezelfde locatie als uitgevraagd
+                type: string
+                enum:
+                  - al
+                  - ld
+                  - lu
+                  - vh
+              opmerking:
+                description: eventuele opmerking ten behoeve van de triagist bij dit voorstel
+                type: string
+
+    Blokkade:
+      description: Een slot uit het reguliere rooster, of een eerder vrijgegeven slot, dat geblokkeerd is door de HAP of door2doc.
+      type: object
+      required:
+        - d2d_id
+        - hap
+        - locatie
+        - slot_start
+        - reden
+        - toelichting
+      properties:
+        d2d_id:
+          description: door2doc ID van het geblokkeerde slot
+          type: string
+          max_length: 50
+        hap:
+          $ref: '#/components/schemas/HAP'
+        locatie:
+          $ref: '#/components/schemas/Locatie'
+        slot_start:
+          description: aanvangstijd van het geblokkeerde slot
+          type: string
+          format: datetime
+        reden:
+          description: reden van de blokkade als enumeratie
+          type: string
+          enum:
+            - pauze
+            - overdracht
+            - compensatie
+            - overig
+        toelichting:
+          description: eventuele plain-text toelichting op de blokkade
           type: string
 
-  VoorstelRequest:
-    type: object
-    required:
-      - hap
-      - lokatie
-      - call_id
-      - zelfverwijzer
-      - triage_urgentie
-      - dt_aanname
-      - type_arts
-      - leeftijd
-      - ingangsklachten
-    example:
-      {
-        "hap": "shr",
-        "locatie": "al",
-        "call_id": "1375545151",
-        "triage_urgentie": "U2",
-        "zelfverwijzer": false,
-        "dt_aanname": "2018-04-17T07:41:05+0200",
-        "type_arts": "huisarts",
-        "leeftijd": 30,
-        "postcode": "2352",
-        "ingangsklachten": [
-          "Koorts volwassene",
-          "Keelpijn"
-        ]
-      }
-    properties:
-      hap:
-        description: unieke identifier voor de HAP
-        type: string
-        enum:
-          - shr
-          - dddb
-      locatie:
-        description: unieke identifier voor de locatie
-        type: string
-        enum:
-          - al
-          - ld
-          - lu
-          - vh
-      call_id:
-        description: uniek ID voor deze afspraak
-        type: string
-      triage_urgentie:
-        description: urgentie zoals bepaald door triagist
-        type: string
-        enum:
-          - U0
-          - U1
-          - U2
-          - U3
-          - U4
-          - U5
-      zelfverwijzer:
-        description: true indien de bezoeker aan de balie verschenen is in plaats van via een telefonische afspraak is binnengekomen
-        type: bool
-        default: false
-      dt_aanname:
-        description: datum/tijd waarop deze afspraak is aangemaakt
-        type: string
-        format: date-time
-      type_arts:
-        description: type arts dat deze afspraak afhandelt
-        type: string
-        enum:
-          - huisarts
-          - nurse-practitioner
-      leeftijd:
-        description: ondergrens van de leeftijdscategorie van de patiënt in 5-jaars groepen
-        type: integer
-        format: int32
-        minimum: 0
-        maximum: 120
-      postcode:
-        description: eerste vier cijfers van de postcode
-        type: string
-        pattern: '^\d\d\d\d$'
-      ingangsklachten:
-        description: lijst met ingangsklachten
-        type: array
-        items:
+    ExtraSlot:
+      description: Een slot dat buiten het reguliere rooster is vrijgegeven
+      type: object
+      required:
+        - d2d_id
+        - hap
+        - locatie
+        - slot_start
+        - arts
+      properties:
+        d2d_id:
+          description: door2doc ID van het extra slot
           type: string
+          max_length: 50
+        hap:
+          $ref: '#/components/schemas/HAP'
+        locatie:
+          $ref: '#/components/schemas/Locatie'
+        slot_start:
+          description: aanvangsttijd van het extra slot
+          type: string
+          format: datetime
+        arts:
+          description: soort arts waar het extra slot op van toepassing is
+          type: string
+          enum:
+            - huisarts
+            - visitearts
+            - overig
 
-
-  VoorstelResponse:
-    type: object
-    required:
-      - hap
-      - lokatie
-      - call_id
-      - gem_duur
-      - voorstellen
-    example:
-      {
-        "hap": "shr",
-        "locatie": "lu",
-        "call_id": "1375545151",
-        "gem_duur": 13,
-        "voorstellen": [
-          {
-            "dt_slot": "2018-07-16T04:30:00+02:00",
-            "locatie": "lu",
-            "opmerking": "",
-          },
-          {
-            "dt_slot": "2018-07-16T06:30:00+02:00",
-            "locatie": "lu",
-            "opmerking": "",
-          },
-          {
-            "dt_slot": "2018-07-16T04:15:00+02:00",
-            "locatie": "ld",
-            "opmerking": "Andere locatie in voorstel",
-          },
-        ]
-      }
-    properties:
-      hap:
-        description: unieke identifier voor de HAP
-        type: string
-        enum:
-          - shr
-          - dddb
-      locatie:
-        description: unieke identifier voor de locatie
-        type: string
-        enum:
-          - al
-          - ld
-          - lu
-          - vh
-      call_id:
-        description: uniek ID voor deze afspraak
-        type: string
-      gem_duur:
-        description: gemiddelde historische duur in minuten van een consult met deze kenmerken
-        type: number
-        format: int32
-        minimum: 0 
-      voorstellen:
-        description: lijst met nul of meer afspraakvoorstellen, geordend op preferentie
-        type: array
-        items:
-          type: object
-          required:
-            - dt_slot
-            - locatie
-            - opmerking
-          properties:
-            dt_slot:
-              description: voorgestelde tijd om het consult in te plannen
-              type: string
-              format: datetime
-            locatie:
-              description: voorgestelde locatie om het consult in te plannen, niet noodzakelijkerwijs dezelfde locatie als uitgevraagd
-              type: string
-              enum: 
-                - al
-                - ld
-                - lu
-                - vh
-            opmerking:
-              description: eventuele opmerking ten behoeve van de triagist bij dit voorstel
-              type: string 
+    Delta:
+      description: Een overzicht van alle geblokkeerde en toegevoegde slots in een bepaalde periode
+      type: object
+      required:
+        - from
+        - to
+        - blokkades
+        - extra_slots
+      properties:
+        from:
+          description: ondergrens van de range waarover de geblokkeerde en toegevoegde slots zijn opgehaald
+          type: string
+          format: datetime
+        to:
+          description: bovengrens van de range waarover de geblokkeerde en toegevoegde slots zijn opgehaald
+          type: string
+          format: datetime
+        extra_slots:
+          description: lijst van alle (nu bekende) extra slots in de opgevraagde periode
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraSlot'
+        blokkades:
+          description: lijst van alle (nu bekende) geblokkeerde slots in de opgevraagde periode
+          type: array
+          items:
+            $ref: '#/components/schemas/Blokkade'
 
 paths:
-  /services/v3/upload/hap/:
+  /services/v3/workflow/upload/:
     post:
       summary: Upload één of meer afspraken.
       operationId: post_afspraken
       tags:
         - Service Definitie
       security:
-        - basicAuth: []
-      parameters:
-        - name: records
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/Afspraken'
+        - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Afspraken'
       responses:
         200:
           description: De records zijn succesvol verwerkt. Het retourbericht bevat aanvullende informatie over de verwerking.
-          schema:
-            $ref: '#/definitions/Verwerking'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Verwerking'
         400:
           description: Er was een probleem met één of meerdere records. Het retourbericht bevat aanvullende informatie.
-          schema:
-            type: object
-            required:
-              - errors
-            example:
-              {
-                "errors": [
-                  "missing field 'hap' for record 988213",
-                  "invalid field 'triage_urgentie' for record 988213"
-                ]
-              }
-            properties:
-              errors:
-                description: lijst van alle errors die zijn opgetreden
-                type: array
-                items:
-                  type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - errors
+                example:
+                  {
+                    "errors": [
+                      "missing field 'hap' for record 988213",
+                      "invalid field 'triage_urgentie' for record 988213"
+                    ]
+                  }
+                properties:
+                  errors:
+                    description: lijst van alle errors die zijn opgetreden
+                    type: array
+                    items:
+                      type: string
         403:
           description: Er was een probleem met het authenticeren.
-          schema:
-            type: object
-            required:
-              - errors
-            example:
-              {
-                "errors": ["no Authorization header present", "invalid authorization header"]
-              }
-            properties:
-              errors:
-                description: lijst van alle errors die zijn opgetreden
-                type: array
-                items:
-                  type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - errors
+                example:
+                  {
+                    "errors": ["no Authorization header present", "invalid authorization header"]
+                  }
+                properties:
+                  errors:
+                    description: lijst van alle errors die zijn opgetreden
+                    type: array
+                    items:
+                      type: string
 
-  /services/v3/voorstel/:
+  /services/v3/workflow/voorstel/:
     post:
       summary: Vraag om een afspraak voorstel
       operationId: get_voorstel
       tags:
         - Service Definitie
       security:
-        - basicAuth: []
-      parameters:
-        - name: afspraak
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/VoorstelRequest'
+        - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoorstelRequest'
 
       responses:
         200:
           description: Een top N van afspraak-voorstellen op basis van aangeleverde informatie.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoorstelResponse'
+
+  /services/v3/workflow/delta/:
+    get:
+      summary: Vraag de extra slots en blokkades op voor een bepaalde periode
+      operationId: getDelta
+      tags:
+        - Service Definitie
+      security:
+        - BasicAuth: []
+      parameters:
+        - name: from
+          in: query
+          required: true
           schema:
-            $ref: '#/definitions/VoorstelResponse'
+            type: string
+            format: datetime
+          example: "2018-07-20T19:00:00+02:00"
+          description: Begintijd van de periode (inclusief)
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: datetime
+          example: "2018-07-23T08:00:00+02:00"
+          description: Eindtijd van de periode (exclusief)
+      responses:
+        200:
+          description: Een overzicht van alle nieuwe en geblokkeerde slots ten opzichte van het standaard rooster
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delta'
