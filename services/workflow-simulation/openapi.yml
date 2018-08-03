@@ -5,6 +5,10 @@ info:
   version: 1.0
   description: |
 
+servers:
+  - url: https://shr.door2doc.net
+  - url: https://dddb.door2doc.net 
+
 components:
   schemas:
     TriageUrgentie:
