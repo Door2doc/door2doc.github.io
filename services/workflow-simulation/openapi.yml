@@ -1,0 +1,422 @@
+openapi: 3.0.0
+
+info:
+  title: Workflow Simulation API
+  version: 1.0
+  description: |
+
+components:
+  schemas:
+    TriageUrgentie:
+      description: Urgentie zoals bepaald tijdens de triage
+      type: string
+      enum:
+        - U0
+        - U1
+        - U2
+        - U3
+        - U4
+        - U5
+
+    Ingangsklachten:
+      description: Lijst ingangsklachten op basis waarvan een call is aangemaakt
+      type: array
+      items:
+        type: string
+      example: ["Beenklachten", "Oogklachten"]
+
+    Reistijd:
+      description: Gemiddelde reistijd per locatie in minuten, per afdeling
+      type: object
+      additionalProperties:
+        type: number
+        format: int32
+        minimum: 0
+      example: {
+        "al": 12,
+        "lu": 19,
+        "ld": 39
+      }
+
+    SimulationScore:
+      description: Huidige score van de simulatie. Let op dat de bezettingsgraad al terug te vinden is in de grid status.
+      type: object
+      properties:
+        verkeerd_gepland:
+          type: integer
+          format: int32
+          description: Aantal afspraken die buiten de gestelde tijd gepland zijn
+        wachttijd:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Gemiddelde voorspelde wachttijd op dit moment
+        vertraagd:
+          type: integer
+          format: int32
+          description: Aantal afspraken tot nog toe dat later is begonnen dan gepland
+        vertraging:
+          type: integer
+          format: int32
+          description: Som van de delta(gepland, begonnen) voor alle afspraken die tot nog toe zijn begonnen.
+        laatkomers:
+          type: integer
+          format: int32
+          description: Aantal patienten dat later is aangekomen dan hun geplande afspraak
+
+    SimulationEvent:
+      description: Een binnenkomende call in de simulatie die gepland moet worden. Afwezig indien de simulatie is afgelopen.
+      type: object
+      properties:
+        locatie:
+          type: string
+          description: Locatie waar de call is aangenomen
+          example: "al"
+        urgentie:
+          $ref: '#/components/schemas/TriageUrgentie'
+        ingangsklachten:
+          $ref: '#/components/schemas/Ingangsklachten'
+        postcode:
+          type: string
+          description: Postcode van de patient
+          example: "2204"
+        leeftijdsgroep:
+          type: string
+          description: Leeftijdsgroep van de patient
+          example: 30
+        zelfverwijzer:
+          type: boolean
+          description: Is deze patient zelf binnen komen lopen?
+        reistijd:
+          $ref: '#/components/schemas/Reistijd'
+        gem_duur:
+          type: number
+          description: Gemiddelde duur van een afspraak met deze kenmerken in minuten
+          example: 17
+
+    Simulation:
+      description: Status van de simulatie op tijdstip t.
+      type: object
+      required:
+        - t
+        - locaties
+        - grid
+        - score
+      properties:
+        t:
+          type: string
+          format: date-time
+          description: Huidige tijd volgens de simulatie
+        locaties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Locatie'
+          description: Details van de locaties in dit overzicht
+        grid:
+          $ref: '#/components/schemas/Grid'
+        event:
+          $ref: '#/components/schemas/SimulationEvent'
+        score:
+          $ref: '#/components/schemas/SimulationScore'
+
+    Grid:
+      type: object
+      required:
+        - start
+        - einde
+        - slot_duur
+        - periodes
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: Begintijd van dit overzicht
+        einde:
+          type: string
+          format: date-time
+          description: Eindtijd van dit overzicht
+        slot_duur:
+          type: integer
+          format: int32
+          description: Duur van één slot in minuten
+        periodes:
+          type: array
+          description: Periodes (tijdvakken van 1 uur) in dit overzicht
+          items:
+            $ref: '#/components/schemas/Periode'
+
+    Locatie:
+      type: object
+      required:
+        - id
+        - vertraagd
+        - wachttijd_min
+        - wachttijd_max
+      properties:
+        id:
+          type: string
+          description: ID van deze locatie
+        vertraagd:
+          type: integer
+          format: int32
+          description: Aantal slots dat deze locatie achterloopt op planning
+        wachttijd_min:
+          type: integer
+          format: int32
+          description: Ondergrens wachttijd in minuten
+        wachttijd_max:
+          type: integer
+          format: int32
+          description: Bovengrens wachttijd in minuten
+      example: {
+        "id": "al",
+        "vertraagd": 2,
+        "wachttijd_min": 30,
+        "wachttijd_max": 45,
+      }
+
+    Periode:
+      description: "Periode van 1 uur in het grid"
+      type: object
+      required:
+        - start
+        - einde
+        - bezetting
+        - tijden
+        - slots
+        - u2
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: Begintijd van deze periode
+        einde:
+          type: string
+          format: date-time
+          description: Eindtijd van deze periode
+        bezetting:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 100
+          description: Bezettingspercentage per locatie in de range 0-100
+          example: {
+            "al": 17,
+            "lu": 142,
+            "ld": 79,
+          }
+        tijden:
+          type: array
+          description: Lijst van de begintijden van alle tijdvakken binnen deze periode
+          items:
+            type: string
+            format: date-time
+        slots:
+          type: array
+          description: Lijst van alle normale slots binnen deze periode
+          items:
+            $ref: '#/components/schemas/Slot'
+        u2:
+          type: array
+          description: Lijst van alle slots voor urgente afspraken binnen deze periode
+          items:
+            $ref: '#/components/schemas/Slot'
+
+    Slot:
+      description: "Een enkel slot in het rooster"
+      type: object
+      required:
+        - id
+        - locatie
+        - start
+        - einde
+        - type_arts
+        - status
+      properties:
+        id:
+          type: string
+          description: Uniek ID voor dit slot
+        locatie:
+          type: string
+          description: ID van de locatie waar dit slot bij hoort
+          example: "al"
+        start:
+          type: string
+          format: date-time
+          description: Begintijd van dit slot
+        einde:
+          type: string
+          format: date-time
+          description: Eindtijd van dit slot
+        type_arts:
+          type: string
+          description: Type arts voor dit slot
+          enum:
+            - huisarts
+            - achterwacht
+            - nurse-practitioner
+            - visite-arts
+        status:
+          type: string
+          description: Status van dit slot. Een open slot kan gevuld worden met een afspraak. Een bezet slot heeft een afspraak. Een geblokkeerd slot kan niet gevuld worden met een afspraak. Een beschikbaar slot is niet zichtbaar, maar kan worden bijgeplust.
+          enum:
+            - open
+            - bezet
+            - geblokkeerd
+            - beschikbaar
+        text:
+          type: string
+          description: Toelichting op dit slot
+          example: "overdracht"
+        afspraak:
+          $ref: '#/components/schemas/Afspraak'
+
+    Afspraak:
+      description: Een afspraak vanuit Topicus
+      type: object
+      required:
+        - id
+        - urgentie
+        - status
+      properties:
+        id:
+          type: string
+          description: Uniek ID voor deze afspraak
+        urgentie:
+          $ref: '#/components/schemas/TriageUrgentie'
+        aangemaakt:
+          type: string
+          format: date-time
+          description: Tijdstip waarop deze afspraak is gemaakt
+        gearriveerd:
+          type: string
+          format: date-time
+          description: Tijdstip waarop de patient is gearriveerd
+        start:
+          type: string
+          format: date-time
+          description: Tijdstip waarop deze afspraak daadwerkelijk is begonnen
+        einde:
+          type: string
+          format: date-time
+          description: Tijdstip waarop deze afspraak daadwerkelijk is begonnen
+        status:
+          type: string
+          enum:
+            - "gepland"
+            - "begonnen"
+            - "afgerond"
+            - "vertraagd"
+            - "gemist"
+          description: Status van deze afspraak
+        icpc_code:
+          type: string
+          description: Code voor de diagnose
+        ingangsklachten:
+          $ref: '#/components/schemas/Ingangsklachten'
+        postcode:
+          type: string
+          description: Postcode van de patient
+        leeftijdsgroep:
+          type: string
+          description: Leeftijdsgroep van de patient
+      example:
+        {
+          "id": "S122876",
+          "urgentie": "U4",
+          "aangemaakt": "2017-10-01T11:45:00+02:00",
+          "gearriveerd": "2017-10-01T12:06:00+02:00",
+          "start": "2017-10-01T12:17:00+02:00",
+          "einde": "2017-10-01T12:28:00+02:00",
+          "status": "afgerond",
+          "icpc_code": "L18.01",
+          "icpc_uitleg": "Fibromyalgie",
+          "postcode": "1000 AA",
+          "leeftijdsgroep": "2"
+        }
+
+  parameters:
+    simulation_id:
+      description: Uniek ID van de simulatie
+      name: simulation_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+paths:
+  /services/v2/simulation:
+    post:
+      summary: Begin een nieuwe simulatie
+      operationId: newSimulation
+      parameters:
+        - name: from
+          schema:
+            type: string
+            format: 'date-time'
+            example: "2018-07-01T22:00:00+02:00"
+          in: query
+          required: true
+          description: Datum/tijd in RFC3339 van de begintijd van de simulatie.
+        - name: to
+          schema:
+            type: string
+            format: 'date-time'
+            example: "2018-07-02T08:00:00+02:00"
+          format: 'date-time'
+          in: query
+          required: true
+          description: Datum/tijd in RFC3339 van de eindtijd van de simulatie.
+
+      responses:
+        '201':
+          description: De nieuwe simulatie is aangemaakt, en verwijst door naar de aangemaakte simulatie.
+          headers:
+            Location:
+              description: De Location header geeft aan waar de nieuwe simulatie gevonden kan worden.
+              schema:
+                type: string
+                format: uri
+                example: https://shr.door2doc.net/services/v2/simulation/d6dcb822-bcb0-49c8-9c32-fe659b902007
+
+  /services/v2/simulation/{simulation_id}:
+    get:
+      summary: Huidige status van de simulatie
+      operationId: getSimulation
+      parameters:
+        - $ref: '#/components/parameters/simulation_id'
+      responses:
+        '200':
+          description: Huidige status van de simulatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+
+    post:
+      summary: Plan de openstaande afspraak in
+      operationId: planAfspraak
+      parameters:
+        - $ref: '#/components/parameters/simulation_id'
+        - name: slot_id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: ID van het slot waar de afspraak gepland moet worden
+        - name: evaluate
+          in: query
+          schema:
+            type: boolean
+          description: Geef het resultaat van het inplannen van deze afspraak, zonder de afspraak daadwerkelijk in te plannen.
+          default: false
+      responses:
+        '200':
+          description: Nieuwe status van de simulatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
