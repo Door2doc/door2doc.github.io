@@ -385,6 +385,23 @@ paths:
                 type: string
                 format: uri
                 example: https://shr.door2doc.net/services/v2/simulation/d6dcb822-bcb0-49c8-9c32-fe659b902007
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                properties:
+                  id:
+                    type: string
+                    format: 'uuid'
+                    example: "d6dcb822-bcb0-49c8-9c32-fe659b902007"
+          links:
+            GetSimulation:
+              operationId: getSimulation
+              parameters:
+                simulation_id: '$response.body#/id'
+              description: Het `id` in de response kan worden gebruikt als `simulation_id` in de andere requests.  
 
   /services/v2/simulation/{simulation_id}/:
     get:
