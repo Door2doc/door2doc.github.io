@@ -361,7 +361,7 @@ paths:
           schema:
             type: string
             format: 'date-time'
-            example: "2018-07-01T22:00:00+02:00"
+            example: "2017-07-01T22:00:00+02:00"
           in: query
           required: true
           description: Datum/tijd in RFC3339 van de begintijd van de simulatie.
@@ -369,7 +369,7 @@ paths:
           schema:
             type: string
             format: 'date-time'
-            example: "2018-07-02T08:00:00+02:00"
+            example: "2017-07-02T08:00:00+02:00"
           format: 'date-time'
           in: query
           required: true
@@ -401,7 +401,7 @@ paths:
               operationId: getSimulation
               parameters:
                 simulation_id: '$response.body#/id'
-              description: Het `id` in de response kan worden gebruikt als `simulation_id` in de andere requests.  
+              description: Het `id` in de response kan worden gebruikt als `simulation_id` in de andere requests.
 
   /services/v2/simulation/{simulation_id}/:
     get:
