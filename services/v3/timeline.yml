@@ -54,7 +54,6 @@ components:
         error:
           type: string
           example: "invalid date"
-
     Arts:
       type: string
       enum:
@@ -198,10 +197,6 @@ components:
           example: "Huisarts"
         urgentie:
           $ref: '#/components/schemas/Urgentie'
-        pincode:
-          type: string
-          description: "Korte code waarmee de patiënt zijn eigen wachttijd kan observeren."
-          example: "288391"
 
       required:
         - bezoek_nummer
@@ -218,6 +213,22 @@ components:
         - minuten_tot_dokter
         - minuten_sinds_dokter
         - minuten_sinds_beslissing
+
+    Pincode:
+      description: Een pincode voor een specifieke bezoeker
+      type: object
+      required:
+        - bezoeknummer
+        - pincode
+      properties:
+        bezoek_nummer:
+          type: string
+          description: Identifier voor het opgevraagde bezoek
+          example: "0012314"
+        pincode:
+          type: string
+          description: Een korte pincode voor deze bezoeker
+          example: "499291"
 
 paths:
   /services/v3/timeline/:
@@ -244,3 +255,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /services/v3/timeline/{bezoek_nummer}/pincode:
+    get:
+      summary: Genereer een pincode die deze bezoeker in hun app kan gebruiken.
+      operationId: getPincode
+      tags:
+        - 'Service definitie'
+      parameters:
+        - name: bezoek_nummer
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Een pincode voor deze bezoeker
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pincode'
+        '404':
+          description: Deze bezoeker bestaat niet of is niet (meer) aanwezig.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
