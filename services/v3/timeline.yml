@@ -276,6 +276,8 @@ paths:
     get:
       summary: Haal een overzicht op van de huidige bezoekers.
       operationId: getTimeline
+      tags:
+        - 'Service definitie'
       parameters:
         - $ref: '#/components/parameters/locatie'
         - $ref: '#/components/parameters/afdeling'
