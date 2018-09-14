@@ -194,6 +194,7 @@ components:
         herkomst:
           type: string
           description: "Code die aangeeft hoe deze patiënt op deze afdeling terecht is gekomen."
+          example: "Huisarts"
         urgentie:
           $ref: '#/components/schemas/Urgentie'
         pincode:
