@@ -7,6 +7,10 @@ info:
     De timeline service geeft een overzicht van de huidige aanwezige bezoekers.
 
 servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: demo
   - url: https://demo.door2doc.net
   - url: https://dz.door2doc.net
 
