@@ -11,8 +11,6 @@ servers:
     variables:
       customer:
         default: demo
-  - url: https://demo.door2doc.net
-  - url: https://dz.door2doc.net
 
 components:
   parameters:
@@ -73,6 +71,17 @@ components:
         * chi: Chirurg
         * ov: Overig
 
+    Urgentie:
+      description: Kleurcode van de urgentie van deze patient
+      type: string
+      enum:
+        - rood
+        - oranje
+        - geel
+        - groen
+        - blauw
+        - onbekend
+
     Zorg:
       type: string
       enum:
@@ -106,71 +115,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Bezoeker'
-      example:
-        {
-          "visitors": [
-            {
-              "bezoek_nummer": "0000320459",
-              "type_arts": "sha",
-              "care": "hc",
-              "status": "inbehandeling",
-              "queue": 0,
-              "specialisme": "Heelkunde",
-              "kamernummer": "D15.01",
-              "reden": "Stomp buiktrauma",
-              "leeftijdsgroep": 1,
-              "herkomst": "Huisarts",
-
-              "binnenkomst": "2017-03-13T10:08:00+01:00",
-              "naar_kamer": "2017-03-13T10:26:00+01:00",
-              "gezien": "2017-03-13T11:12:00+01:00",
-              "minuten_aanwezig": 262,
-              "minuten_tot_dokter": 200,
-              "minuten_sinds_dokter": 62,
-              "minuten_sinds_beslissing": 0
-            },
-            {
-              "bezoek_nummer": "0000320452",
-              "type_arts": "int",
-              "care": "lc",
-              "status": "wachtend",
-              "queue": 0,
-              "specialisme": "Interne geneeskunde",
-              "kamernummer": "D17.01",
-              "reden": "Algehele malaise",
-              "leeftijdsgroep": 7,
-              "herkomst": "Radiologie",
-
-              "binnenkomst": "2017-03-13T10:08:00+01:00",
-              "naar_kamer": "2017-03-13T10:26:00+01:00",
-              "gezien": "2017-03-13T11:12:00+01:00",
-              "minuten_aanwezig": 42,
-              "minuten_tot_dokter": 42,
-              "minuten_sinds_dokter": 0,
-              "minuten_sinds_beslissing": 0
-            },
-            {
-              "bezoek_nummer": "0000320452",
-              "type_arts": "int",
-              "care": "lc",
-              "status": "wachtend",
-              "queue": 1,
-              "specialisme": "Interne geneeskunde",
-              "kamernummer": "D17.01",
-              "reden": "Algehele malaise",
-              "leeftijdsgroep": 4,
-              "herkomst": "Huisartsenpost",
-
-              "binnenkomst": "2017-03-13T10:08:00+01:00",
-              "naar_kamer": "2017-03-13T10:26:00+01:00",
-              "gezien": "2017-03-13T11:12:00+01:00",
-              "minuten_aanwezig": 42,
-              "minuten_tot_dokter": 42,
-              "minuten_sinds_dokter": 0,
-              "minuten_sinds_beslissing": 0
-            }
-          ]
-        }
 
     Bezoeker:
       type: object
@@ -179,6 +123,7 @@ components:
         bezoek_nummer:
           type: string
           description: Unieke identifier voor dit bezoek
+          example: "0012314"
         type_arts:
           $ref: '#/components/schemas/Arts'
         care:
@@ -193,52 +138,68 @@ components:
         specialisme:
           type: string
           description: Het exacte specialisme van de benodigde arts.
+          example: "Longgeneeskunde"
         kamernummer:
           type: string
           description: Het kamernummer (eventueel met bednummer) waar deze bezoeker momenteel verblijft.
             Het is mogelijk dat een bezoeker wel gezien is, nog niet vertrokken is, en niet meer op een kamer ligt.
+          example: "D12.02"
         reden:
           type: string
           description: De reden van dit bezoek.
+          example: "Dyspnoe NNO"
         binnenkomst:
           type: string
           format: 'date-time'
           description: Datum/Tijd waarop de bezoeker is binnengekomen.
+          example: "2017-02-28 15:44:00+01:00"
         naar_kamer:
           type: string
           format: 'date-time'
           description: Datum/Tijd waarop de bezoeker de huidige behandelkamer is binnengekomen.
+          example: "2017-02-28T16:18:00+01:00"
         gezien:
           type: string
           format: 'date-time'
           description: Datum/Tijd waarop de bezoeker voor het eerst is gezien door een arts.
+          example: "2017-02-28T16:42:00+01:00"
         opname:
           type: string
           format: 'date-time'
           description: Datum/Tijd waarop de bezoeker is geregistreerd voor opname.
+          example: null
         minuten_aanwezig:
           type: integer
           format: int32
           description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
+          example: 76
         minuten_tot_dokter:
           type: integer
           format: int32
           description: "De huidige deur-tot-doktertijd; indien de bezoeker gezien is: het aantal minuten van binnenkomst tot `gezien`; anders gelijk aan `minuten_aanwezig`."
+          example: 58
         minuten_sinds_dokter:
           type: integer
           format: int32
           description: "Voor bezoekers die gezien zijn door een arts: het aantal minuten sinds `gezien`. Anders gelijk aan 0."
+          example: 18
         minuten_sinds_beslissing:
           type: integer
           format: int32
           description: "Voor bezoekers waar de arts een beslissing over genomen heeft: het aantal minuten sinds `opname`. Anders gelijk aan 0."
         leeftijdsgroep:
-          type: integer
-          format: int32
+          type: string
           description: "Abstracte indicatie van de leeftijdsgroep van deze bezoeker."
+          example: "8"
         herkomst:
           type: string
           description: "Code die aangeeft hoe deze patiënt op deze afdeling terecht is gekomen."
+        urgentie:
+          $ref: '#/components/schemas/Urgentie'
+        pincode:
+          type: string
+          description: "Korte code waarmee de patiënt zijn eigen wachttijd kan observeren."
+          example: "288391"
 
       required:
         - bezoek_nummer
@@ -249,31 +210,12 @@ components:
         - reden
         - leeftijdsgroep
         - herkomst
+        - urgentie
         - binnenkomst
         - minuten_aanwezig
         - minuten_tot_dokter
         - minuten_sinds_dokter
         - minuten_sinds_beslissing
-      example:
-        {
-          "bezoek_nummer": "0000320459",
-          "type_arts": "sha",
-          "care": "HC",
-          "status": "inbehandeling",
-          "queue": 0,
-          "specialisme": "Heelkunde",
-          "kamernummer": "D15.01",
-          "reden": "Stomp buiktrauma",
-          "leeftijdsgroep": 4,
-          "herkomst": "Huisarts",
-          "binnenkomst": "2017-03-13T10:08:00+02:00",
-          "naar_kamer": "2017-03-13T10:26:00+02:00",
-          "gezien": "2017-03-13T11:12:00+02:00",
-          "minuten_aanwezig": 262,
-          "minuten_tot_dokter": 200,
-          "minuten_sinds_dokter": 62,
-          "minuten_sinds_beslissing": 0
-        }
 
 paths:
   /services/v3/timeline/:
