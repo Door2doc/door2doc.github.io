@@ -135,6 +135,7 @@ components:
           format: int32
           description: Totaal aantal aanwezige bezoekers die dezelfde arts nodig hebben.
           minimum: 0
+          example: 1
         specialisme:
           type: string
           description: Het exacte specialisme van de benodigde arts.
