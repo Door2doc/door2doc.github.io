@@ -1828,11 +1828,31 @@ paths:
   /v2/predict/:
     get:
       summary: Voorspel de wachttijd op de opgegeven afdeling
+      operationId: get_prediction_v2
+      tags:
+        - 'Service: Prediction'
+        - 'Project: ZKH'
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/arts'
+        - $ref: '#/parameters/tijdstip'
+      responses:
+        200:
+          description: De voorspelling voor het opgegeven tijdstip
+          schema:
+            $ref: '#/definitions/Prediction'
+        400:
+          description: Fout bij het uitlezen van een van de parameters.
+
+  /v3/predict/:
+    get:
+      summary: Voorspel de wachttijd op de opgegeven afdeling
       operationId: get_prediction
       tags:
         - 'Service: Prediction'
         - 'Project: ZKH'
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/arts'
         - $ref: '#/parameters/tijdstip'
@@ -1983,7 +2003,7 @@ paths:
       tags:
         - 'Service: Capacity'
         - 'Project: ZKH'
-      operationId: getCapacity
+      operationId: getCapacityV2
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/d-from'
@@ -2004,7 +2024,7 @@ paths:
         - 'Service: Capacity'
         - 'Reporting'
         - 'Project: ZKH'
-      operationId: getCapacityReport
+      operationId: getCapacityReportV2
       parameters:
         - $ref: '#/parameters/arts'
         - $ref: '#/parameters/afdeling'
@@ -2024,8 +2044,85 @@ paths:
       tags:
         - 'Service: Capacity'
         - 'Project: ZKH'
+      operationId: getCapacitySummaryV2
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - name: referentie
+          type: string
+          in: query
+          description: Bepaalt hoe referentie_nodig wordt berekend; op basis van het gemiddelde, of het zoveelste percentiel
+          default: avg
+          enum:
+            - "avg"
+            - "60"
+            - "75"
+        - name: bandbreedte
+          type: string
+          in: query
+          default: "75"
+          enum:
+            - "75"
+            - "80"
+            - "90"
+          description: Bepaalt op basis van welk percentiel de bovengrens (en daarmee ook de ondergrens) van de bandbreedte wordt berekend
+      responses:
+        200:
+          description: De capaciteit over het afgelopen jaar per dag/uur
+          schema:
+            $ref: '#/definitions/TreatmentPointSummary'
+
+  /v3/capacity/calculate/:
+    get:
+      summary: Bereken de capaciteit in behandelpunten over de opgegeven periode
+      tags:
+        - 'Service: Capacity'
+        - 'Project: ZKH'
+      operationId: getCapacity
+      parameters:
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/d-from'
+        - $ref: '#/parameters/d-to'
+      produces:
+        - application/json
+        - text/csv
+      responses:
+        200:
+          description: De behandelpunten voor de opgegeven periode per tijdsvak
+          schema:
+            $ref: '#/definitions/TreatmentPointOverview'
+
+  /v3/capacity/calculate/details/:
+    get:
+      summary: Gedetailleerde output over de capaciteit
+      tags:
+        - 'Service: Capacity'
+        - 'Reporting'
+        - 'Project: ZKH'
+      operationId: getCapacityReport
+      parameters:
+        - $ref: '#/parameters/arts'
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/d-from'
+        - $ref: '#/parameters/d-to'
+      produces:
+        - text/csv
+      responses:
+        200:
+          description: De behandelpunten per patiënt voor de opgegeven periode per tijdsvak
+          schema:
+            $ref: '#/definitions/TreatmentPointDetails'
+
+  /v3/capacity/calculate/summary/:
+    get:
+      summary: Samenvatting van de capaciteit over het afgelopen jaar
+      tags:
+        - 'Service: Capacity'
+        - 'Project: ZKH'
       operationId: getCapacitySummary
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - name: referentie
           type: string
