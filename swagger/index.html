@@ -38,11 +38,11 @@
         // Build a system
         const ui = SwaggerUIBundle({
             urls: [
-                {"url": "/services/swagger.yml", "name": "Algemene documentatie"},
-                {"url": "/services/upload/swagger.yml", "name": "Integratie ziekenhuizen"},
-                {"url": "/services/hap.yml", "name": "Integratie HAP"},
-                {"url": "/services/workflow-simulation/openapi.yml", "name": "Workflow: Simulation"},
-
+                {"url": "../services/swagger.yml", "name": "Algemene documentatie"},
+                {"url": "../services/v3/timeline.yml", "name": "ZKH: Timeline V3"},
+                {"url": "../services/upload/swagger.yml", "name": "ZKH: Integratie"},
+                {"url": "../services/hap.yml", "name": "HAP: Integratie"},
+                {"url": "../services/workflow-simulation/openapi.yml", "name": "HAP: Simulation"}
             ],
             dom_id: '#swagger-ui',
             deepLinking: true,

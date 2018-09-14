@@ -1,0 +1,296 @@
+openapi: 3.0.0
+
+info:
+  title: Timeline Service
+  version: 3
+  description: |
+    De timeline service geeft een overzicht van de huidige aanwezige bezoekers.
+
+servers:
+  - url: https://demo.door2doc.net
+  - url: https://dz.door2doc.net
+
+components:
+  parameters:
+    afdeling:
+      description: De afdeling waarvoor deze informatie wordt opgevraagd
+      name: afdeling
+      in: query
+      required: true
+      schema:
+        type: string
+        enum:
+          - "seh"
+          - "ehh"
+
+    locatie:
+      description: De locatie waarvoor deze informatie wordt opgevraagd.
+      name: locatie
+      in: query
+      required: true
+      schema:
+        type: string
+
+    tijdstip:
+      description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan gedraagt de service
+       zich alsof deze op dat moment werd aangeroepen. Het format is beschreven in RFC3339.
+      name: t
+      in: query
+      required: false
+      example: "2017-02-28T17:00:00+01:00"
+      schema:
+        type: string
+        format: 'date-time'
+
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "invalid date"
+
+    Arts:
+      type: string
+      enum:
+        - vpk
+        - seh
+        - int
+        - chi
+        - ov
+      description: |
+        Type arts:
+        * vpk: Verpleegkundige (geen arts)
+        * seh: SEH arts
+        * int: Internist
+        * chi: Chirurg
+        * ov: Overig
+
+    Zorg:
+      type: string
+      enum:
+        - lc
+        - mc
+        - hc
+      description: |
+        Type zorg dat benodigd is:
+        * hc: High Care
+        * mc: Medium Care
+        * lc: Low Care
+
+    BezoekerStatus:
+      type: string
+      enum:
+        - wachtend
+        - inbehandeling
+        - opname
+      description: |
+        Status van de bezoeker:
+        * wachtend: Wachtend op arts
+        * inbehandeling: Gezien door een arts
+        * opname: Geregistreerd voor opname, maar nog niet opgenomen
+
+    Timeline:
+      type: object
+      required:
+        - visitors
+      properties:
+        visitors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bezoeker'
+      example:
+        {
+          "visitors": [
+            {
+              "bezoek_nummer": "0000320459",
+              "type_arts": "sha",
+              "care": "hc",
+              "status": "inbehandeling",
+              "queue": 0,
+              "specialisme": "Heelkunde",
+              "kamernummer": "D15.01",
+              "reden": "Stomp buiktrauma",
+              "leeftijdsgroep": 1,
+              "herkomst": "Huisarts",
+
+              "binnenkomst": "2017-03-13T10:08:00+01:00",
+              "naar_kamer": "2017-03-13T10:26:00+01:00",
+              "gezien": "2017-03-13T11:12:00+01:00",
+              "minuten_aanwezig": 262,
+              "minuten_tot_dokter": 200,
+              "minuten_sinds_dokter": 62,
+              "minuten_sinds_beslissing": 0
+            },
+            {
+              "bezoek_nummer": "0000320452",
+              "type_arts": "int",
+              "care": "lc",
+              "status": "wachtend",
+              "queue": 0,
+              "specialisme": "Interne geneeskunde",
+              "kamernummer": "D17.01",
+              "reden": "Algehele malaise",
+              "leeftijdsgroep": 7,
+              "herkomst": "Radiologie",
+
+              "binnenkomst": "2017-03-13T10:08:00+01:00",
+              "naar_kamer": "2017-03-13T10:26:00+01:00",
+              "gezien": "2017-03-13T11:12:00+01:00",
+              "minuten_aanwezig": 42,
+              "minuten_tot_dokter": 42,
+              "minuten_sinds_dokter": 0,
+              "minuten_sinds_beslissing": 0
+            },
+            {
+              "bezoek_nummer": "0000320452",
+              "type_arts": "int",
+              "care": "lc",
+              "status": "wachtend",
+              "queue": 1,
+              "specialisme": "Interne geneeskunde",
+              "kamernummer": "D17.01",
+              "reden": "Algehele malaise",
+              "leeftijdsgroep": 4,
+              "herkomst": "Huisartsenpost",
+
+              "binnenkomst": "2017-03-13T10:08:00+01:00",
+              "naar_kamer": "2017-03-13T10:26:00+01:00",
+              "gezien": "2017-03-13T11:12:00+01:00",
+              "minuten_aanwezig": 42,
+              "minuten_tot_dokter": 42,
+              "minuten_sinds_dokter": 0,
+              "minuten_sinds_beslissing": 0
+            }
+          ]
+        }
+
+    Bezoeker:
+      type: object
+      description: Bezoeker bevat de gegevens van een enkel bezoek.
+      properties:
+        bezoek_nummer:
+          type: string
+          description: Unieke identifier voor dit bezoek
+        type_arts:
+          $ref: '#/components/schemas/Arts'
+        care:
+          $ref: '#/components/schemas/Zorg'
+        status:
+          $ref: '#/components/schemas/BezoekerStatus'
+        queue:
+          type: integer
+          format: int32
+          description: Totaal aantal aanwezige bezoekers die dezelfde arts nodig hebben.
+          minimum: 0
+        specialisme:
+          type: string
+          description: Het exacte specialisme van de benodigde arts.
+        kamernummer:
+          type: string
+          description: Het kamernummer (eventueel met bednummer) waar deze bezoeker momenteel verblijft.
+            Het is mogelijk dat een bezoeker wel gezien is, nog niet vertrokken is, en niet meer op een kamer ligt.
+        reden:
+          type: string
+          description: De reden van dit bezoek.
+        binnenkomst:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker is binnengekomen.
+        naar_kamer:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker de huidige behandelkamer is binnengekomen.
+        gezien:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker voor het eerst is gezien door een arts.
+        opname:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker is geregistreerd voor opname.
+        minuten_aanwezig:
+          type: integer
+          format: int32
+          description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
+        minuten_tot_dokter:
+          type: integer
+          format: int32
+          description: "De huidige deur-tot-doktertijd; indien de bezoeker gezien is: het aantal minuten van binnenkomst tot `gezien`; anders gelijk aan `minuten_aanwezig`."
+        minuten_sinds_dokter:
+          type: integer
+          format: int32
+          description: "Voor bezoekers die gezien zijn door een arts: het aantal minuten sinds `gezien`. Anders gelijk aan 0."
+        minuten_sinds_beslissing:
+          type: integer
+          format: int32
+          description: "Voor bezoekers waar de arts een beslissing over genomen heeft: het aantal minuten sinds `opname`. Anders gelijk aan 0."
+        leeftijdsgroep:
+          type: integer
+          format: int32
+          description: "Abstracte indicatie van de leeftijdsgroep van deze bezoeker."
+        herkomst:
+          type: string
+          description: "Code die aangeeft hoe deze patiënt op deze afdeling terecht is gekomen."
+
+      required:
+        - bezoek_nummer
+        - type_arts
+        - care
+        - status
+        - queue
+        - reden
+        - leeftijdsgroep
+        - herkomst
+        - binnenkomst
+        - minuten_aanwezig
+        - minuten_tot_dokter
+        - minuten_sinds_dokter
+        - minuten_sinds_beslissing
+      example:
+        {
+          "bezoek_nummer": "0000320459",
+          "type_arts": "sha",
+          "care": "HC",
+          "status": "inbehandeling",
+          "queue": 0,
+          "specialisme": "Heelkunde",
+          "kamernummer": "D15.01",
+          "reden": "Stomp buiktrauma",
+          "leeftijdsgroep": 4,
+          "herkomst": "Huisarts",
+          "binnenkomst": "2017-03-13T10:08:00+02:00",
+          "naar_kamer": "2017-03-13T10:26:00+02:00",
+          "gezien": "2017-03-13T11:12:00+02:00",
+          "minuten_aanwezig": 262,
+          "minuten_tot_dokter": 200,
+          "minuten_sinds_dokter": 62,
+          "minuten_sinds_beslissing": 0
+        }
+
+paths:
+  /services/v3/timeline/:
+    get:
+      summary: Haal een overzicht op van de huidige bezoekers.
+      operationId: getTimeline
+      parameters:
+        - $ref: '#/components/parameters/locatie'
+        - $ref: '#/components/parameters/afdeling'
+        - $ref: '#/components/parameters/tijdstip'
+      responses:
+        '200':
+          description: Een arbitrair geordende lijst van alle bezoekers die op dit moment aanwezig zijn.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timeline'
+        400:
+          description: Fout bij het uitlezen van een van de parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+

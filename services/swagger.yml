@@ -1806,25 +1806,6 @@ paths:
         400:
           description: Fout bij het uitlezen van een van de parameters.
 
-  /v3/timeline/:
-    get:
-      summary: Haal een overzicht op van de huidige bezoekers.
-      tags:
-        - 'Service: Timeline'
-        - 'Project: ZKH'
-      operationId: getTimeline
-      parameters:
-        - $ref: '#/parameters/locatie'
-        - $ref: '#/parameters/afdeling'
-        - $ref: '#/parameters/tijdstip'
-      responses:
-        200:
-          description: Een arbitrair geordende lijst van alle bezoekers die op dit moment aanwezig zijn.
-          schema:
-            $ref: '#/definitions/Timeline'
-        400:
-          description: Fout bij het uitlezen van een van de parameters.
-
   /v2/predict/:
     get:
       summary: Voorspel de wachttijd op de opgegeven afdeling
