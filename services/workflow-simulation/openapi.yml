@@ -328,7 +328,7 @@ components:
             - "afgerond"
             - "achter"
             - "geen"
-          description: Indicatie van de status van deze patiënt. 
+          description: Indicatie van de status van deze patiënt.
         icpc_code:
           type: string
           description: Code voor de diagnose

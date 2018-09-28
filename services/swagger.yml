@@ -1481,8 +1481,11 @@ definitions:
     type: object
     required:
       - id
+      - aangemaakt
       - urgentie
       - status
+      - patient
+      - aanwezig
     properties:
       id:
         type: string
@@ -1515,6 +1518,17 @@ definitions:
           - "vertraagd"
           - "gemist"
         description: Status van deze afspraak
+      aanwezig:
+        type: boolean
+        description: True indien de patiënt aanwezig is
+      patient:
+        type: string
+        enum:
+        - "gepland"
+        - "afgerond"
+        - "achter"
+        - "geen"
+        description: Indicatie van de status van deze patiënt.
       icpc_code:
         type: string
         description: Code voor de diagnose
