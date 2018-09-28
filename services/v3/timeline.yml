@@ -264,7 +264,7 @@ paths:
       parameters:
         - name: bezoek_nummer
           in: query
-          required: true 
+          required: true
           schema:
             type: string
       responses:
