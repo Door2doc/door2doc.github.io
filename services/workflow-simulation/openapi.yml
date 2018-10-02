@@ -503,5 +503,5 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Simulation'
+                $ref: '#/components/schemas/WachtkamerInfo'
 
