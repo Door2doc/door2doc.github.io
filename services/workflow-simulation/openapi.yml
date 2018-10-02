@@ -355,6 +355,41 @@ components:
           "leeftijdsgroep": "2"
         }
 
+    WachtkamerInfo:
+      type: object
+      required:
+      - t
+      - locaties
+      properties:
+        t:
+          type: string
+          format: date-time
+          description: Tijdstip van de simulatie
+        locaties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Locatie'
+          description: Details van de locaties in dit overzicht
+      example:
+        {
+          "t": "2017-10-18T13:32:00+02:00",
+          "locaties": [
+          {
+            "locatie": "al",
+            "vertraagd": 0,
+            "wachttijd_min": 0,
+            "wachttijd_max": 0
+          },
+          {
+            "locatie": "ld",
+            "vertraagd": 2,
+            "wachttijd_min": 15,
+            "wachttijd_max": 30
+          }
+          ]
+        }
+
+
   parameters:
     simulation_id:
       description: Uniek ID van de simulatie
@@ -455,3 +490,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Simulation'
+
+  /services/v2/simulation/{simulation_id}/wachtkamer/:
+    get:
+      summary: Huidige wachtkamer info van de simulatie
+      operationId: getWachtkamer
+      parameters:
+      - $ref: '#/components/parameters/simulation_id'
+      responses:
+        '200':
+          description: Huidige status van de simulatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+
