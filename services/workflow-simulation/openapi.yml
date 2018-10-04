@@ -378,6 +378,9 @@ components:
           type: string
           description: Toelichting op dit slot
           example: "overdracht"
+        toegevoegd:
+          type: boolean
+          description: True indien dit veld later is toegevoegd
         afspraak:
           $ref: '#/components/schemas/Afspraak'
 
