@@ -444,6 +444,10 @@ components:
         leeftijdsgroep:
           type: string
           description: Leeftijdsgroep van de patient
+        wachttijd:
+          type: number
+          format: int32
+          description: Individuele wachttijd van de patient in minuten
       example:
         {
           "id": "S122876",
