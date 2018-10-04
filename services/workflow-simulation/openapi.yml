@@ -719,11 +719,6 @@ paths:
           - huisarts
           - nurse-practitioner
           - visite-arts
-      - name: locatie
-        in: query
-        schema:
-          type: string
-        description: Locatie waar dit slot voor beschikbaar komt
       responses:
         '200':
           description: Huidige status van de simulatie
