@@ -11,6 +11,16 @@ servers:
 
 components:
   schemas:
+    Error:
+      description: Foutmelding
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+      example: {"error": "tekstuele toelichting op de fout"}
+
     TriageUrgentie:
       description: Urgentie zoals bepaald tijdens de triage
       type: string
@@ -45,28 +55,122 @@ components:
     SimulationScore:
       description: Huidige score van de simulatie. Let op dat de bezettingsgraad al terug te vinden is in de grid status.
       type: object
+      required:
+        - overall
+        - wachttijd
+        - wachttijd_loc
+        - wachttijd_cum_loc
+        - bezetting
+        - afspraken
       properties:
-        verkeerd_gepland:
-          type: integer
-          format: int32
-          description: Aantal afspraken die buiten de gestelde tijd gepland zijn
+        overall:
+          description: De overall score van deze simulatie
+          type: object
+          required:
+            - percentage
+            - optijd
+            - telaat
+            - onbekend
+            - ref_historisch
+            - ref_tria
+          properties:
+            percentage:
+              description: Overall score, uitgedrukt als een percentage
+              type: number
+              format: int32
+              example: 55
+            optijd:
+              description: Aantal afspraken dat op tijd is ingepland
+              type: number
+              format: int32
+              example: 22
+            telaat:
+              description: Aantal afspraken dat te laat is ingepland
+              type: number
+              format: int32
+              example: 18
+            onbekend:
+              description: Aantal afspraken waarvan de status onbekend was aan het einde van de simulatie
+              type: number
+              format: int32
+              example: 0
+            ref_historisch:
+              description: Overall score, uitgedrukt als een percentage, op basis van historie
+              type: number
+              format: int32
+              example: 60
+            ref_tria:
+              description: Overall score, uitgedrukt als een percentage, op basis van afspraak voorstellen
+              type: number
+              format: int32
+              example: 93
+
         wachttijd:
-          type: integer
+          description: De gemiddelde individuele wachttijd
+          type: number
           format: int32
-          minimum: 0
-          description: Gemiddelde voorspelde wachttijd op dit moment
-        vertraagd:
-          type: integer
-          format: int32
-          description: Aantal afspraken tot nog toe dat later is begonnen dan gepland
-        vertraging:
-          type: integer
-          format: int32
-          description: Som van de delta(gepland, begonnen) voor alle afspraken die tot nog toe zijn begonnen.
-        laatkomers:
-          type: integer
-          format: int32
-          description: Aantal patienten dat later is aangekomen dan hun geplande afspraak
+          example: 59
+
+        wachttijd_loc:
+          description: De gemiddelde individuele wachttijd per locatie
+          type: object
+          additionalProperties:
+            type: number
+            format: int32
+          example: {
+            "ld": 27,
+            "lu": 198,
+            "al": 75
+          }
+
+        wachttijd_cum_loc:
+          description: De cumulatieve individuele wachttijd per locatie
+          type: object
+          additionalProperties:
+            type: number
+            format: int32
+          example: {
+            "ld": 627,
+            "lu": 1098,
+            "al": 400
+          }
+
+        bezetting:
+          description: De gemiddelde bezetting per locatie als percentage
+          type: object
+          additionalProperties:
+            type: number
+            format: int32
+          example: {
+            "al": 17,
+            "lu": 142,
+            "ld": 79,
+          }
+
+        afspraken:
+          description: Overzicht van de afspraken in deze simulatie
+          type: object
+          properties:
+            totaal:
+              description: Totaal aantal afspraken in deze simulatie
+              type: number
+              format: int32
+              example: 40
+            u2:
+              description: Aantal afspraken <= U2
+              type: number
+              format: int32
+              example: 12
+            u3:
+              description: Aantal afspraken U3
+              type: number
+              format: int32
+              example: 24
+            u4:
+              description: Aantal afspraken >= U4
+              type: number
+              format: int32
+              example: 4
 
     SimulationEvent:
       description: Een binnenkomende call in de simulatie die gepland moet worden. Afwezig indien de simulatie is afgelopen.
@@ -389,7 +493,6 @@ components:
           ]
         }
 
-
   parameters:
     simulation_id:
       description: Uniek ID van de simulatie
@@ -399,6 +502,28 @@ components:
       schema:
         type: string
         format: uuid
+
+  responses:
+    SimulationNotFound:
+      description: Onbekende simulatie
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    ServerError:
+      description: Server fout
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    SlotError:
+      description: Deze operatie kan niet worden uitgevoerd op het opgegeven slot
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
 
 paths:
   /services/v2/simulation/:
@@ -451,6 +576,8 @@ paths:
               parameters:
                 simulation_id: '$response.body#/id'
               description: Het `id` in de response kan worden gebruikt als `simulation_id` in de andere requests.
+        '500':
+          $ref: '#/components/responses/ServerError'
 
   /services/v2/simulation/{simulation_id}/:
     get:
@@ -465,6 +592,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Simulation'
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
 
     post:
       summary: Plan de openstaande afspraak in
@@ -490,6 +621,74 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Simulation'
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '409':
+          $ref: '#/components/responses/SlotError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/v2/simulation/{simulation_id}/block/:
+    post:
+      summary: Blokkeer een slot
+      operationId: block
+      parameters:
+      - $ref: '#/components/parameters/simulation_id'
+      - name: slot_id
+        in: query
+        schema:
+          type: string
+        required: true
+        description: ID van het slot dat geblokkeerd moet worden
+      - name: reason
+        in: query
+        schema:
+          type: string
+          enum:
+            - pauze
+            - autoriseren
+            - compensatie
+        required: true
+        description: Reden van de blokkade
+      responses:
+        '200':
+          description: Huidige status van de simulatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '409':
+          $ref: '#/components/responses/SlotError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/v2/simulation/{simulation_id}/unblock/:
+    post:
+      summary: Deblokkeer een geblokkeerd slot
+      operationId: unblock
+      parameters:
+      - $ref: '#/components/parameters/simulation_id'
+      - name: slot_id
+        in: query
+        schema:
+          type: string
+        required: true
+        description: ID van het slot dat gedeblokkeerd moet worden
+      responses:
+        '200':
+          description: Huidige status van de simulatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '409':
+          $ref: '#/components/responses/SlotError'
+        '500':
+          $ref: '#/components/responses/ServerError'
 
   /services/v2/simulation/{simulation_id}/wachtkamer/:
     get:
@@ -504,4 +703,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WachtkamerInfo'
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
 
