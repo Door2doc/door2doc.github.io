@@ -448,6 +448,9 @@ components:
           type: number
           format: int32
           description: Individuele wachttijd van de patient in minuten
+        zelfverwijzer:
+          type: boolean
+          description: True indien deze patiënt is komen binnenlopen
       example:
         {
           "id": "S122876",
@@ -460,7 +463,8 @@ components:
           "icpc_code": "L18.01",
           "icpc_uitleg": "Fibromyalgie",
           "postcode": "1000 AA",
-          "leeftijdsgroep": "2"
+          "leeftijdsgroep": "2",
+          "zelfverwijzer": false
         }
 
     WachtkamerInfo:
@@ -680,6 +684,46 @@ paths:
           type: string
         required: true
         description: ID van het slot dat gedeblokkeerd moet worden
+      responses:
+        '200':
+          description: Huidige status van de simulatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '409':
+          $ref: '#/components/responses/SlotError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/v2/simulation/{simulation_id}/add/:
+    post:
+      summary: Voeg een slot toe. Dit kan alleen op basis van sloten met de status "Beschikbaar".
+      operationId: add
+      parameters:
+      - $ref: '#/components/parameters/simulation_id'
+      - name: slot_id
+        in: query
+        schema:
+          type: string
+        required: true
+        description: ID van het "Beschikbaar" slot dat wordt gebruikt
+      - name: arts
+        in: query
+        description: Type arts voor dit slot
+        schema:
+          type: string
+          enum:
+          - huisarts
+          - nurse-practitioner
+          - visite-arts
+      - name: locatie
+        in: query
+        schema:
+          type: string
+        description: Locatie waar dit slot voor beschikbaar komt
       responses:
         '200':
           description: Huidige status van de simulatie

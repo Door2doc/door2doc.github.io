@@ -1547,6 +1547,9 @@ definitions:
         type: number
         format: int32
         description: Individuele wachttijd van de patient in minuten
+      zelfverwijzer:
+        type: boolean
+        description: True indien deze patiënt is komen binnenlopen
     example:
       {
         "id": "S122876",
@@ -1561,6 +1564,7 @@ definitions:
         "postcode": "1000 AA",
         "leeftijdsgroep": "5",
         "wachttijd": 71,
+        "zelfverwijzer": true,
       }
 
 parameters:
