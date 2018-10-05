@@ -62,6 +62,8 @@ components:
         - wachttijd_cum_loc
         - bezetting
         - afspraken
+        - extra_slots
+        - voorstel_verworpen
       properties:
         overall:
           description: De overall score van deze simulatie
@@ -171,6 +173,14 @@ components:
               type: number
               format: int32
               example: 4
+        extra_slots:
+          description: Aantal sloten dat is toegevoegd
+          type: number
+          format: int32
+        voorstel_verworpen:
+          description: Aantal keer dat het afspraak-voorstel niet is overgenomen
+          type: number
+          format: int32
 
     SimulationEvent:
       description: Een binnenkomende call in de simulatie die gepland moet worden. Afwezig indien de simulatie is afgelopen.
