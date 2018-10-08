@@ -1550,6 +1550,10 @@ definitions:
       zelfverwijzer:
         type: boolean
         description: True indien deze patiënt is komen binnenlopen
+      afspraak_duur:
+        type: number
+        format: int32
+        description: Duur van dit consult in minuten. Voor afgeronde afspraken (patient == "afgerond") is dit de reële duur; voor niet-afgeronde afspraken is dit de _verwachte_ duur
     example:
       {
         "id": "S122876",
@@ -1565,6 +1569,7 @@ definitions:
         "leeftijdsgroep": "5",
         "wachttijd": 71,
         "zelfverwijzer": true,
+        "afspraak_duur": 11
       }
 
 parameters:
