@@ -586,11 +586,25 @@ paths:
                 type: object
                 required:
                   - id
+                  - locaties
+                  - slot_duur
                 properties:
                   id:
                     type: string
                     format: 'uuid'
                     example: "d6dcb822-bcb0-49c8-9c32-fe659b902007"
+                    description: Uniek ID voor deze simulatie
+                  locaties:
+                    type: array
+                    items:
+                      - type: string
+                    description: Locaties in deze simulatie
+                    example: ['ld', 'al', 'lu']
+                  slot_duur:
+                    type: number
+                    format: int32
+                    example: 15
+                    description: Duur van een enkel slot in deze simulatie
           links:
             GetSimulation:
               operationId: getSimulation
