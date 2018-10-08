@@ -825,16 +825,37 @@ paths:
   /services/v2/simulation/{simulation_id}/spoed-patient/:
     get:
       summary: Vraag de huidige waarde van de "spoed-patient" interrupt op.
+      parameters:
+      - name: locatie
+        in: query
+        schema:
+          type: string
+        required: true
+        description: Locatie waarvoor de interrupt wordt opgevraagd.
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
     put:
       summary: Activeer de interrupt "spoed-patient"
+      parameters:
+      - name: locatie
+        in: query
+        schema:
+          type: string
+        required: true
+        description: Locatie waarvoor de interrupt wordt ingesteld.
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
     delete:
       summary: Deactiveer de interrupt "spoed-patient"
+      parameters:
+      - name: locatie
+        in: query
+        schema:
+          type: string
+        required: true
+        description: Locatie waarvoor de interrupt wordt ingesteld.
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
