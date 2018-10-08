@@ -238,8 +238,14 @@ components:
         score:
           $ref: '#/components/schemas/SimulationScore'
         visitearts:
-          type: boolean
-          description: True indien de visite-arts aanwezig is.
+          type: object
+          additionalProperties:
+            type: boolean
+          example: {
+            'al': true,
+            'ld': false
+          }
+          description: Per locatie: true indien de visite-arts aanwezig is. Locaties zonder visite-arts zijn niet opgenomen in dit object.
 
     Grid:
       type: object
@@ -800,6 +806,12 @@ paths:
           type: boolean
         required: true
         description: Stel de huidige aanwezigheid in.
+      - name: locatie
+        in: query
+        schema:
+          type: string
+        required: true
+        description: Locatie waarvoor de aanwezigheid wordt ingesteld. 
       responses:
         '200':
           description: Huidige status van de simulatie
