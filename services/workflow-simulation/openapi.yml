@@ -722,6 +722,7 @@ paths:
           - pauze
           - autoriseren
           - compensatie
+          - verwijzing
         required: true
         description: Reden van de blokkade
       responses:
