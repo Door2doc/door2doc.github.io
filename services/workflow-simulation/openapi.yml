@@ -52,6 +52,30 @@ components:
         "ld": 39
       }
 
+    AfspraakVoorstel:
+      description: Afspraak voorstellen en suggesties voor het openen van sloten.
+      type: object
+      properties:
+        plan:
+          description: Een lijst met slot_ids waarop de huidige afspraak gepland kan worden
+          type: array
+          items:
+            type: string
+        open:
+          description: Een lijst met lijsten met slot_ids; het voorstel is om alle slot_ids uit een entry te openen.
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+      example: {
+        "plan": ["shr_ld_201705011800_h1", "shr_al_201705012330_h1"],
+        "open": [
+          ["shr_al_201705012300_x", "shr_al_201705012315_x", "shr_al_201705012345_x"]
+        ]
+      }
+
+
     SimulationScore:
       description: Huidige score van de simulatie. Let op dat de bezettingsgraad al terug te vinden is in de grid status.
       type: object
@@ -256,6 +280,8 @@ components:
             "al": {"type": "spoed-patient", "seconds_remaining": 20, "text": "some text..."},
             "ld": {"type": "spoed-patient"}
           }
+        tria:
+          $ref: '#/components/schemas/AfspraakVoorstel'
 
     Grid:
       type: object
