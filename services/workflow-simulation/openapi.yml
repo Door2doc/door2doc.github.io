@@ -237,7 +237,7 @@ components:
           example: 17
         type_arts:
           type: string
-          description: Type arts voor dit event. Let op: als het event type arts 'huisarts' heeft, dan mag het ook worden geboekt op 'visite-arts' of 'achterwacht'
+          description: "Type arts voor dit event. Let op: als het event type arts 'huisarts' heeft, dan mag het ook worden geboekt op 'visite-arts' of 'achterwacht'"
           enum:
           - huisarts
           - nurse-practitioner
