@@ -1,12 +1,12 @@
 swagger: "2.0"
 info:
   title: Door2doc Frontend Services
-  version: v2
-  description: |
-    Dit is het overzicht van alle beschikbare services. De endpoints zijn
-    zowel gegroepeerd op service als op scherm.
+  version: v2,v3
+  description: >
+    Dit is het overzicht van alle beschikbare services. De endpoints zijn zowel gegroepeerd op service als op scherm.
 
     ## Algemene conventies
+
     Alle datum/tijd velden volgen het formaat van [RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14).
     Dit formaat is voorzien van tijdzone-informatie die niet noodzakelijkerwijs overeenkomt met de huidige tijdzone van de gebruiker.
 
@@ -38,7 +38,6 @@ tags:
   - name: "Service: Target"
   - name: "Service: Timeline"
   - name: "Service: Workflow"
-  - name: "Service: Workflow Simulatie"
   - name: "Reporting"
 
 definitions:
@@ -767,12 +766,100 @@ definitions:
         }
       }
 
+  SettingsV3:
+    type: object
+    required:
+      - naam
+      - theme
+      - locaties
+    properties:
+      naam:
+        type: string
+        description: Naam van het ziekenhuis
+      theme:
+        type: string
+        description: Identifier die gebruikt wordt om het visuele thema te bepalen.
+      locaties:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/LocatieSettings'
+    example:
+      {
+        "theme": "theme-example",
+        "naam": "Voorbeeld ziekenhuis",
+        "locaties": {
+          "loc": {
+            "naam": "Voorbeeld locatie",
+            "afdelingen": {
+              "seh": {
+                "naam": "Spoedpost",
+                "labels": {
+                  "sha": "Arts",
+                  "vpk": "Verpleegkundige",
+                  "ova": "Overige artsen"
+                },
+                "aantal_kamers": 12,
+                "targets": {
+                  "deur_tot_vertrek": 180,
+                  "deur_tot_dokter": 30,
+                  "dokter_tot_beslissing": 90,
+                  "beslissing_tot_opname": 60
+                },
+                "artsen": ["sha", "vpk", "ova"],
+                "features": ["capacity"],
+                "specialismes": [
+                  "Cardiologie",
+                  "Gynaecologie en Verloskunde",
+                  "Klinische geriatrie",
+                  "SEH",
+                  "Specialismen onbekend",
+                ],
+                "ingangsklachten": [
+                  "Humerusfractuur",
+                  "Hydradenitis",
+                  "Hypercalciumie",
+                ],
+                "capacity": {
+                  "artsen": ["sha", "vpk"]
+                },
+              },
+              "ehh": {
+                "naam": "Eerste-Hart Hulp",
+                "labels": {
+                  "sha": "Arts",
+                  "vpk": "Verpleegkundige"
+                },
+                "aantal_kamers": 3,
+                "targets": {
+                  "deur_tot_vertrek": 90,
+                  "deur_tot_dokter": 15,
+                  "dokter_tot_beslissing": 45,
+                  "beslissing_tot_opname": 30
+                },
+                "target_vbt": 180,
+                "artsen": ["sha", "vpk"],
+                "features": ["capacity"],
+                "specialismes": [
+                  "Cardiologie",
+                  "SEH",
+                ],
+                "ingangsklachten": [
+                  "Hyperventilatie",
+                  "Hypocalciëmie",
+                  "Hypoglykemie"
+                ]
+              }
+            }
+          }
+        }
+      }
+
   HAPSettings:
     type: object
     required:
       - naam
       - theme
-      - afdelingen
+      - locaties
     properties:
       naam:
         type: string
@@ -797,6 +884,18 @@ definitions:
           }
         }
       }
+
+  LocatieSettings:
+    type: object
+    required:
+      - naam
+      - afdelingen
+    properties:
+      naam:
+        type: string
+        description: Naam van de locatie
+      afdelingen:
+        $ref: '#/definitions/AfdelingSettingsCollection'
 
   AfdelingSettingsCollection:
     type: object
@@ -1199,62 +1298,6 @@ definitions:
         }
       }
 
-  WorkflowSimulation:
-    type: object
-    required:
-      - t
-      - locaties
-      - grid
-      - score
-    properties:
-      t:
-        type: string
-        format: date-time
-        description: Huidige tijd volgens de simulatie
-      locaties:
-        type: array
-        items:
-          $ref: '#/definitions/WorkflowLocatie'
-        description: Details van de locaties in dit overzicht
-      grid:
-        $ref: '#/definitions/WorkflowGrid'
-      event:
-        description: Eerstvolgende afspraak die ingepland moet worden. Afwezig indien de simulatie afgelopen is.
-        type: object
-        properties:
-          urgentie:
-            description: Urgentie van de afspraak
-            type: string
-            enum:
-              - U1
-              - U2
-              - U3
-              - U4
-              - U5
-          ingangsklachten:
-            description: Genoemde ingangsklachten
-            type: array
-            items:
-              - type: string
-          postcode:
-            type: string
-            description: Postcode van de patient
-          leeftijdsgroep:
-            type: string
-            description: Leeftijdsgroep van de patient
-      score:
-        description: Huidige score van de simulatie. Let op dat de bezettingsgraad al terug te vinden is in de grid status.
-        type: object
-        properties:
-          verkeerd_gepland:
-            type: integer
-            format: int32
-            description: Aantal afspraken die buiten de gestelde tijd gepland zijn
-          wachttijd:
-            type: integer
-            format: int32
-            description: Gemiddelde wachttijd van de patiënt.
-
   WorkflowWachtkamer:
     type: object
     required:
@@ -1338,6 +1381,12 @@ definitions:
         type: integer
         format: int32
         description: Bovengrens wachttijd in minuten
+    example: {
+      "id": "alph",
+      "vertraagd": 2,
+      "wachttijd_min": 30,
+      "wachttijd_max": 45,
+    }
 
   WorkflowPeriode:
     type: object
@@ -1432,8 +1481,11 @@ definitions:
     type: object
     required:
       - id
+      - aangemaakt
       - urgentie
       - status
+      - patient
+      - aanwezig
     properties:
       id:
         type: string
@@ -1466,6 +1518,17 @@ definitions:
           - "vertraagd"
           - "gemist"
         description: Status van deze afspraak
+      aanwezig:
+        type: boolean
+        description: True indien de patiënt aanwezig is
+      patient:
+        type: string
+        enum:
+        - "gepland"
+        - "afgerond"
+        - "achter"
+        - "geen"
+        description: Indicatie van de status van deze patiënt.
       icpc_code:
         type: string
         description: Code voor de diagnose
@@ -1480,6 +1543,17 @@ definitions:
       leeftijdsgroep:
         type: string
         description: Leeftijdsgroep van de patient
+      wachttijd:
+        type: number
+        format: int32
+        description: Individuele wachttijd van de patient in minuten
+      zelfverwijzer:
+        type: boolean
+        description: True indien deze patiënt is komen binnenlopen
+      afspraak_duur:
+        type: number
+        format: int32
+        description: Duur van dit consult in minuten. Voor afgeronde afspraken (patient == "afgerond") is dit de reële duur; voor niet-afgeronde afspraken is dit de _verwachte_ duur
     example:
       {
         "id": "S122876",
@@ -1492,7 +1566,10 @@ definitions:
         "icpc_code": "L18.01",
         "icpc_uitleg": "Fibromyalgie",
         "postcode": "1000 AA",
-        "leeftijdsgroep": "2"
+        "leeftijdsgroep": "5",
+        "wachttijd": 71,
+        "zelfverwijzer": true,
+        "afspraak_duur": 11
       }
 
 parameters:
@@ -1592,6 +1669,7 @@ paths:
         - $ref: "#/parameters/project"
       responses:
         200:
+          description: De domeinen deze gebruiker toegang toe heeft.
           schema:
             type: array
             items:
@@ -1604,9 +1682,10 @@ paths:
       tags:
         - 'Service: Settings'
         - 'Project: ZKH'
-      operationId: getSettings
+      operationId: getSettingsV2
       responses:
         200:
+          description: De settings voor dit ziekennhuis
           schema:
             $ref: '#/definitions/Settings'
 
@@ -1616,9 +1695,36 @@ paths:
       tags:
         - 'Service: Settings'
         - 'Project: HAP'
+      operationId: getSettingsHAPV2
+      responses:
+        200:
+          description: De settings voor deze huisartsenpost
+          schema:
+            $ref: '#/definitions/HAPSettings'
+
+  /v3/settings/:
+    get:
+      summary: Haal de settings op voor dit ziekenhuis
+      tags:
+        - 'Service: Settings'
+        - 'Project: ZKH'
+      operationId: getSettings
+      responses:
+        200:
+          description: De settings voor dit ziekenhuis
+          schema:
+            $ref: '#/definitions/SettingsV3'
+
+  /v3/settings/hap/:
+    get:
+      summary: Haal de settings op voor deze huisartsenpost
+      tags:
+        - 'Service: Settings'
+        - 'Project: HAP'
       operationId: getSettingsHAP
       responses:
         200:
+          description: De settings voor deze huisartsenpost
           schema:
             $ref: '#/definitions/HAPSettings'
 
@@ -1628,7 +1734,7 @@ paths:
       tags:
         - 'Service: Rooms'
         - 'Project: ZKH'
-      operationId: getRooms
+      operationId: getRoomsV2
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/tijdstip'
@@ -1644,8 +1750,53 @@ paths:
       tags:
         - 'Service: Rooms'
         - 'Project: ZKH'
+      operationId: getRoomV2
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/tijdstip'
+        - name: kamernummer
+          type: string
+          description: Een bestaand kamernummer
+          required: true
+          in: path
+      responses:
+        200:
+          description: Gegevens van de bezoeker die momenteel op deze kamer verblijft.
+          schema:
+            $ref: '#/definitions/VisitorRecord'
+        204:
+          description: Er is momenteel geen bezoeker op deze kamer.
+        404:
+          description: Het opgegeven kamernummer bestaat niet.
+        400:
+          description: Een van de parameters is incorrect.
+
+  /v3/rooms/:
+    get:
+      summary: Haal een overzicht op van de bestaande kamernummers.
+      tags:
+        - 'Service: Rooms'
+        - 'Project: ZKH'
+      operationId: getRooms
+      parameters:
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/tijdstip'
+      responses:
+        200:
+          description: Een overzicht van de beschikbare kamers.
+          schema:
+            $ref: '#/definitions/RoomOverview'
+
+  /v3/rooms/{kamernummer}/:
+    get:
+      summary: Informatie over de patiënt op de opgegeven kamer.
+      tags:
+        - 'Service: Rooms'
+        - 'Project: ZKH'
       operationId: getRoom
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/tijdstip'
         - name: kamernummer
@@ -1671,7 +1822,7 @@ paths:
       tags:
         - 'Service: Timeline'
         - 'Project: ZKH'
-      operationId: getTimeline
+      operationId: getTimelineV2
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/tijdstip'
@@ -1686,11 +1837,31 @@ paths:
   /v2/predict/:
     get:
       summary: Voorspel de wachttijd op de opgegeven afdeling
+      operationId: get_prediction_v2
+      tags:
+        - 'Service: Prediction'
+        - 'Project: ZKH'
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/arts'
+        - $ref: '#/parameters/tijdstip'
+      responses:
+        200:
+          description: De voorspelling voor het opgegeven tijdstip
+          schema:
+            $ref: '#/definitions/Prediction'
+        400:
+          description: Fout bij het uitlezen van een van de parameters.
+
+  /v3/predict/:
+    get:
+      summary: Voorspel de wachttijd op de opgegeven afdeling
       operationId: get_prediction
       tags:
         - 'Service: Prediction'
         - 'Project: ZKH'
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/arts'
         - $ref: '#/parameters/tijdstip'
@@ -1841,7 +2012,7 @@ paths:
       tags:
         - 'Service: Capacity'
         - 'Project: ZKH'
-      operationId: getCapacity
+      operationId: getCapacityV2
       parameters:
         - $ref: '#/parameters/afdeling'
         - $ref: '#/parameters/d-from'
@@ -1862,7 +2033,7 @@ paths:
         - 'Service: Capacity'
         - 'Reporting'
         - 'Project: ZKH'
-      operationId: getCapacityReport
+      operationId: getCapacityReportV2
       parameters:
         - $ref: '#/parameters/arts'
         - $ref: '#/parameters/afdeling'
@@ -1882,8 +2053,85 @@ paths:
       tags:
         - 'Service: Capacity'
         - 'Project: ZKH'
+      operationId: getCapacitySummaryV2
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - name: referentie
+          type: string
+          in: query
+          description: Bepaalt hoe referentie_nodig wordt berekend; op basis van het gemiddelde, of het zoveelste percentiel
+          default: avg
+          enum:
+            - "avg"
+            - "60"
+            - "75"
+        - name: bandbreedte
+          type: string
+          in: query
+          default: "75"
+          enum:
+            - "75"
+            - "80"
+            - "90"
+          description: Bepaalt op basis van welk percentiel de bovengrens (en daarmee ook de ondergrens) van de bandbreedte wordt berekend
+      responses:
+        200:
+          description: De capaciteit over het afgelopen jaar per dag/uur
+          schema:
+            $ref: '#/definitions/TreatmentPointSummary'
+
+  /v3/capacity/calculate/:
+    get:
+      summary: Bereken de capaciteit in behandelpunten over de opgegeven periode
+      tags:
+        - 'Service: Capacity'
+        - 'Project: ZKH'
+      operationId: getCapacity
+      parameters:
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/d-from'
+        - $ref: '#/parameters/d-to'
+      produces:
+        - application/json
+        - text/csv
+      responses:
+        200:
+          description: De behandelpunten voor de opgegeven periode per tijdsvak
+          schema:
+            $ref: '#/definitions/TreatmentPointOverview'
+
+  /v3/capacity/calculate/details/:
+    get:
+      summary: Gedetailleerde output over de capaciteit
+      tags:
+        - 'Service: Capacity'
+        - 'Reporting'
+        - 'Project: ZKH'
+      operationId: getCapacityReport
+      parameters:
+        - $ref: '#/parameters/arts'
+        - $ref: '#/parameters/locatie'
+        - $ref: '#/parameters/afdeling'
+        - $ref: '#/parameters/d-from'
+        - $ref: '#/parameters/d-to'
+      produces:
+        - text/csv
+      responses:
+        200:
+          description: De behandelpunten per patiënt voor de opgegeven periode per tijdsvak
+          schema:
+            $ref: '#/definitions/TreatmentPointDetails'
+
+  /v3/capacity/calculate/summary/:
+    get:
+      summary: Samenvatting van de capaciteit over het afgelopen jaar
+      tags:
+        - 'Service: Capacity'
+        - 'Project: ZKH'
       operationId: getCapacitySummary
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - name: referentie
           type: string
@@ -1915,8 +2163,75 @@ paths:
       tags:
         - 'Service: Target'
         - 'Project: ZKH'
+      operationId: getTargetInfoV2
+      parameters:
+        - $ref: '#/parameters/afdeling'
+        - name: pretty
+          type: string
+          in: query
+          description: Pretty printing van het resultaat?
+          enum:
+            - true
+        - name: periode
+          type: string
+          default: dag
+          in: query
+          description: Periode waarover gerapporteerd moet worden
+          enum:
+            - dag
+            - week
+            - maand
+            - jaar
+        - name: dienst
+          type: string
+          in: query
+          description: Dienst waarover gerapporteerd moet worden; indien afwezig wordt over de volledige 24h gerapporteerd.
+          enum:
+            - dag
+            - avond
+            - nacht
+        - name: bestemming
+          type: string
+          in: query
+          description: Bestemming waarover gerapporteerd moet worden; indien afwezig wort over alle bestemmingen gerapporteerd.
+          enum:
+            - ontslag
+            - opname
+        - $ref: '#/parameters/arts'
+        - name: specialisme
+          type: string
+          in: query
+          description: Beperk rapportage tot patiënten met dit specialisme.
+        - name: ingangsklacht
+          type: string
+          in: query
+          description: Beperk rapportage tot patiënten met deze ingangsklacht.
+        - name: interval
+          type: string
+          in: query
+          default: deur-tot-vertrek
+          description: Interval waarover target berekend wordt.
+          enum:
+            - deur-tot-vertrek
+            - deur-tot-dokter
+            - dokter-tot-beslissing
+            - beslissing-tot-opname
+
+      responses:
+        200:
+          description: Target informatie voor de opgegeven filters. De informatie is geordend op tijd en bevat maximaal de laatste 30 datapunten.
+          schema:
+            $ref: '#/definitions/Target'
+
+  /v3/target/:
+    get:
+      summary: Geef target informatie
+      tags:
+        - 'Service: Target'
+        - 'Project: ZKH'
       operationId: getTargetInfo
       parameters:
+        - $ref: '#/parameters/locatie'
         - $ref: '#/parameters/afdeling'
         - name: pretty
           type: string
@@ -2042,57 +2357,3 @@ paths:
           description: Het verstuurde bericht
           schema:
             type: string
-
-  /v2/workflow/simulatie/:
-    post:
-      summary: Begin een nieuwe simulatie
-      tags:
-        - 'Service: Workflow Simulatie'
-        - 'Project: HAP'
-      operationId: newSimulation
-      parameters:
-        - $ref: '#/parameters/t-from'
-        - $ref: '#/parameters/t-to'
-      responses:
-        302:
-          description: De nieuwe simulatie is aangemaakt, en verwijst door naar de aangemaakte simulatie.
-          type: string
-          format: url
-
-  /v2/workflow/simulatie/{simulatie_id}:
-    get:
-      summary: Toon de huidige status van de simulatie
-      tags:
-        - 'Service: Workflow Simulatie'
-        - 'Project: HAP'
-      operationId: getSimulation
-      parameters:
-        - name: simulatie_id
-          in: path
-          type: string
-          description: Uniek ID van de simulatie
-      responses:
-        200:
-          description: Status van de simulatie
-          schema:
-            $ref: '#/definitions/WorkflowSimulation'
-
-    post:
-      summary: Plan de openstaande afspraak in
-      tags:
-        - 'Service: Workflow Simulatie'
-        - 'Project: HAP'
-      parameters:
-        - name: simulatie_id
-          in: path
-          type: string
-          description: Uniek ID van de simulatie
-        - name: slot_id
-          in: query
-          type: string
-          description: ID van het slot waar de afspraak gepland moet worden
-      responses:
-        200:
-          description: Status van de simulatie
-          schema:
-            $ref: '#/definitions/WorkflowSimulation'

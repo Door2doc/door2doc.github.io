@@ -1,0 +1,282 @@
+openapi: 3.0.0
+
+info:
+  title: Timeline Service
+  version: 3
+  description: |
+    De timeline service geeft een overzicht van de huidige aanwezige bezoekers.
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: demo
+
+components:
+  parameters:
+    afdeling:
+      description: De afdeling waarvoor deze informatie wordt opgevraagd
+      name: afdeling
+      in: query
+      required: true
+      schema:
+        type: string
+        enum:
+          - "seh"
+          - "ehh"
+
+    locatie:
+      description: De locatie waarvoor deze informatie wordt opgevraagd.
+      name: locatie
+      in: query
+      required: true
+      schema:
+        type: string
+
+    tijdstip:
+      description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan gedraagt de service
+       zich alsof deze op dat moment werd aangeroepen. Het format is beschreven in RFC3339.
+      name: t
+      in: query
+      required: false
+      example: "2017-02-28T17:00:00+01:00"
+      schema:
+        type: string
+        format: 'date-time'
+
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "invalid date"
+    Arts:
+      type: string
+      enum:
+        - vpk
+        - seh
+        - int
+        - chi
+        - ov
+      description: |
+        Type arts:
+        * vpk: Verpleegkundige (geen arts)
+        * seh: SEH arts
+        * int: Internist
+        * chi: Chirurg
+        * ov: Overig
+
+    Urgentie:
+      description: Kleurcode van de urgentie van deze patient
+      type: string
+      enum:
+        - rood
+        - oranje
+        - geel
+        - groen
+        - blauw
+        - onbekend
+
+    Zorg:
+      type: string
+      enum:
+        - lc
+        - mc
+        - hc
+      description: |
+        Type zorg dat benodigd is:
+        * hc: High Care
+        * mc: Medium Care
+        * lc: Low Care
+
+    BezoekerStatus:
+      type: string
+      enum:
+        - wachtend
+        - inbehandeling
+        - opname
+      description: |
+        Status van de bezoeker:
+        * wachtend: Wachtend op arts
+        * inbehandeling: Gezien door een arts
+        * opname: Geregistreerd voor opname, maar nog niet opgenomen
+
+    Timeline:
+      type: object
+      required:
+        - visitors
+      properties:
+        visitors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bezoeker'
+
+    Bezoeker:
+      type: object
+      description: Bezoeker bevat de gegevens van een enkel bezoek.
+      properties:
+        bezoek_nummer:
+          type: string
+          description: Unieke identifier voor dit bezoek
+          example: "0012314"
+        type_arts:
+          $ref: '#/components/schemas/Arts'
+        care:
+          $ref: '#/components/schemas/Zorg'
+        status:
+          $ref: '#/components/schemas/BezoekerStatus'
+        queue:
+          type: integer
+          format: int32
+          description: Totaal aantal aanwezige bezoekers die dezelfde arts nodig hebben.
+          minimum: 0
+          example: 1
+        specialisme:
+          type: string
+          description: Het exacte specialisme van de benodigde arts.
+          example: "Longgeneeskunde"
+        kamernummer:
+          type: string
+          description: Het kamernummer (eventueel met bednummer) waar deze bezoeker momenteel verblijft.
+            Het is mogelijk dat een bezoeker wel gezien is, nog niet vertrokken is, en niet meer op een kamer ligt.
+          example: "D12.02"
+        reden:
+          type: string
+          description: De reden van dit bezoek.
+          example: "Dyspnoe NNO"
+        binnenkomst:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker is binnengekomen.
+          example: "2017-02-28 15:44:00+01:00"
+        naar_kamer:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker de huidige behandelkamer is binnengekomen.
+          example: "2017-02-28T16:18:00+01:00"
+        gezien:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker voor het eerst is gezien door een arts.
+          example: "2017-02-28T16:42:00+01:00"
+        opname:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker is geregistreerd voor opname.
+          example: null
+        minuten_aanwezig:
+          type: integer
+          format: int32
+          description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
+          example: 76
+        minuten_tot_dokter:
+          type: integer
+          format: int32
+          description: "De huidige deur-tot-doktertijd; indien de bezoeker gezien is: het aantal minuten van binnenkomst tot `gezien`; anders gelijk aan `minuten_aanwezig`."
+          example: 58
+        minuten_sinds_dokter:
+          type: integer
+          format: int32
+          description: "Voor bezoekers die gezien zijn door een arts: het aantal minuten sinds `gezien`. Anders gelijk aan 0."
+          example: 18
+        minuten_sinds_beslissing:
+          type: integer
+          format: int32
+          description: "Voor bezoekers waar de arts een beslissing over genomen heeft: het aantal minuten sinds `opname`. Anders gelijk aan 0."
+        leeftijdsgroep:
+          type: string
+          description: "Abstracte indicatie van de leeftijdsgroep van deze bezoeker."
+          example: "8"
+        herkomst:
+          type: string
+          description: "Code die aangeeft hoe deze patiënt op deze afdeling terecht is gekomen."
+          example: "Huisarts"
+        urgentie:
+          $ref: '#/components/schemas/Urgentie'
+
+      required:
+        - bezoek_nummer
+        - type_arts
+        - care
+        - status
+        - queue
+        - reden
+        - leeftijdsgroep
+        - herkomst
+        - urgentie
+        - binnenkomst
+        - minuten_aanwezig
+        - minuten_tot_dokter
+        - minuten_sinds_dokter
+        - minuten_sinds_beslissing
+
+    Pincode:
+      description: Een pincode voor een specifieke bezoeker
+      type: object
+      required:
+        - bezoeknummer
+        - pincode
+      properties:
+        bezoek_nummer:
+          type: string
+          description: Identifier voor het opgevraagde bezoek
+          example: "0012314"
+        pincode:
+          type: string
+          description: Een korte pincode voor deze bezoeker
+          example: "499291"
+
+paths:
+  /services/v3/timeline/:
+    get:
+      summary: Haal een overzicht op van de huidige bezoekers.
+      operationId: getTimeline
+      tags:
+        - 'Service definitie'
+      parameters:
+        - $ref: '#/components/parameters/locatie'
+        - $ref: '#/components/parameters/afdeling'
+        - $ref: '#/components/parameters/tijdstip'
+      responses:
+        '200':
+          description: Een arbitrair geordende lijst van alle bezoekers die op dit moment aanwezig zijn.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timeline'
+        400:
+          description: Fout bij het uitlezen van een van de parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /services/v3/timeline/pincode:
+    get:
+      summary: Genereer een pincode die deze bezoeker in hun app kan gebruiken.
+      operationId: getPincode
+      tags:
+        - 'Service definitie'
+      parameters:
+        - name: bezoek_nummer
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Een pincode voor deze bezoeker
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pincode'
+        '404':
+          description: Deze bezoeker bestaat niet of is niet (meer) aanwezig.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
