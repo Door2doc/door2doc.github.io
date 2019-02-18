@@ -62,7 +62,7 @@ De abonnementsprijs van Door2doc SEH is afhankelijk van het totaal aantal bezoek
       //  reductie 40% bij aantal > 40k, 20% bij aantal tussen 20-40k
       function calculateCosts(numVisitors, numLocations, oi) {
   
-          var rate = .75,
+          var rate = .85,
               feeBasic = 12450,
               feeNext = 6000,
               feeOI = 1800,
