@@ -34,8 +34,8 @@ info:
     periodieke totaaloverzichten te pushen.
 
 servers:
-- url: https://integration.door2doc.net
-  description: Integratie-server van door2doc
+  - url: https://integration.door2doc.net
+    description: Integratie-server van door2doc
 
 components:
   securitySchemes:
@@ -346,23 +346,123 @@ paths:
     post:
       summary: |
         Vraag een afspraak-voorstel op. De afspraak wordt ingeschoten als een FHIR appointment. Het resultaat is een
-        FHIR Bundle met nul of meer Slots.
+        FHIR Bundle met nul of meer Slots. De afspraak moet de volgende informatie bevatten:
+
+        * appointmentType: onderscheid tussen zelfverwijzer en niet
+        * reason: ingangsklachten van de patiënt
+        * priority: initiële triagecode van de patiënt
+        * birthdate: geboortedatum van de patiënt, bij voorkeur afgerond naar 1e van de maand
+        * postcode: postcode van de patiënt, niet nodig voor zelfverwijzers
+        * locatie van waar de call is aangenomen
       operationId: propose
       security:
-      - BasicAuth: []
+        - BasicAuth: []
       requestBody:
         description: Een FHIR Appointment
         required: true
         content:
           application/fhir+json:
-            example: "todo"
-
+            example: {
+              "resourceType": "Appointment",
+              "status": "PROPOSED",
+              "appointmentType": {
+                "coding": [
+                {
+                  "system": "http://hl7.org/fhir/v2/0276",
+                  "code": "WALKIN",
+                  "display": "A previously unscheduled walk-in visit"
+                }
+                ]
+              },
+              "reason": [
+              {
+                "coding": [
+                {
+                  "system": "todo",
+                  "code": "45",
+                  "display": "Wond"
+                }
+                ]
+              }
+              ],
+              "priority": 3,
+              "participant": [
+              {
+                "actor": {
+                  "reference": "#patient1"
+                }
+              },
+              {
+                "actor": {
+                  "reference": "#location1"
+                }
+              }
+              ],
+              "contained": [
+              {
+                "resourceType": "Patient",
+                "id": "patient1",
+                "birthDate": "1970-07-11T08:30:00.000+02:00",
+                "address": [
+                {
+                  "postalCode": "7411"
+                }
+                ]
+              },
+              {
+                "resourceType": "Location",
+                "id": "#location1",
+                "identifier": [
+                {
+                  "use": "official",
+                  "system": "urn:topicuszorg:topplan:plek:id",
+                  "value": "34"
+                }
+                ],
+                "name": "Leiderdorp",
+                "managingOrganization": {
+                  "reference": "#7"
+                }
+              },
+              {
+                "resourceType": "Organization",
+                "id": "7",
+                "name": "HAP D2D SHR"
+              }
+              ]
+            }
       responses:
         200:
           description: Er is een afspraak voorstel beschikbaar. Het resultaat is een Bundle met nul of meer Slots.
           content:
             application/fhir+json:
-              example: "todo"
+              example: {
+                "resourceType": "Bundle",
+                "type": "searchset",
+                "total": 2,
+                "entry": [
+                {
+                  "resource": {
+                    "resourceType": "Slot",
+                    "schedule": {
+                      "reference": "Schedule/35",
+                    },
+                    "start": "2019-03-18T13:15:00.000+01:00",
+                    "end": "2019-03-18T13:30:00.000+01:00"
+                  }
+                },
+                {
+                  "resource": {
+                    "resourceType": "Slot",
+                    "schedule": {
+                      "reference": "Schedule/37",
+                    },
+                    "start": "2019-03-18T13:15:00.000+01:00",
+                    "end": "2019-03-18T13:30:00.000+01:00"
+                  }
+                }
+                ]
+              }}
 
   /fhir/v3/List:
     post:
@@ -371,7 +471,7 @@ paths:
         schedule.
       operationId: postList
       security:
-      - BasicAuth: []
+        - BasicAuth: []
       requestBody:
         description: Een FHIR List met daarin één Schedule en 0 of meer Slots.
         required: true
@@ -417,7 +517,7 @@ paths:
         Registreer een afspraak. Een bestaande afspraak met hetzelfde ID wordt vervangen.
       operationId: postAppointment
       security:
-      - BasicAuth: []
+        - BasicAuth: []
       requestBody:
         description: Een FHIR appointment.
         required: true
