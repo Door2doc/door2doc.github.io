@@ -194,6 +194,10 @@ definitions:
         type: string
         format: 'date-time'
         description: Datum/Tijd waarop de bezoeker voor het eerst is gezien door een arts.
+      arts_klaar:
+        type: string
+        format: 'date-time'
+        description: Datum/Tijd waarop de arts klaar was met de patiënt, indien van toepassing. 
       opname:
         type: string
         format: 'date-time'
@@ -221,6 +225,10 @@ definitions:
       herkomst:
         type: string
         description: "Code die aangeeft hoe deze patiënt op deze afdeling terecht is gekomen."
+      opname_afdeling:
+        type: string
+        description: "Naam van de afdeling waar de patiënt gaat worden opgenomen, indien bekend"
+      
 
     required:
       - bezoek_nummer
