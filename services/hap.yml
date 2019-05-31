@@ -367,23 +367,23 @@ paths:
               "status": "PROPOSED",
               "appointmentType": {
                 "coding": [
-                {
-                  "system": "http://hl7.org/fhir/v2/0276",
-                  "code": "WALKIN",
-                  "display": "A previously unscheduled walk-in visit"
-                }
+                  {
+                    "system": "http://hl7.org/fhir/v2/0276",
+                    "code": "WALKIN",
+                    "display": "A previously unscheduled walk-in visit"
+                  }
                 ]
               },
               "reason": [
-              {
-                "coding": [
                 {
-                  "system": "todo",
-                  "code": "45",
-                  "display": "Wond"
+                  "coding": [
+                  {
+                    "system": "todo",
+                    "code": "45",
+                    "display": "Wond"
+                  }
+                  ]
                 }
-                ]
-              }
               ],
               "priority": 3,
               "participant": [

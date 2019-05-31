@@ -1050,12 +1050,14 @@ definitions:
         "locaties": [
           {
             "locatie": "alph",
+            "open": true,
             "vertraagd": 0,
             "wachttijd_min": 0,
             "wachttijd_max": 0
           },
           {
             "locatie": "ldd",
+            "open": true,
             "vertraagd": 2,
             "wachttijd_min": 15,
             "wachttijd_max": 30
@@ -1327,12 +1329,14 @@ definitions:
         "locaties": [
           {
             "locatie": "alph",
+            "open": true,
             "vertraagd": 0,
             "wachttijd_min": 0,
             "wachttijd_max": 0
           },
           {
             "locatie": "ldd",
+            "open": true,
             "vertraagd": 2,
             "wachttijd_min": 15,
             "wachttijd_max": 30
@@ -1370,6 +1374,7 @@ definitions:
     type: object
     required:
       - id
+      - open 
       - vertraagd
       - wachttijd_min
       - wachttijd_max
@@ -1377,6 +1382,9 @@ definitions:
       id:
         type: string
         description: ID van deze locatie
+      open:
+        type: boolean
+        description: Indien false, dan is deze locatie momenteel gesloten
       vertraagd:
         type: integer
         format: int32
