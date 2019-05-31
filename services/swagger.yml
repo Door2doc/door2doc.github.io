@@ -31,7 +31,6 @@ tags:
   - name: "Project: HAP"
   - name: "Service: Domain"
   - name: "Service: Capacity"
-  - name: "Service: Interrupt"
   - name: "Service: Prediction"
   - name: "Service: Rooms"
   - name: "Service: Settings"
@@ -366,33 +365,6 @@ definitions:
       model:
         type: string
         description: Identifier voor het gebruikte model
-
-  InterruptStatus:
-    type: object
-    required:
-      - type
-    properties:
-      type:
-        type: string
-        enum:
-          - spoed-patient
-        description: Type interrupt
-      seconds_remaining:
-        type: integer
-        format: int32
-        minimum: 0
-        description: >
-          Aantal seconden dat deze interrupt nog aan blijft staan. Interrupts *kunnen* eerder inactief
-          worden, dus dit is meer een indicatie. Afwezig indien er geen interrupt actief is.
-      message:
-        type: string
-        description: Tekst die bij deze interrupt hoort. Afwezig indien er geen interrupt actief is.
-    example:
-      {
-        "type": "spoed-patient",
-        "seconds_remaining": 285,
-        "message": "Er is een patiënt binnengebracht die al onze aandacht behoeft. Uw behandeling duurt hierdoor mogelijk langer. Bedankt voor uw begrip."
-      }
 
   RoomDetails:
     type: object
@@ -1924,103 +1896,6 @@ paths:
             $ref: '#/definitions/PredictionList'
         400:
           description: Fout bij het uitlezen van een van de parameters.
-
-  /v2/interrupt/spoed-patient/:
-    get:
-      summary: Haal de waarde van de interrupt "spoed-patient" op.
-      tags:
-        - 'Service: Interrupt'
-        - 'Project: ZKH'
-      operationId: getSpoedPatient
-      parameters:
-        - $ref: '#/parameters/afdeling'
-      responses:
-        200:
-          description: De status van de interrupt "spoed-patient". Indien de interrupt uit staat, is het veld 'seconds_remaining' afwezig.
-          schema:
-            $ref: '#/definitions/InterruptStatus'
-        400:
-          description: Fout bij het uitlezen van een van de parameters
-
-    put:
-      summary: Activeer de interrupt "spoed-patient".
-      tags:
-        - 'Service: Interrupt'
-        - 'Project: ZKH'
-      operationId: setSpoedPatient
-      parameters:
-        - $ref: '#/parameters/afdeling'
-      responses:
-        200:
-          description: De nieuwe status van de interrupt "spoed-patient".
-          schema:
-            $ref: '#/definitions/InterruptStatus'
-        400:
-          description: Fout bij het uitlezen van een van de parameters
-
-    delete:
-      summary: Deactiveer de interrupt "spoed-patient".
-      tags:
-        - 'Service: Interrupt'
-        - 'Project: ZKH'
-      operationId: unsetSpoedPatient
-      parameters:
-        - $ref: '#/parameters/afdeling'
-      responses:
-        200:
-          description: De nieuwe status van de interrupt "spoed-patient"; de velden 'seconds_remaining' en 'description' zullen hierin afwezig zijn.
-          schema:
-            $ref: '#/definitions/InterruptStatus'
-
-  /v3/interrupt/spoed-patient/:
-    get:
-      summary: Haal de waarde van de interrupt "spoed-patient" op.
-      tags:
-        - 'Service: Interrupt'
-        - 'Project: ZKH'
-      operationId: getSpoedPatientV3
-      parameters:
-        - $ref: '#/parameters/locatie'
-        - $ref: '#/parameters/afdeling'
-      responses:
-        200:
-          description: De status van de interrupt "spoed-patient". Indien de interrupt uit staat, is het veld 'seconds_remaining' afwezig.
-          schema:
-            $ref: '#/definitions/InterruptStatus'
-        400:
-          description: Fout bij het uitlezen van een van de parameters
-
-    put:
-      summary: Activeer de interrupt "spoed-patient".
-      tags:
-        - 'Service: Interrupt'
-        - 'Project: ZKH'
-      operationId: setSpoedPatientVV3
-      parameters:
-        - $ref: '#/parameters/locatie'
-        - $ref: '#/parameters/afdeling'
-      responses:
-        200:
-          description: De nieuwe status van de interrupt "spoed-patient".
-          schema:
-            $ref: '#/definitions/InterruptStatus'
-        400:
-          description: Fout bij het uitlezen van een van de parameters
-
-    delete:
-      summary: Deactiveer de interrupt "spoed-patient".
-      tags:
-        - 'Service: Interrupt'
-        - 'Project: ZKH'
-      operationId: unsetSpoedPatientV3
-      parameters:
-        - $ref: '#/parameters/locatie'
-        - $ref: '#/parameters/afdeling'
-      responses:
-        200:
-          description: De nieuwe status van de interrupt "spoed-patient"; de velden 'seconds_remaining' en 'description' zullen hierin afwezig zijn.
-          schema:
-            $ref: '#/definitions/InterruptStatus'
 
   /v2/capacity/calculate/:
     get:
