@@ -6,8 +6,8 @@ info:
   description: |
 
 servers:
-- url: https://shr.door2doc.net
-- url: https://dddb.door2doc.net
+  - url: https://shr.door2doc.net
+  - url: https://dddb.door2doc.net
 
 components:
   schemas:
@@ -15,7 +15,7 @@ components:
       description: Foutmelding
       type: object
       required:
-      - error
+        - error
       properties:
         error:
           type: string
@@ -25,12 +25,12 @@ components:
       description: Urgentie zoals bepaald tijdens de triage
       type: string
       enum:
-      - U0
-      - U1
-      - U2
-      - U3
-      - U4
-      - U5
+        - U0
+        - U1
+        - U2
+        - U3
+        - U4
+        - U5
 
     Ingangsklachten:
       description: Lijst ingangsklachten op basis waarvan een call is aangemaakt
@@ -68,10 +68,15 @@ components:
             type: array
             items:
               type: string
+        achterwacht:
+          description: Een lijst met locaties waarvoor wordt geadviseerd de achterwacht in te schakelen
+          type: array
+          items:
+            type: string
       example: {
         "plan": ["shr_ld_201705011800_h1", "shr_al_201705012330_h1"],
         "open": [
-          ["shr_al_201705012300_x", "shr_al_201705012315_x", "shr_al_201705012345_x"]
+        ["shr_al_201705012300_x", "shr_al_201705012315_x", "shr_al_201705012345_x"]
         ]
       }
 
@@ -80,25 +85,25 @@ components:
       description: Huidige score van de simulatie. Let op dat de bezettingsgraad al terug te vinden is in de grid status.
       type: object
       required:
-      - overall
-      - wachttijd
-      - wachttijd_loc
-      - wachttijd_cum_loc
-      - bezetting
-      - afspraken
-      - extra_slots
-      - voorstel_verworpen
+        - overall
+        - wachttijd
+        - wachttijd_loc
+        - wachttijd_cum_loc
+        - bezetting
+        - afspraken
+        - extra_slots
+        - voorstel_verworpen
       properties:
         overall:
           description: De overall score van deze simulatie
           type: object
           required:
-          - percentage
-          - optijd
-          - telaat
-          - onbekend
-          - ref_historisch
-          - ref_tria
+            - percentage
+            - optijd
+            - telaat
+            - onbekend
+            - ref_historisch
+            - ref_tria
           properties:
             percentage:
               description: Overall score, uitgedrukt als een percentage
@@ -239,19 +244,19 @@ components:
           type: string
           description: "Type arts voor dit event. Let op: als het event type arts 'huisarts' heeft, dan mag het ook worden geboekt op 'visite-arts' of 'achterwacht'"
           enum:
-          - huisarts
-          - nurse-practitioner
+            - huisarts
+            - nurse-practitioner
 
     Simulation:
       description: Status van de simulatie op tijdstip t.
       type: object
       required:
-      - t
-      - locaties
-      - grid
-      - score
-      - visitearts
-      - interrupts
+        - t
+        - locaties
+        - grid
+        - score
+        - visitearts
+        - interrupts
       properties:
         t:
           type: string
@@ -292,10 +297,10 @@ components:
     Grid:
       type: object
       required:
-      - start
-      - einde
-      - slot_duur
-      - periodes
+        - start
+        - einde
+        - slot_duur
+        - periodes
       properties:
         start:
           type: string
@@ -318,10 +323,10 @@ components:
     Locatie:
       type: object
       required:
-      - id
-      - vertraagd
-      - wachttijd_min
-      - wachttijd_max
+        - id
+        - vertraagd
+        - wachttijd_min
+        - wachttijd_max
       properties:
         id:
           type: string
@@ -349,12 +354,12 @@ components:
       description: "Periode van 1 uur in het grid"
       type: object
       required:
-      - start
-      - einde
-      - bezetting
-      - tijden
-      - slots
-      - u2
+        - start
+        - einde
+        - bezetting
+        - tijden
+        - slots
+        - u2
       properties:
         start:
           type: string
@@ -398,12 +403,12 @@ components:
       description: "Een enkel slot in het rooster"
       type: object
       required:
-      - id
-      - locatie
-      - start
-      - einde
-      - type_arts
-      - status
+        - id
+        - locatie
+        - start
+        - einde
+        - type_arts
+        - status
       properties:
         id:
           type: string
@@ -424,18 +429,18 @@ components:
           type: string
           description: Type arts voor dit slot
           enum:
-          - huisarts
-          - achterwacht
-          - nurse-practitioner
-          - visite-arts
+            - huisarts
+            - achterwacht
+            - nurse-practitioner
+            - visite-arts
         status:
           type: string
           description: Status van dit slot. Een open slot kan gevuld worden met een afspraak. Een bezet slot heeft een afspraak. Een geblokkeerd slot kan niet gevuld worden met een afspraak. Een beschikbaar slot is niet zichtbaar, maar kan worden bijgeplust.
           enum:
-          - open
-          - bezet
-          - geblokkeerd
-          - beschikbaar
+            - open
+            - bezet
+            - geblokkeerd
+            - beschikbaar
         text:
           type: string
           description: Toelichting op dit slot
@@ -450,12 +455,12 @@ components:
       description: Een afspraak vanuit Topicus
       type: object
       required:
-      - id
-      - aangemaakt
-      - urgentie
-      - status
-      - patient
-      - aanwezig
+        - id
+        - aangemaakt
+        - urgentie
+        - status
+        - patient
+        - aanwezig
       properties:
         id:
           type: string
@@ -481,11 +486,11 @@ components:
         status:
           type: string
           enum:
-          - "gepland"
-          - "begonnen"
-          - "afgerond"
-          - "vertraagd"
-          - "gemist"
+            - "gepland"
+            - "begonnen"
+            - "afgerond"
+            - "vertraagd"
+            - "gemist"
           description: Status van deze afspraak
         aanwezig:
           type: boolean
@@ -493,10 +498,10 @@ components:
         patient:
           type: string
           enum:
-          - "gepland"
-          - "afgerond"
-          - "achter"
-          - "geen"
+            - "gepland"
+            - "afgerond"
+            - "achter"
+            - "geen"
           description: Indicatie van de status van deze patiënt.
         icpc_code:
           type: string
@@ -540,8 +545,8 @@ components:
     WachtkamerInfo:
       type: object
       required:
-      - t
-      - locaties
+        - t
+        - locaties
       properties:
         t:
           type: string
@@ -574,12 +579,12 @@ components:
     SpoedPatient:
       type: object
       required:
-      - type
+        - type
       properties:
         type:
           type: string
           enum:
-          - spoed-patient
+            - spoed-patient
         seconds_remaining:
           type: number
           format: int32
@@ -633,23 +638,23 @@ paths:
       summary: Begin een nieuwe simulatie
       operationId: newSimulation
       parameters:
-      - name: from
-        schema:
-          type: string
+        - name: from
+          schema:
+            type: string
+            format: 'date-time'
+            example: "2017-07-01T22:00:00+02:00"
+          in: query
+          required: true
+          description: Datum/tijd in RFC3339 van de begintijd van de simulatie.
+        - name: to
+          schema:
+            type: string
+            format: 'date-time'
+            example: "2017-07-02T08:00:00+02:00"
           format: 'date-time'
-          example: "2017-07-01T22:00:00+02:00"
-        in: query
-        required: true
-        description: Datum/tijd in RFC3339 van de begintijd van de simulatie.
-      - name: to
-        schema:
-          type: string
-          format: 'date-time'
-          example: "2017-07-02T08:00:00+02:00"
-        format: 'date-time'
-        in: query
-        required: true
-        description: Datum/tijd in RFC3339 van de eindtijd van de simulatie.
+          in: query
+          required: true
+          description: Datum/tijd in RFC3339 van de eindtijd van de simulatie.
 
       responses:
         '201':
@@ -666,9 +671,9 @@ paths:
               schema:
                 type: object
                 required:
-                - id
-                - locaties
-                - slot_duur
+                  - id
+                  - locaties
+                  - slot_duur
                 properties:
                   id:
                     type: string
@@ -678,7 +683,7 @@ paths:
                   locaties:
                     type: array
                     items:
-                    - type: string
+                      - type: string
                     description: Locaties in deze simulatie
                     example: ['ld', 'al', 'lu']
                   slot_duur:
@@ -700,7 +705,7 @@ paths:
       summary: Huidige status van de simulatie
       operationId: getSimulation
       parameters:
-      - $ref: '#/components/parameters/simulation_id'
+        - $ref: '#/components/parameters/simulation_id'
       responses:
         '200':
           description: Huidige status van de simulatie
@@ -717,19 +722,19 @@ paths:
       summary: Plan de openstaande afspraak in
       operationId: planAfspraak
       parameters:
-      - $ref: '#/components/parameters/simulation_id'
-      - name: slot_id
-        in: query
-        schema:
-          type: string
-        required: true
-        description: ID van het slot waar de afspraak gepland moet worden
-      - name: evaluate
-        in: query
-        schema:
-          type: boolean
-        description: Geef het resultaat van het inplannen van deze afspraak, zonder de afspraak daadwerkelijk in te plannen.
-        default: false
+        - $ref: '#/components/parameters/simulation_id'
+        - name: slot_id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: ID van het slot waar de afspraak gepland moet worden
+        - name: evaluate
+          in: query
+          schema:
+            type: boolean
+          description: Geef het resultaat van het inplannen van deze afspraak, zonder de afspraak daadwerkelijk in te plannen.
+          default: false
       responses:
         '200':
           description: Nieuwe status van de simulatie
@@ -749,24 +754,24 @@ paths:
       summary: Blokkeer een slot
       operationId: block
       parameters:
-      - $ref: '#/components/parameters/simulation_id'
-      - name: slot_id
-        in: query
-        schema:
-          type: string
-        required: true
-        description: ID van het slot dat geblokkeerd moet worden
-      - name: reason
-        in: query
-        schema:
-          type: string
-          enum:
-          - pauze
-          - autoriseren
-          - compensatie
-          - verwijzing
-        required: true
-        description: Reden van de blokkade
+        - $ref: '#/components/parameters/simulation_id'
+        - name: slot_id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: ID van het slot dat geblokkeerd moet worden
+        - name: reason
+          in: query
+          schema:
+            type: string
+            enum:
+              - pauze
+              - autoriseren
+              - compensatie
+              - verwijzing
+          required: true
+          description: Reden van de blokkade
       responses:
         '200':
           description: Huidige status van de simulatie
@@ -786,13 +791,13 @@ paths:
       summary: Deblokkeer een geblokkeerd slot
       operationId: unblock
       parameters:
-      - $ref: '#/components/parameters/simulation_id'
-      - name: slot_id
-        in: query
-        schema:
-          type: string
-        required: true
-        description: ID van het slot dat gedeblokkeerd moet worden
+        - $ref: '#/components/parameters/simulation_id'
+        - name: slot_id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: ID van het slot dat gedeblokkeerd moet worden
       responses:
         '200':
           description: Huidige status van de simulatie
@@ -812,22 +817,22 @@ paths:
       summary: Voeg een slot toe. Dit kan alleen op basis van sloten met de status "Beschikbaar".
       operationId: add
       parameters:
-      - $ref: '#/components/parameters/simulation_id'
-      - name: slot_id
-        in: query
-        schema:
-          type: string
-        required: true
-        description: ID van het "Beschikbaar" slot dat wordt gebruikt
-      - name: arts
-        in: query
-        description: Type arts voor dit slot
-        schema:
-          type: string
-          enum:
-          - huisarts
-          - nurse-practitioner
-          - visite-arts
+        - $ref: '#/components/parameters/simulation_id'
+        - name: slot_id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: ID van het "Beschikbaar" slot dat wordt gebruikt
+        - name: arts
+          in: query
+          description: Type arts voor dit slot
+          schema:
+            type: string
+            enum:
+              - huisarts
+              - nurse-practitioner
+              - visite-arts
       responses:
         '200':
           description: Huidige status van de simulatie
@@ -847,19 +852,19 @@ paths:
       summary: Beheer de aanwezigheid van de visite-arts.
       operationId: setVisiteArts
       parameters:
-      - $ref: '#/components/parameters/simulation_id'
-      - name: aanwezig
-        in: query
-        schema:
-          type: boolean
-        required: true
-        description: Stel de huidige aanwezigheid in.
-      - name: locatie
-        in: query
-        schema:
-          type: string
-        required: true
-        description: Locatie waarvoor de aanwezigheid wordt ingesteld.
+        - $ref: '#/components/parameters/simulation_id'
+        - name: aanwezig
+          in: query
+          schema:
+            type: boolean
+          required: true
+          description: Stel de huidige aanwezigheid in.
+        - name: locatie
+          in: query
+          schema:
+            type: string
+          required: true
+          description: Locatie waarvoor de aanwezigheid wordt ingesteld.
       responses:
         '200':
           description: Huidige status van de simulatie
@@ -874,36 +879,36 @@ paths:
     get:
       summary: Vraag de huidige waarde van de "spoed-patient" interrupt op.
       parameters:
-      - name: locatie
-        in: query
-        schema:
-          type: string
-        required: true
-        description: Locatie waarvoor de interrupt wordt opgevraagd.
+        - name: locatie
+          in: query
+          schema:
+            type: string
+          required: true
+          description: Locatie waarvoor de interrupt wordt opgevraagd.
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
     put:
       summary: Activeer de interrupt "spoed-patient"
       parameters:
-      - name: locatie
-        in: query
-        schema:
-          type: string
-        required: true
-        description: Locatie waarvoor de interrupt wordt ingesteld.
+        - name: locatie
+          in: query
+          schema:
+            type: string
+          required: true
+          description: Locatie waarvoor de interrupt wordt ingesteld.
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
     delete:
       summary: Deactiveer de interrupt "spoed-patient"
       parameters:
-      - name: locatie
-        in: query
-        schema:
-          type: string
-        required: true
-        description: Locatie waarvoor de interrupt wordt ingesteld.
+        - name: locatie
+          in: query
+          schema:
+            type: string
+          required: true
+          description: Locatie waarvoor de interrupt wordt ingesteld.
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
@@ -914,7 +919,7 @@ paths:
       summary: Huidige wachtkamer info van de simulatie
       operationId: getWachtkamer
       parameters:
-      - $ref: '#/components/parameters/simulation_id'
+        - $ref: '#/components/parameters/simulation_id'
       responses:
         '200':
           description: Huidige status van de simulatie
