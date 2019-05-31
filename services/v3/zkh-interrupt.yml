@@ -23,7 +23,6 @@ components:
         enum:
           - "seh"
           - "ehh"
-          - "hap"
 
     locatie:
       name: locatie
@@ -53,7 +52,6 @@ components:
       type: string
       enum:
         - "spoed-patient"
-        - "achterwacht"
 
     InterruptStatus:
       type: object
@@ -83,7 +81,7 @@ paths:
   /services/v3/interrupt/{type}/:
     get:
       summary: Haal de waarde van een interrupt op.
-      operationId: getSpoedPatientV3
+      operationId: getInterrupt
       parameters:
         - $ref: '#/components/parameters/locatie'
         - $ref: '#/components/parameters/afdeling'
@@ -100,7 +98,7 @@ paths:
 
     put:
       summary: Activeer een interrupt.
-      operationId: setSpoedPatientVV3
+      operationId: setInterrupt
       parameters:
         - $ref: '#/components/parameters/locatie'
         - $ref: '#/components/parameters/afdeling'
@@ -117,7 +115,7 @@ paths:
 
     delete:
       summary: Deactiveer een interrupt.
-      operationId: unsetSpoedPatientV3
+      operationId: unsetInterrupt
       parameters:
         - $ref: '#/components/parameters/locatie'
         - $ref: '#/components/parameters/afdeling'

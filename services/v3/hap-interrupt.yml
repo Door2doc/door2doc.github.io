@@ -1,0 +1,117 @@
+openapi: 3.0.0
+
+info:
+  title: Interrupt Service
+  version: 3
+  description: |
+    De interrupt service wordt gebruikt voor urgente berichten.
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: qa-shr
+
+components:
+  parameters:
+    locatie:
+      name: locatie
+      in: query
+      required: true
+      schema:
+        type: string
+
+    type:
+      name: type
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Type'
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "invalid date"
+
+    Type:
+      type: string
+      enum:
+        - "spoed-patient"
+        - "achterwacht"
+
+    InterruptStatus:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          $ref: '#components/schemas/Type'
+        seconds_remaining:
+          type: integer
+          format: int32
+          minimum: 0
+          description: >
+            Aantal seconden dat deze interrupt nog aan blijft staan. Interrupts *kunnen* eerder inactief
+            worden, dus dit is meer een indicatie. Afwezig indien er geen interrupt actief is.
+        message:
+          type: string
+          description: Tekst die bij deze interrupt hoort. Afwezig indien er geen interrupt actief is.
+      example:
+        {
+          "type": "spoed-patient",
+          "seconds_remaining": 285,
+          "message": "Er is een patiënt binnengebracht die al onze aandacht behoeft. Uw behandeling duurt hierdoor mogelijk langer. Bedankt voor uw begrip."
+        }
+
+paths:
+  /services/v3/interrupt/{type}/:
+    get:
+      summary: Haal de waarde van een interrupt op.
+      operationId: getInterrupt
+      parameters:
+        - $ref: '#/components/parameters/locatie'
+        - $ref: '#/components/parameters/type'
+      responses:
+        200:
+          description: De status van de interrupt "spoed-patient". Indien de interrupt uit staat, is het veld 'seconds_remaining' afwezig.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterruptStatus'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
+
+    put:
+      summary: Activeer een interrupt.
+      operationId: setInterrupt
+      parameters:
+        - $ref: '#/components/parameters/locatie'
+        - $ref: '#/components/parameters/type'
+      responses:
+        200:
+          description: De nieuwe status van de interrupt "spoed-patient".
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterruptStatus'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
+
+    delete:
+      summary: Deactiveer een interrupt.
+      operationId: unsetInterrupt
+      parameters:
+        - $ref: '#/components/parameters/locatie'
+        - $ref: '#/components/parameters/type'
+      responses:
+        200:
+          description: De nieuwe status van de interrupt "spoed-patient"; de velden 'seconds_remaining' en 'description' zullen hierin afwezig zijn.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterruptStatus'
