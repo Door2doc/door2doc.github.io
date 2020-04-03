@@ -95,7 +95,7 @@ components:
           example: 3
         wachttijd:
           type: number
-          description: Verwachte wachttijd in minuten. Alleen aanwezig indien dit veld getoond moet worden.
+          description: Verwachte wachttijd in minuten. Alaleen aanwezig indien dit veld getoond moet worden.
           example: 72
         verblijftijd:
           type: number
