@@ -7,7 +7,7 @@ info:
     De MyLive service geeft de status van een specifieke bezoeker weer. Het gebruik van de MyLive service bestaat uit
     twee stappen:
 
-    1. Vraag de unieke code op via `/services/v3/mylive/code`, waarbij kamernummer en pincode als
+    1. Vraag de unieke code op via `/services/v3/mylive/code`, waarbij SEH ID en pincode als
        gebruikersnaam/wachtwoord worden opgegeven.
     2. Vraag de huidige status op via `/services/v3/mylive/status/{code}`. Deze code mag gedeeld worden met derden.
 
@@ -192,7 +192,7 @@ components:
     pincode:
       type: http
       scheme: basic
-      description: Gebruik kamernummer en pincode voor een specifieke bezoeker.
+      description: Gebruik SEH ID als gebruikersnaam en pincode als wachtwoord voor een specifieke bezoeker.
 
 
 paths:
@@ -206,7 +206,7 @@ paths:
         - pincode
       responses:
         401:
-          description: Kamernummer of pincode is onjuist.
+          description: SEH-ID of pincode is onjuist.
           content:
             application/json:
               schema:
