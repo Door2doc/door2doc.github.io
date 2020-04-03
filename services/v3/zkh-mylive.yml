@@ -1,0 +1,254 @@
+openapi: 3.0.0
+
+info:
+  title: MyLive Service
+  version: 3
+  description: |
+    De MyLive service geeft de status van een specifieke bezoeker weer. Het gebruik van de MyLive service bestaat uit
+    twee stappen:
+
+    1. Vraag de unieke code op via `/services/v3/mylive/code`, waarbij kamernummer en pincode als
+       gebruikersnaam/wachtwoord worden opgegeven.
+    2. Vraag de huidige status op via `/services/v3/mylive/status/{code}`. Deze code mag gedeeld worden met derden.
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: demo
+
+
+
+components:
+  parameters:
+    afdeling:
+      description: De afdeling waarvoor deze informatie wordt opgevraagd
+      name: afdeling
+      in: query
+      required: true
+      schema:
+        type: string
+        enum:
+          - "seh"
+          - "ehh"
+
+    locatie:
+      description: De locatie waarvoor deze informatie wordt opgevraagd.
+      name: locatie
+      in: query
+      required: true
+      schema:
+        type: string
+
+    tijdstip:
+      description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan gedraagt de service
+       zich alsof deze op dat moment werd aangeroepen. Het format is beschreven in RFC3339.
+      name: t
+      in: query
+      required: false
+      example: "2017-02-28T17:00:00+01:00"
+      schema:
+        type: string
+        format: 'date-time'
+
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "stuff went wrong"
+
+    Code:
+      type: object
+      required:
+        - code
+        - link
+      properties:
+        code:
+          type: string
+          example: "7c9ey8fqe8f8q0f89"
+        link:
+          type: string
+          example: "/services/v3/mylive/status/7c9ey8fqe8f8q0f89"
+
+    Status:
+      type: object
+      required:
+        - status
+        - behandelruimtes
+        - bezet
+        - stappen
+      properties:
+        status:
+          $ref: '#/components/schemas/BezoekerStatus'
+        wachtend:
+          type: number
+          description: Aantal wachtenden (op dezelfde arts) voor deze patiënt. Alleen aanwezig indien dit veld getoond moet worden.
+          example: 3
+        in-behandeling:
+          type: number
+          description: Aantal patiënten in behandeling bij dezelfde arts. Alleen aanwezig indien dit veld getoond moet worden.
+          example: 3
+        wachttijd:
+          type: number
+          description: Verwachte wachttijd in minuten. Alleen aanwezig indien dit veld getoond moet worden.
+          example: 72
+        verblijftijd:
+          type: number
+          description: Verwachte verblijftijd in minuten. Alleen aanwezig indien dit veld getoond moet worden.
+          example: 84
+        behandelruimtes:
+          type: number
+          description: Aantal behandelruimtes beschikbaar.
+          example: 11
+        bezet:
+          type: number
+          description: Aantal behandelruimtes in gebruik.
+          example: 8
+        stappen:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stap'
+          description: Stappenplan voor deze patient.
+      example:
+        {
+          "status": "wacht-op-arts",
+          "wachtend": 5,
+          "wachttijd": 75,
+          "behandelruimtes": 11,
+          "bezet": 8,
+          "stappen": [
+            {
+              "fase": "aankomst",
+              "tijdstip": "2020-04-03T23:00:07.023+02:00"
+            },
+            {
+              "fase": "triage",
+              "tijdstip": "2020-04-04T00:05:00.000+02:00"
+            },
+            {
+              "fase": "behandelruimte"
+            },
+            {
+              "fase": "arts"
+            },
+            {
+              "fase": "beslissing"
+            },
+            {
+              "fase": "arts_klaar"
+            },
+            {
+              "fase": "vertrek"
+            },
+          ]
+        }
+
+    BezoekerStatus:
+      type: string
+      enum:
+        - wacht-op-arts
+        - wacht-op-beslissing
+        - wacht-op-vertrek
+        - vertrokken
+      description: |
+        Status van de bezoeker.
+        * wacht-op-arts: Wachtend op arts
+        * wacht-op-beslissing: Gezien door een arts, maar nog geen beslissing
+        * wacht-op-vertrek: Arts heeft beslissing genomen, patient nog niet vertrokken
+        * vertrokken: Patient is vertrokken
+
+    Stap:
+      type: object
+      required:
+        - fase
+      properties:
+        fase:
+          $ref: '#/components/schemas/Fase'
+        tijdstip:
+          type: string
+          format: date-time
+          description: Tijdstip waarop deze stap is afgerond; afwezig indien deze stap nog niet is afgerond.
+
+    Fase:
+      type: string
+      enum:
+        - aankomst
+        - triage
+        - behandelruimte
+        - arts
+        - beslissing
+        - arts_klaar
+        - vertrek
+      description: Fase in de aanwezigheid van de patient
+
+
+
+  securitySchemes:
+    pincode:
+      type: http
+      scheme: basic
+      description: Gebruik kamernummer en pincode voor een specifieke bezoeker.
+
+
+paths:
+  /services/v3/mylive/code/:
+    post:
+      summary: Vraag de unieke code op voor een bezoeker.
+      operationId: getCode
+      tags:
+        - 'Service definitie'
+      security:
+        - pincode
+      responses:
+        401:
+          description: Kamernummer of pincode is onjuist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        200:
+          description: De code om te gebuiken voor MyLive.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Code'
+
+  /service/v3/mylive/status/{code}:
+    get:
+      summary: Vraag de huidige status op voor een specifieke bezoeker.
+      operationId: getStatus
+      tags:
+        - 'Service definitie'
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: De eerder opgevraagde code.
+          schema:
+            type: string
+      responses:
+        401:
+          description: De code is ongeldig.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        410:
+          description: De code is verlopen.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        200:
+          description: De huidige status voor deze bezoeker.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
