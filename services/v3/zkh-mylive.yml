@@ -86,7 +86,7 @@ components:
       properties:
         locatie:
           type: string
-          description: Code van de locatie waar deze bezoeker zich bevindt 
+          description: Code van de locatie waar deze bezoeker zich bevindt
         status:
           $ref: '#/components/schemas/BezoekerStatus'
         wachtend:
@@ -130,10 +130,12 @@ components:
             {
               "fase": "aankomst",
               "tijdstip": "2020-04-03T23:00:07.023+02:00",
+              "afgerond": true
             },
             {
               "fase": "triage",
               "tijdstip": "2020-04-04T00:05:00.000+02:00",
+              "afgerond": true
             },
             {
               "fase": "behandelruimte",
@@ -177,7 +179,10 @@ components:
           $ref: '#/components/schemas/Fase'
         current:
           type: boolean
-          description: Geeft aan of dit de 'huidige' stap is. Indien afwezig, te beschouwen als `false`.  
+          description: Geeft aan of dit de 'huidige' stap is. Indien afwezig, te beschouwen als `false`.
+        afgerond:
+          type: boolean
+          description: Geeft aan of deze stap is afgerond. Indien afwezig, te beschouwen als `false`.
         tijdstip:
           type: string
           format: date-time
