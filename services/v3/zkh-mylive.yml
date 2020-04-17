@@ -78,11 +78,15 @@ components:
     Status:
       type: object
       required:
+        - locatie
         - status
         - behandelruimtes
         - bezet
         - stappen
       properties:
+        locatie:
+          type: string
+          description: Code van de locatie waar deze bezoeker zich bevindt 
         status:
           $ref: '#/components/schemas/BezoekerStatus'
         wachtend:
@@ -116,6 +120,7 @@ components:
           description: Stappenplan voor deze patient.
       example:
         {
+          "locatie": "ams",
           "status": "wacht-op-arts",
           "wachtend": 5,
           "wachttijd": 75,
