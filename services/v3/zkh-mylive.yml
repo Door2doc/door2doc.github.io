@@ -113,6 +113,10 @@ components:
           type: number
           description: Aantal behandelruimtes in gebruik.
           example: 8
+        vrij:
+          type: number
+          description: Aantal behandelruimtes vrij
+          example: 3
         stappen:
           type: array
           items:
@@ -126,6 +130,7 @@ components:
           "wachttijd": 75,
           "behandelruimtes": 11,
           "bezet": 8,
+          "vrij": 3,
           "stappen": [
             {
               "fase": "aankomst",
