@@ -109,7 +109,8 @@ definitions:
             "minuten_aanwezig": 262,
             "minuten_tot_dokter": 200,
             "minuten_sinds_dokter": 62,
-            "minuten_sinds_beslissing": 0
+            "minuten_sinds_beslissing": 0,
+            "qr_code": "https://demo.door2doc.net/qrcode/17793bbc-a38f-4c17-8c3f-a91e14a4ce8f.png"
           },
           {
             "bezoek_nummer": "0000320452",
@@ -129,7 +130,8 @@ definitions:
             "minuten_aanwezig": 42,
             "minuten_tot_dokter": 42,
             "minuten_sinds_dokter": 0,
-            "minuten_sinds_beslissing": 0
+            "minuten_sinds_beslissing": 0,
+            "qr_code": "https://demo.door2doc.net/qrcode/17793bbc-a38f-4c17-8c3f-a91e14a4ce8f.png"
           },
           {
             "bezoek_nummer": "0000320452",
@@ -149,7 +151,8 @@ definitions:
             "minuten_aanwezig": 42,
             "minuten_tot_dokter": 42,
             "minuten_sinds_dokter": 0,
-            "minuten_sinds_beslissing": 0
+            "minuten_sinds_beslissing": 0,
+            "qr_code": "https://demo.door2doc.net/qrcode/17793bbc-a38f-4c17-8c3f-a91e14a4ce8f.png"
           }
         ]
       }
@@ -227,6 +230,10 @@ definitions:
       opname_afdeling:
         type: string
         description: "Naam van de afdeling waar de patiënt gaat worden opgenomen, indien bekend"
+      qr_code:
+        type: string
+        format: uri
+        description: URL van een PNG met de QR Code voor deze bezoeker. Deze QR Code linkt naar MyLive Mobile.
       
 
     required:
@@ -262,7 +269,8 @@ definitions:
         "minuten_aanwezig": 262,
         "minuten_tot_dokter": 200,
         "minuten_sinds_dokter": 62,
-        "minuten_sinds_beslissing": 0
+        "minuten_sinds_beslissing": 0,
+        "qr_code": "https://demo.door2doc.net/qrcode/17793bbc-a38f-4c17-8c3f-a91e14a4ce8f.png"
       }
 
   PredictionList:
@@ -1715,49 +1723,6 @@ paths:
           description: De settings voor deze huisartsenpost
           schema:
             $ref: '#/definitions/HAPSettings'
-
-  /v2/rooms/:
-    get:
-      summary: Haal een overzicht op van de bestaande kamernummers.
-      tags:
-        - 'Service: Rooms'
-        - 'Project: ZKH'
-      operationId: getRoomsV2
-      parameters:
-        - $ref: '#/parameters/afdeling'
-        - $ref: '#/parameters/tijdstip'
-      responses:
-        200:
-          description: Een overzicht van de beschikbare kamers.
-          schema:
-            $ref: '#/definitions/RoomOverview'
-
-  /v2/rooms/{kamernummer}/:
-    get:
-      summary: Informatie over de patiënt op de opgegeven kamer.
-      tags:
-        - 'Service: Rooms'
-        - 'Project: ZKH'
-      operationId: getRoomV2
-      parameters:
-        - $ref: '#/parameters/afdeling'
-        - $ref: '#/parameters/tijdstip'
-        - name: kamernummer
-          type: string
-          description: Een bestaand kamernummer
-          required: true
-          in: path
-      responses:
-        200:
-          description: Gegevens van de bezoeker die momenteel op deze kamer verblijft.
-          schema:
-            $ref: '#/definitions/VisitorRecord'
-        204:
-          description: Er is momenteel geen bezoeker op deze kamer.
-        404:
-          description: Het opgegeven kamernummer bestaat niet.
-        400:
-          description: Een van de parameters is incorrect.
 
   /v3/rooms/:
     get:

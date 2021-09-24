@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   title: Timeline Service
-  version: 3
+  version: "3"
   description: |
     De timeline service geeft een overzicht van de huidige aanwezige bezoekers.
 
@@ -206,6 +206,11 @@ components:
           example: "Huisarts"
         urgentie:
           $ref: '#/components/schemas/Urgentie'
+        qr_code:
+          type: string
+          format: uri
+          description: URL van een PNG met de QR Code voor deze bezoeker. Deze QR Code linkt naar MyLive Mobile.
+          example: https://demo.door2doc.net/qrcode/17793bbc-a38f-4c17-8c3f-a91e14a4ce8f.png
 
       required:
         - bezoek_nummer

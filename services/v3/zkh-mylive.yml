@@ -2,14 +2,18 @@ openapi: 3.0.0
 
 info:
   title: MyLive Service
-  version: 3
+  version: "3"
   description: |
-    De MyLive service geeft de status van een specifieke bezoeker weer. Het gebruik van de MyLive service bestaat uit
-    twee stappen:
+    De MyLive service geeft de status van een specifieke bezoeker weer. Er zijn twee manieren om gebruik te maken
+    van MyLive:
 
-    1. Vraag de unieke code op via `/services/v3/mylive/code`, waarbij SEH ID en pincode als
-       gebruikersnaam/wachtwoord worden opgegeven.
-    2. Vraag de huidige status op via `/services/v3/mylive/status/{code}`. Deze code mag gedeeld worden met derden.
+    1. Via pincode:
+        - Vraag de unieke code op via `/services/v3/mylive/code`, waarbij SEH ID en pincode als gebruikersnaam/wachtwoord worden opgegeven.
+        - Vraag de huidige status op via `/services/v3/mylive/status/{code}`. Deze code mag gedeeld worden met derden.
+    2. Via QR-Code in Room Service:
+        - QR-Code redirect naar `https://{customer}.door2doc.net/app/mobile/mylive.html?code={code}`. Deze link mag gedeeld worden met derden.
+        - Vraag de huidige status op via `/services/v3/mylive/status/{code}`. Deze code mag gedeeld worden met derden.
+
 
 servers:
   - url: https://{customer}.door2doc.net
@@ -42,7 +46,7 @@ components:
 
     tijdstip:
       description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan gedraagt de service
-       zich alsof deze op dat moment werd aangeroepen. Het format is beschreven in RFC3339.
+        zich alsof deze op dat moment werd aangeroepen. Het format is beschreven in RFC3339.
       name: t
       in: query
       required: false
@@ -222,7 +226,7 @@ paths:
       tags:
         - 'Service definitie'
       security:
-        - pincode
+        - pincode: [ ]
       responses:
         401:
           description: SEH-ID of pincode is onjuist.
