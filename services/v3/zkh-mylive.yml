@@ -87,6 +87,7 @@ components:
         - behandelruimtes
         - bezet
         - stappen
+        - onderzoeken
       properties:
         locatie:
           type: string
@@ -126,6 +127,11 @@ components:
           items:
             $ref: '#/components/schemas/Stap'
           description: Stappenplan voor deze patient.
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+          description: Lopende en afgeronde onderzoeken
       example:
         {
           "locatie": "ams",
@@ -152,6 +158,9 @@ components:
             },
             {
               "fase": "arts",
+            },
+            {
+              "fase": "onderzoek",
             },
             {
               "fase": "beslissing"
@@ -204,10 +213,37 @@ components:
         - triage
         - behandelruimte
         - arts
+        - onderzoek
         - beslissing
         - arts_klaar
         - vertrek
       description: Fase in de aanwezigheid van de patient
+
+    OrderType:
+      type: string
+      enum:
+        - lab
+        - icc
+        - rontgen
+      description: Soort order
+
+    Order:
+      type: object
+      required:
+        - type
+        - afgerond
+        - tijdstip
+      properties:
+        type:
+          $ref: '#/components/schemas/OrderType'
+        afgerond:
+          type: boolean
+          description: Geeft aan of dit onderzoek is afgerond.
+        tijdstip:
+          type: string
+          format: date-time
+          description: Tijdstip waarop dit onderzoek is begonnen
+      description: Diagnostische order, gebruikt tijdens de onderzoek fase.
 
 
 
