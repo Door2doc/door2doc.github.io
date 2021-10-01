@@ -51,6 +51,10 @@ components:
         toelichting:
           type: string
           example: "ben weer helemaal beter"
+        locatie:
+          description: Locatiecode
+          type: string
+          example: "hil"
         datum:
           type: string
           format: datetime
@@ -73,10 +77,15 @@ components:
           type: string
           description: Toelichting op de review. Dit veld is verplicht, maar mag leeg zijn.
           example: "ben weer helemaal beter"
+        locatie:
+          description: Locatiecode
+          type: string
+          example: "hil"
       required:
         - zorgverlening
         - informatie
         - description
+        - locatie
 
 paths:
   /public/v4/review:
