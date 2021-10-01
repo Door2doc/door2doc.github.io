@@ -2,9 +2,12 @@ openapi: 3.0.0
 
 info:
   title: Interrupt Service
-  version: 3
+  version: "3"
   description: |
     De interrupt service wordt gebruikt voor urgente berichten.
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
 
 servers:
   - url: https://{customer}.door2doc.net
@@ -39,15 +42,6 @@ components:
         $ref: '#/components/schemas/Type'
 
   schemas:
-    Error:
-      type: object
-      required:
-        - error
-      properties:
-        error:
-          type: string
-          example: "invalid date"
-
     Type:
       type: string
       enum:
@@ -59,7 +53,7 @@ components:
         - type
       properties:
         type:
-          $ref: '#components/schemas/Type'
+          $ref: '#/components/schemas/Type'
         seconds_remaining:
           type: integer
           format: int32
@@ -78,10 +72,10 @@ components:
         }
 
 paths:
-  /public/v3/interrupt/{type}/:
+  /public/v3/interrupt/{type}:
     get:
       summary: Haal de waarde van een interrupt op.
-      operationId: getInterrupt
+      operationId: getPublicInterrupt
       tags:
         - Public
       parameters:
@@ -98,7 +92,7 @@ paths:
         400:
           description: Fout bij het uitlezen van een van de parameters
 
-  /services/v3/interrupt/{type}/:
+  /services/v3/interrupt/{type}:
     get:
       summary: Haal de waarde van een interrupt op.
       operationId: getInterrupt

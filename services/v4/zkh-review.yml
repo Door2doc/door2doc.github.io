@@ -6,6 +6,9 @@ info:
   description: |
     De review service heeft een openbaar endpoint voor het geven van reviews, en een private endpoint
     voor het opvragen van recente reviews.
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
 
 
 servers:

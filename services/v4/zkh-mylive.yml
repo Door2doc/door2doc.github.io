@@ -9,6 +9,9 @@ info:
 
     1. QR-Code redirect naar `https://{customer}.door2doc.net/app/mobile/mylive.html?code={code}`. Deze link mag gedeeld worden met derden.
     2. Vraag de huidige status op via `/services/v3/mylive/status/{code}`. Deze code mag gedeeld worden met derden.
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
 
 
 servers:
@@ -18,38 +21,6 @@ servers:
         default: demo
 
 components:
-  parameters:
-    afdeling:
-      description: De afdeling waarvoor deze informatie wordt opgevraagd
-      name: afdeling
-      in: query
-      required: true
-      schema:
-        type: string
-        enum:
-          - "seh"
-          - "ehh"
-
-    locatie:
-      description: De locatie waarvoor deze informatie wordt opgevraagd.
-      name: locatie
-      in: query
-      required: true
-      schema:
-        type: string
-
-    tijdstip:
-      description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan gedraagt de service
-        zich alsof deze op dat moment werd aangeroepen. Het format is beschreven in RFC3339.
-      name: t
-      in: query
-      required: false
-      example: "2017-02-28T17:00:00+01:00"
-      schema:
-        type: string
-        format: 'date-time'
-
-
   schemas:
     Error:
       type: object
@@ -59,19 +30,6 @@ components:
         error:
           type: string
           example: "stuff went wrong"
-
-    Code:
-      type: object
-      required:
-        - code
-        - link
-      properties:
-        code:
-          type: string
-          example: "7c9ey8fqe8f8q0f89"
-        link:
-          type: string
-          example: "/services/v3/mylive/status/7c9ey8fqe8f8q0f89"
 
     Status:
       type: object
@@ -196,7 +154,7 @@ components:
           $ref: '#/components/schemas/Fase'
         current:
           type: boolean
-          description: Geeft aan of dit de 'huidige' stap is. Indien afwezig, te beschouwen als `false`.
+          description: "Geeft aan of dit de 'huidige' stap is. Indien afwezig, te beschouwen als `false`. Let op: er kunnen meerdere 'huidige' stappen zijn."
         afgerond:
           type: boolean
           description: Geeft aan of deze stap is afgerond. Indien afwezig, te beschouwen als `false`.

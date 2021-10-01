@@ -5,6 +5,9 @@ info:
   version: "3"
   description: |
     De timeline service geeft een overzicht van de huidige aanwezige bezoekers.
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
 
 servers:
   - url: https://{customer}.door2doc.net
@@ -245,7 +248,7 @@ components:
           example: "499291"
 
 paths:
-  /services/v3/timeline/:
+  /services/v3/timeline:
     get:
       summary: Haal een overzicht op van de huidige bezoekers.
       operationId: getTimeline
