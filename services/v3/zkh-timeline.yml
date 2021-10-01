@@ -214,6 +214,8 @@ components:
           format: uri
           description: URL van een PNG met de QR Code voor deze bezoeker. Deze QR Code linkt naar MyLive Mobile.
           example: https://demo.door2doc.net/qrcode/17793bbc-a38f-4c17-8c3f-a91e14a4ce8f.png
+        orders:
+          $ref: '#/components/schemas/Orders'
 
       required:
         - bezoek_nummer
@@ -246,6 +248,62 @@ components:
           type: string
           description: Een korte pincode voor deze bezoeker
           example: "499291"
+
+    Order:
+      description: Beschrijving van een specifieke order
+      type: object
+      properties:
+        start:
+          type: string
+          format: datetime
+          description: Tijdstip waarop de order is begonnen
+          example: "2017-02-28T17:00:00+01:00"
+        status:
+          type: string
+          enum:
+            - in-bewerking
+            - voltooid
+          description: Huidige status van de order
+        eind:
+          type: string
+          format: datetime
+          description: Tijdstip waarop de order is afgerond. Afwezig voor lopende orders.
+          example: "2017-02-28T17:00:00+01:00"
+        omschrijving:
+          type: string
+          description: Tekstuele toelichting voor orders, indien van toepassing.
+        specialisme:
+          type: string
+          format: datetime
+          description: Omschrijving van het relevante specialisme voor deze order. Alleen relevant voor ICC orders.
+          example: "Neurologie"
+      required:
+        - start
+        - status
+
+    Orders:
+      description: Overzicht van alle lopende en afgeronde orders voor deze bezoeker
+      type: object
+      properties:
+        icc:
+          description: Geordende lijst van alle ICC orders
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        lab:
+          description: Geordende lijst van alle Lab orders
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        rad:
+          description: Geordende lijst van alle Radiologie orders
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+      required:
+        - icc
+        - lab
+        - rad
 
 paths:
   /services/v3/timeline:
