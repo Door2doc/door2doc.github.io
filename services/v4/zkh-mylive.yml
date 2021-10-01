@@ -121,11 +121,6 @@ components:
           items:
             $ref: '#/components/schemas/Stap'
           description: Stappenplan voor deze patient.
-        orders:
-          type: array
-          items:
-            $ref: '#/components/schemas/Order'
-          description: Lopende en afgeronde onderzoeken
       example:
         {
           "locatie": "ams",
@@ -148,13 +143,23 @@ components:
             },
             {
               "fase": "behandelruimte",
-              "current": true
-            },
-            {
-              "fase": "arts",
+              "tijdstip": "2020-04-04T00:05:00.000+02:00",
+              "afgerond": true
             },
             {
               "fase": "onderzoek",
+              "current": true,
+              "orders": [
+                {
+                  "type": "rontgen",
+                  "naam": "Röntgenfoto",
+                  "afgerond": false,
+                  "tijdstip": "2020-04-04T00:05:00.000+02:00",
+                }
+              ]
+            },
+            {
+              "fase": "arts",
             },
             {
               "fase": "beslissing"
@@ -199,6 +204,12 @@ components:
           type: string
           format: date-time
           description: Tijdstip waarop deze stap is afgerond; afwezig indien deze stap nog niet is afgerond.
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+          description: Lopende en afgeronde onderzoeken binnen deze stap.
+
 
     Fase:
       type: string
@@ -225,11 +236,16 @@ components:
       type: object
       required:
         - type
+        - naam
         - afgerond
         - tijdstip
       properties:
         type:
           $ref: '#/components/schemas/OrderType'
+        naam:
+          type: string
+          description: Naam van dit specifieke onderzoek
+          example: "Röntgenfoto"
         afgerond:
           type: boolean
           description: Geeft aan of dit onderzoek is afgerond.
@@ -238,6 +254,13 @@ components:
           format: date-time
           description: Tijdstip waarop dit onderzoek is begonnen
       description: Diagnostische order, gebruikt tijdens de onderzoek fase.
+      example: |
+        {
+          "type": "rontgen",
+          "naam": "Röntgenfoto",
+          "afgerond": false,
+          "tijdstip": "2020-04-04T00:05:00.000+02:00",
+        }
 
 paths:
   /public/v4/mylive/status/{code}:

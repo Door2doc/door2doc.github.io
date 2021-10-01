@@ -68,6 +68,7 @@ components:
           $ref: '#/components/schemas/InfoScore'
         toelichting:
           type: string
+          description: Toelichting op de review. Dit veld is verplicht, maar mag leeg zijn.
           example: "ben weer helemaal beter"
       required:
         - zorgverlening
