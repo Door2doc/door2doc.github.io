@@ -5,4 +5,5 @@ verify:
 		/services/v3/zkh-rooms.yml \
 		/services/v3/zkh-timeline.yml \
 		/services/v4/zkh-mylive.yml \
-		/services/v4/zkh-review.yml
+		/services/v4/zkh-review.yml \
+		/services/v4/zkh-widget.yml

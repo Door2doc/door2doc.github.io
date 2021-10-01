@@ -1,0 +1,83 @@
+openapi: 3.0.0
+
+info:
+  title: Ziekenhuis Widget Service
+  version: "4"
+  description: |
+    De widget service levert informatie voor de widgets op <https://www.hoedrukisdeseh.nl>
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
+
+
+servers:
+  - url: https://data.door2doc.net
+
+components:
+  schemas:
+    WidgetInfo:
+      type: object
+      properties:
+        wachtend_op_arts:
+          description: Aantal patienten dat nog wacht op een arts
+          type: integer
+          example: 5
+        wachtend_op_arts_details:
+          description: Detail informatie over de vraag naar artsen
+          type: object
+          additionalProperties:
+            type: integer
+          example: |
+            {
+              "Snijdend": 3,
+              "Beschouwend": 2,
+              "Overige artsen": 0
+            }
+        kamers_beschikbaar:
+          description: Aantal beschikbare kamers
+          type: integer
+          example: 7
+        vrij_vanaf:
+          description: Verwacht tijstip waarop een behandelruimte beschikbaar wordt
+          type: string
+          format: time
+          example: "12:15"
+
+paths:
+  /public/v4/widget:
+    get:
+      summary: Widget informatie voor het opgegeven ziekenhuis
+      operationId: getWidgetInfo
+      parameters:
+        - name: ziekenhuis
+          in: query
+          description: Ziekenhuiscode
+          example: tg
+          required: true
+          schema:
+            type: string
+        - name: locatie
+          in: query
+          description: Locatiecode
+          example: hil
+          required: true
+          schema:
+            type: string
+        - name: afdeling
+          in: query
+          description: Locatiecode
+          required: true
+          schema:
+            type: string
+            enum:
+              - seh
+              - ehh
+      responses:
+        200:
+          description: Widget informatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetInfo'
+        400:
+          description: Ongeldige parameter
