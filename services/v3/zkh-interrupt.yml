@@ -78,10 +78,32 @@ components:
         }
 
 paths:
+  /public/v3/interrupt/{type}/:
+    get:
+      summary: Haal de waarde van een interrupt op.
+      operationId: getInterrupt
+      tags:
+        - Public
+      parameters:
+        - $ref: '#/components/parameters/locatie'
+        - $ref: '#/components/parameters/afdeling'
+        - $ref: '#/components/parameters/type'
+      responses:
+        200:
+          description: De status van de interrupt "spoed-patient". Indien de interrupt uit staat, is het veld 'seconds_remaining' afwezig.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterruptStatus'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
+
   /services/v3/interrupt/{type}/:
     get:
       summary: Haal de waarde van een interrupt op.
       operationId: getInterrupt
+      tags:
+        - Private
       parameters:
         - $ref: '#/components/parameters/locatie'
         - $ref: '#/components/parameters/afdeling'
@@ -99,6 +121,8 @@ paths:
     put:
       summary: Activeer een interrupt.
       operationId: setInterrupt
+      tags:
+        - Private
       parameters:
         - $ref: '#/components/parameters/locatie'
         - $ref: '#/components/parameters/afdeling'
@@ -116,6 +140,8 @@ paths:
     delete:
       summary: Deactiveer een interrupt.
       operationId: unsetInterrupt
+      tags:
+        - Private
       parameters:
         - $ref: '#/components/parameters/locatie'
         - $ref: '#/components/parameters/afdeling'

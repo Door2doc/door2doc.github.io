@@ -1,0 +1,304 @@
+openapi: 3.0.0
+
+info:
+  title: Room Service
+  version: "3"
+  description: |
+    De Room service geeft een overzicht van de bezetting van kamers.
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: demo
+
+components:
+  schemas:
+    Arts:
+      type: string
+      enum:
+        - vpk
+        - seh
+        - int
+        - chi
+        - ov
+      description: |
+        Type arts:
+        * vpk: Verpleegkundige (geen arts)
+        * seh: SEH arts
+        * int: Internist
+        * chi: Chirurg
+        * ov: Overig
+
+    Care:
+      type: string
+      enum:
+        - lc
+        - mc
+        - hc
+      description: |
+        Type zorg dat benodigd is:
+        * hc: High Care
+        * mc: Medium Care
+        * lc: Low Care
+
+    VisitorStatus:
+      type: string
+      enum:
+        - wachtend
+        - inbehandeling
+        - opname
+      description: |
+        Status van de bezoeker:
+        * wachtend: Wachtend op arts
+        * inbehandeling: Gezien door een arts
+        * opname: Geregistreerd voor opname, maar nog niet opgenomen
+
+    RoomDetails:
+      type: object
+      required:
+        - kamernummer
+        - bezet
+      properties:
+        kamernummer:
+          type: string
+        bezet:
+          type: boolean
+      example: |
+        {
+          "kamernummer": "TRC1.1",
+          "bezet": true
+        }
+
+    RoomOverview:
+      type: object
+      required:
+        - rooms
+      example: |
+        {
+          "rooms": [
+            {
+              "kamernummer": "TRC1.1",
+              "bezet": true
+            },
+            {
+              "kamernummer": "TRC2.1",
+              "bezet": true
+            },
+            {
+              "kamernummer": "D01.01",
+              "bezet": false
+            },
+            {
+              "kamernummer": "D02.01",
+              "bezet": false
+            }
+          ]
+        }
+      properties:
+        rooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomDetails'
+
+    VisitorRecord:
+      type: object
+      properties:
+        bezoek_nummer:
+          type: string
+          description: Unieke identifier voor dit bezoek
+        type_arts:
+          $ref: '#/components/schemas/Arts'
+        care:
+          $ref: '#/components/schemas/Care'
+        status:
+          $ref: '#/components/schemas/VisitorStatus'
+        queue:
+          type: integer
+          format: int32
+          description: Totaal aantal aanwezige bezoekers die dezelfde arts nodig hebben.
+          minimum: 0
+        specialisme:
+          type: string
+          description: Het exacte specialisme van de benodigde arts.
+        kamernummer:
+          type: string
+          description: Het kamernummer (eventueel met bednummer) waar deze bezoeker momenteel verblijft.
+            Het is mogelijk dat een bezoeker wel gezien is, nog niet vertrokken is, en niet meer op een kamer ligt.
+        reden:
+          type: string
+          description: De reden van dit bezoek.
+        binnenkomst:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker is binnengekomen.
+        naar_kamer:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker de huidige behandelkamer is binnengekomen.
+        gezien:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker voor het eerst is gezien door een arts.
+        arts_klaar:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de arts klaar was met de patiënt, indien van toepassing.
+        opname:
+          type: string
+          format: 'date-time'
+          description: Datum/Tijd waarop de bezoeker is geregistreerd voor opname.
+        minuten_aanwezig:
+          type: integer
+          format: int32
+          description: "De huidige verblijftijd: het aantal minuten van binnenkomst tot nu."
+        minuten_tot_dokter:
+          type: integer
+          format: int32
+          description: "De huidige deur-tot-doktertijd; indien de bezoeker gezien is: het aantal minuten van binnenkomst tot `gezien`; anders gelijk aan `minuten_aanwezig`."
+        minuten_sinds_dokter:
+          type: integer
+          format: int32
+          description: "Voor bezoekers die gezien zijn door een arts: het aantal minuten sinds `gezien`. Anders gelijk aan 0."
+        minuten_sinds_beslissing:
+          type: integer
+          format: int32
+          description: "Voor bezoekers waar de arts een beslissing over genomen heeft: het aantal minuten sinds `opname`. Anders gelijk aan 0."
+        leeftijdsgroep:
+          type: integer
+          format: int32
+          description: "Abstracte indicatie van de leeftijdsgroep van deze bezoeker."
+        herkomst:
+          type: string
+          description: "Code die aangeeft hoe deze patiënt op deze afdeling terecht is gekomen."
+        opname_afdeling:
+          type: string
+          description: "Naam van de afdeling waar de patiënt gaat worden opgenomen, indien bekend"
+        qr_code:
+          type: string
+          format: uri
+          description: URL van een PNG met de QR Code voor deze bezoeker. Deze QR Code linkt naar MyLive Mobile.
+
+
+      required:
+        - bezoek_nummer
+        - type_arts
+        - care
+        - status
+        - queue
+        - reden
+        - leeftijdsgroep
+        - herkomst
+        - binnenkomst
+        - minuten_aanwezig
+        - minuten_tot_dokter
+        - minuten_sinds_dokter
+        - minuten_sinds_beslissing
+      example: |
+        {
+          "bezoek_nummer": "0000320459",
+          "type_arts": "sha",
+          "care": "HC",
+          "status": "inbehandeling",
+          "queue": 0,
+          "specialisme": "Heelkunde",
+          "kamernummer": "D15.01",
+          "reden": "Stomp buiktrauma",
+          "leeftijdsgroep": 4,
+          "herkomst": "Huisarts",
+
+          "binnenkomst": "2017-03-13T10:08:00+0200",
+          "naar_kamer": "2017-03-13T10:26:00+0200",
+          "gezien": "2017-03-13T11:12:00+0200",
+          "minuten_aanwezig": 262,
+          "minuten_tot_dokter": 200,
+          "minuten_sinds_dokter": 62,
+          "minuten_sinds_beslissing": 0,
+          "qr_code": "https://demo.door2doc.net/qrcode/17793bbc-a38f-4c17-8c3f-a91e14a4ce8f.png"
+        }
+
+
+
+  parameters:
+    afdeling:
+      name: afdeling
+      in: query
+      required: true
+      description: De afdeling waarvoor deze informatie wordt opgevraagd
+      schema:
+        type: string
+        enum:
+          - "seh"
+          - "ehh"
+      example: "seh"
+
+    locatie:
+      name: locatie
+      in: query
+      required: true
+      description: De locatie waarvoor deze informatie wordt opgevraagd.
+      schema:
+        type: string
+      example: "demo"
+
+    tijdstip:
+      name: t
+      in: query
+      required: false
+      description: Optionele datum/tijd in het verleden. Heeft 'nu' als default. Als deze parameter is opgegeven, dan
+        gedraagt de service zich alsof deze op dat moment werd aangeroepen.
+      schema:
+        type: string
+        format: 'date-time'
+      example: "2021-07-24T20:30:00+02:00"
+
+paths:
+  /services/v3/rooms/:
+    get:
+      summary: Haal een overzicht op van de bestaande kamernummers.
+      tags:
+        - 'Private'
+      operationId: getRooms
+      parameters:
+        - $ref: '#/components/parameters/locatie'
+        - $ref: '#/components/parameters/afdeling'
+        - $ref: '#/components/parameters/tijdstip'
+      responses:
+        200:
+          description: Een overzicht van de beschikbare kamers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomOverview'
+
+  /services/v3/rooms/{kamernummer}/:
+    get:
+      summary: Informatie over de patiënt op de opgegeven kamer.
+      tags:
+        - 'Private'
+      operationId: getRoom
+      parameters:
+        - $ref: '#/components/parameters/locatie'
+        - $ref: '#/components/parameters/afdeling'
+        - $ref: '#/components/parameters/tijdstip'
+        - name: kamernummer
+          description: Een bestaand kamernummer
+          required: true
+          in: path
+          example: "D03"
+          schema:
+            type: string
+      responses:
+        200:
+          description: Gegevens van de bezoeker die momenteel op deze kamer verblijft.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorRecord'
+        204:
+          description: Er is momenteel geen bezoeker op deze kamer.
+        404:
+          description: Het opgegeven kamernummer bestaat niet.
+        400:
+          description: Een van de parameters is incorrect.
+

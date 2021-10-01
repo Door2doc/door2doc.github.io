@@ -1,0 +1,109 @@
+openapi: 3.0.0
+
+info:
+  title: Review Service
+  version: "4"
+  description: |
+    De review service heeft een openbaar endpoint voor het geven van reviews, en een private endpoint
+    voor het opvragen van recente reviews.
+
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: demo
+
+components:
+  schemas:
+    ZorgScore:
+      description: Score voor de zorgverlening, waardes -1, 0 of 1
+      type: integer
+      minimum: -1
+      maximum: 1
+
+    InfoScore:
+      description: Score voor de informatievoorziening, waardes 1 – 5.
+      type: integer
+      minimum: 1
+      maximum: 5
+
+    Reviews:
+      description: Verzamelobject voor reviews
+      type: object
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+
+    Review:
+      description: Een specifieke review
+      type: object
+      properties:
+        zorgverlening:
+          $ref: '#/components/schemas/ZorgScore'
+        informatie:
+          $ref: '#/components/schemas/InfoScore'
+        toelichting:
+          type: string
+          example: "ben weer helemaal beter"
+        datum:
+          type: string
+          format: datetime
+          example: "2017-02-28T16:54:00+01:00"
+      required:
+        - zorgverlening
+        - informatie
+        - description
+        - datum
+
+    NewReview:
+      description: Format voor het indienen van een nieuwe review
+      type: object
+      properties:
+        zorgverlening:
+          $ref: '#/components/schemas/ZorgScore'
+        informatie:
+          $ref: '#/components/schemas/InfoScore'
+        toelichting:
+          type: string
+          example: "ben weer helemaal beter"
+      required:
+        - zorgverlening
+        - informatie
+        - description
+
+paths:
+  /public/v4/review:
+    post:
+      summary: Post een nieuwe review
+      operationId: addReview
+      tags:
+        - 'Public'
+      requestBody:
+        description: Inhoud van de review
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewReview'
+      responses:
+        200:
+          description: De nieuwe review is verwerkt
+        400:
+          description: Een of meer parameters waren incorrect
+
+  /services/v4/review:
+    get:
+      summary: Alle recente reviews.
+      operationId: getReviews
+      tags:
+        - 'Private'
+      responses:
+        200:
+          description: Een arbitrair geordende lijst van reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reviews'

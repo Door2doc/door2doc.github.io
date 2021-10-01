@@ -32,7 +32,6 @@ tags:
   - name: "Service: Domain"
   - name: "Service: Capacity"
   - name: "Service: Prediction"
-  - name: "Service: Rooms"
   - name: "Service: Settings"
   - name: "Service: Target"
   - name: "Service: Timeline"
@@ -373,53 +372,6 @@ definitions:
       model:
         type: string
         description: Identifier voor het gebruikte model
-
-  RoomDetails:
-    type: object
-    required:
-      - kamernummer
-      - bezet
-    example:
-      {
-        "kamernummer": "TRC1.1",
-        "bezet": true
-      }
-    properties:
-      kamernummer:
-        type: string
-      bezet:
-        type: boolean
-
-  RoomOverview:
-    type: object
-    required:
-      - rooms
-    example:
-      {
-        "rooms": [
-          {
-            "kamernummer": "TRC1.1",
-            "bezet": true
-          },
-          {
-            "kamernummer": "TRC2.1",
-            "bezet": true
-          },
-          {
-            "kamernummer": "D01.01",
-            "bezet": false
-          },
-          {
-            "kamernummer": "D02.01",
-            "bezet": false
-          }
-        ]
-      }
-    properties:
-      rooms:
-        type: array
-        items:
-          $ref: '#/definitions/RoomDetails'
 
   ArtsWerk:
     type: object
@@ -1723,51 +1675,6 @@ paths:
           description: De settings voor deze huisartsenpost
           schema:
             $ref: '#/definitions/HAPSettings'
-
-  /v3/rooms/:
-    get:
-      summary: Haal een overzicht op van de bestaande kamernummers.
-      tags:
-        - 'Service: Rooms'
-        - 'Project: ZKH'
-      operationId: getRooms
-      parameters:
-        - $ref: '#/parameters/locatie'
-        - $ref: '#/parameters/afdeling'
-        - $ref: '#/parameters/tijdstip'
-      responses:
-        200:
-          description: Een overzicht van de beschikbare kamers.
-          schema:
-            $ref: '#/definitions/RoomOverview'
-
-  /v3/rooms/{kamernummer}/:
-    get:
-      summary: Informatie over de patiënt op de opgegeven kamer.
-      tags:
-        - 'Service: Rooms'
-        - 'Project: ZKH'
-      operationId: getRoom
-      parameters:
-        - $ref: '#/parameters/locatie'
-        - $ref: '#/parameters/afdeling'
-        - $ref: '#/parameters/tijdstip'
-        - name: kamernummer
-          type: string
-          description: Een bestaand kamernummer
-          required: true
-          in: path
-      responses:
-        200:
-          description: Gegevens van de bezoeker die momenteel op deze kamer verblijft.
-          schema:
-            $ref: '#/definitions/VisitorRecord'
-        204:
-          description: Er is momenteel geen bezoeker op deze kamer.
-        404:
-          description: Het opgegeven kamernummer bestaat niet.
-        400:
-          description: Een van de parameters is incorrect.
 
   /v2/timeline/:
     get:
