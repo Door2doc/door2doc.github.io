@@ -255,7 +255,7 @@ components:
       properties:
         start:
           type: string
-          format: datetime
+          format: date-time
           description: Tijdstip waarop de order is begonnen
           example: "2017-02-28T17:00:00+01:00"
         status:
@@ -266,7 +266,7 @@ components:
           description: Huidige status van de order
         eind:
           type: string
-          format: datetime
+          format: date-time
           description: Tijdstip waarop de order is afgerond. Afwezig voor lopende orders.
           example: "2017-02-28T17:00:00+01:00"
         omschrijving:
@@ -274,7 +274,7 @@ components:
           description: Tekstuele toelichting voor orders, indien van toepassing.
         specialisme:
           type: string
-          format: datetime
+          format: date-time
           description: Omschrijving van het relevante specialisme voor deze order. Alleen relevant voor ICC orders.
           example: "Neurologie"
       required:

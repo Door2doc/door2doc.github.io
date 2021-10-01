@@ -57,7 +57,7 @@ components:
           example: "hil"
         datum:
           type: string
-          format: datetime
+          format: date-time
           example: "2017-02-28T16:54:00+01:00"
       required:
         - zorgverlening
