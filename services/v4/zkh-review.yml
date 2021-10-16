@@ -77,6 +77,12 @@ components:
           description: Locatiecode
           type: string
           example: "hil"
+        bron:
+          description: Bron van de review
+          type: string
+          enum:
+            - behandelkamer
+            - mylive
       required:
         - zorgverlening
         - informatie
