@@ -51,10 +51,6 @@ components:
         toelichting:
           type: string
           example: "ben weer helemaal beter"
-        locatie:
-          description: Locatiecode
-          type: string
-          example: "hil"
         datum:
           type: string
           format: date-time
@@ -113,6 +109,13 @@ paths:
       operationId: getReviews
       tags:
         - 'Private'
+      parameters:
+        - name: loc
+          description: Locatie code
+          schema:
+            type: string
+          required: true
+          in: query
       responses:
         200:
           description: Een arbitrair geordende lijst van reviews
