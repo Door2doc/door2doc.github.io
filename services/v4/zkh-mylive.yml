@@ -19,6 +19,9 @@ servers:
     variables:
       customer:
         default: demo
+        enum:
+          - demo
+          - qa-demo
 
 components:
   schemas:
