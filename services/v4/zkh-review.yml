@@ -58,6 +58,19 @@ components:
           type: string
           format: date-time
           example: "2017-02-28T16:54:00+01:00"
+        fase:
+          description: Fase van het verblijf waarin deze review werd verstuurd
+          type: string
+          enum:
+            - aankomst
+            - triage
+            - behandelruimte
+            - arts
+            - onderzoek
+            - beslissing
+            - arts_klaar
+            - vertrek
+          example: "vertrek"
       required:
         - zorgverlening
         - informatie
@@ -84,8 +97,21 @@ components:
           description: Bron van de review
           type: string
           enum:
-            - behandelkamer
             - mylive
+            - behandelkamer
+        fase:
+          description: Huidige fase zoals gerapporteerd door MyLive
+          type: string
+          enum:
+          - aankomst
+          - triage
+          - behandelruimte
+          - arts
+          - onderzoek
+          - beslissing
+          - arts_klaar
+          - vertrek
+          example: "beslissing"
       required:
         - zorgverlening
         - informatie
