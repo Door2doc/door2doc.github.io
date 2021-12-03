@@ -224,7 +224,7 @@ components:
         }
 
 paths:
-  /public/v4/mylive/status/{code}:
+  /public/v4/mylive/status/:
     get:
       summary: Vraag de huidige status op voor een specifieke bezoeker.
       operationId: getStatus
@@ -232,7 +232,7 @@ paths:
         - 'Public'
       parameters:
         - name: code
-          in: path
+          in: query
           required: true
           description: De code uit de QR Code.
           schema:
