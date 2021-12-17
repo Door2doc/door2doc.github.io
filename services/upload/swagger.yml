@@ -275,68 +275,49 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/DiagnostischeOrder'
-    example:
-      [
-        {
-          "bezoek_id": "A12345",
-          "order_volgnummer": "19",
-          "dt_aanvraag": "2016-10-07T13:15:00+0200",
-          "code_specialisme": "9"
-        },
-        {
-          "bezoek_id": "123456AA",
-          "order_volgnummer": "X19",
-          "text_verrichting": "Verrichting...",
-          "code_verrichting": "18",
-          "dt_aanvraag": "2016-10-07T13:52:00+0200",
-          "dt_aanvang": "2016-10-07T15:00:00+0200",
-          "dt_resultaat": "2016-10-08T08:00:00+0200",
-          "code_specialisme": "11"
-        }
-      ]
 
   DiagnostischeOrder:
     type: object
     required:
       - bezoek_id
-      - order_volgnummer
-      - dt_aanvraag
+      - order_id
+      - code_status
       - code_specialisme
     properties:
       bezoek_id:
-        type: string
+        type: integer
         description: ID van het bezoek dat eerder is geüpload.
+        example: 88273
 
-      order_volgnummer:
-        type: string
+      order_id:
+        type: integer
         description: Volgnummer van de order. De combinatie bezoek_id/order_volgnummer wordt als unieke sleutel gebruikt.
+        example: 166311
 
-      text_verrichting:
-        type: string
-        description: Tekstuele omschrijving van de verrichting.
-
-      code_verrichting:
-        type: string
-        description: Code van de verrichting.
-
-      dt_aanvraag:
-        type: string
-        format: date-time
-        description: Datum/Tijd waarop de order is aangevraagd.
-
-      dt_aanvang:
+      dt_start:
         type: string
         format: date-time
         description: Datum/Tijd waarop is begonnen de order te verwerken.
 
-      dt_resultaat:
+      dt_eind:
         type: string
         format: date-time
         description: Datum/Tijd waarop het resultaat is teruggegeven.
 
+      code_status:
+        type: string
+        description: Code van de verrichting.
+        example: Afgesloten
+
+      code_module:
+        type: string
+        description: Module, alleen van toepassing voor radiologie
+        example: Bucky
+
       code_specialisme:
         type: string
         description: Code van het specialisme dat de order heeft aangevraagd.
+        example: RAD
 
 
   Verwerking:
@@ -379,26 +360,13 @@ definitions:
 
 
 paths:
-  /services/v1/upload/bezoeken:
+  /services/v3/upload/bezoeken:
     post:
       summary: Verwerk één of meer records van bezoeken.
       operationId: post_events
       tags:
         - Service definitie
       parameters:
-        - name: afdeling
-          in: query
-          type: string
-          required: true
-          description: "Afdeling waar deze import op van toepassing is: de SEH of de EHH"
-          enum:
-            - seh
-            - ehh
-        - name: locatie
-          in: query
-          type: string
-          required: true
-          description: Vestiging waar deze import op van toepassing is. Neem contact met ons op voor de juiste waardes per ziekenhuis.
         - name: records
           in: body
           required: true
@@ -415,26 +383,21 @@ paths:
           schema:
             $ref: '#/definitions/Probleem'
 
-  /services/v1/upload/diagnostische_orders:
+  /services/v3/upload/orders/{type}:
     post:
       summary: Verwerk één of meer records met diagnostische orders.
       operationId: post_order_events
       tags:
         - Service definitie
       parameters:
-        - name: afdeling
-          in: query
+        - name: type
+          in: path
           type: string
-          required: true
-          description: "Afdeling waar deze import op van toepassing is: de SEH of de EHH"
           enum:
-            - seh
-            - ehh
-        - name: locatie
-          in: query
-          type: string
+            - lab
+            - consult
+            - radiologie
           required: true
-          description: Vestiging waar deze import op van toepassing is. Neem contact met ons op voor de juiste waardes per ziekenhuis.
         - name: records
           in: body
           required: true
