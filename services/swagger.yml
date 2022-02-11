@@ -816,28 +816,42 @@ definitions:
             naam:
               type: string
       gebieden:
-        type: object
+        type: array
         description: Mapt gebieden naar locaties. Leeg indien er geen onderscheid in gebieden is.
-        additionalProperties:
-          type: array
-          items:
-            type: string
-    example:
+        items:
+          type: object
+          properties:
+            naam:
+              type: string
+            locaties:
+              type: array
+              items:
+                type: string
+    example: |
       {
         "naam": "Huisartsenpost",
         "theme": "hap",
         "locaties": {
-          "alph": {
-            "naam": "Alphen a/d Rijn"
+          "loc1": {
+            "naam": "Locatie #1"
           },
-          "lumc": {
-            "naam": "LUMC"
+          "loc2": {
+            "naam": "Locatie #2"
+          },
+          "loc3": {
+            "naam": "Locatie #3"
           }
         },
-        "gebieden": {
-          "Noord": [ "alph" ],
-          "Zuid-West": ["lumc"]
-        }
+        "gebieden": [
+          {
+            "naam": "Noord",
+            "locaties": ["loc1", "loc2"]
+          },
+          {
+            "naam": "Zuid",
+            "locaties": ["loc3"]
+          }
+        ]
       }
 
   LocatieSettings:
