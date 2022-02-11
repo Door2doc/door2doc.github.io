@@ -224,7 +224,7 @@ components:
         }
 
 paths:
-  /public/v4/mylive/status/:
+  /public/v4/mylive/status:
     get:
       summary: Vraag de huidige status op voor een specifieke bezoeker.
       operationId: getStatus

@@ -198,7 +198,7 @@ definitions:
       arts_klaar:
         type: string
         format: 'date-time'
-        description: Datum/Tijd waarop de arts klaar was met de patiënt, indien van toepassing. 
+        description: Datum/Tijd waarop de arts klaar was met de patiënt, indien van toepassing.
       opname:
         type: string
         format: 'date-time'
@@ -233,7 +233,7 @@ definitions:
         type: string
         format: uri
         description: URL van een PNG met de QR Code voor deze bezoeker. Deze QR Code linkt naar MyLive Mobile.
-      
+
 
     required:
       - bezoek_nummer
@@ -482,7 +482,7 @@ definitions:
         "sha": 2,
         "int": 4,
         "chi": 0,
-        "ova":  0
+        "ova": 0
       }
     required:
       - tijdvak
@@ -659,22 +659,22 @@ definitions:
               "dokter_tot_beslissing": 90,
               "beslissing_tot_opname": 60
             },
-            "artsen": ["sha", "vpk", "ova"],
-            "features": ["capacity"],
+            "artsen": [ "sha", "vpk", "ova" ],
+            "features": [ "capacity" ],
             "specialismes": [
-              "Cardiologie",
-              "Gynaecologie en Verloskunde",
-              "Klinische geriatrie",
-              "SEH",
-              "Specialismen onbekend",
+                "Cardiologie",
+                "Gynaecologie en Verloskunde",
+                "Klinische geriatrie",
+                "SEH",
+                "Specialismen onbekend",
             ],
             "ingangsklachten": [
-              "Humerusfractuur",
-              "Hydradenitis",
-              "Hypercalciumie",
+                "Humerusfractuur",
+                "Hydradenitis",
+                "Hypercalciumie",
             ],
             "capacity": {
-              "artsen": ["sha", "vpk"]
+              "artsen": [ "sha", "vpk" ]
             },
           },
           "ehh": {
@@ -691,16 +691,16 @@ definitions:
               "beslissing_tot_opname": 30
             },
             "target_vbt": 180,
-            "artsen": ["sha", "vpk"],
-            "features": ["capacity"],
+            "artsen": [ "sha", "vpk" ],
+            "features": [ "capacity" ],
             "specialismes": [
-              "Cardiologie",
-              "SEH",
+                "Cardiologie",
+                "SEH",
             ],
             "ingangsklachten": [
-              "Hyperventilatie",
-              "Hypocalciëmie",
-              "Hypoglykemie"
+                "Hyperventilatie",
+                "Hypocalciëmie",
+                "Hypoglykemie"
             ]
           }
         }
@@ -745,22 +745,22 @@ definitions:
                   "dokter_tot_beslissing": 90,
                   "beslissing_tot_opname": 60
                 },
-                "artsen": ["sha", "vpk", "ova"],
-                "features": ["capacity"],
+                "artsen": [ "sha", "vpk", "ova" ],
+                "features": [ "capacity" ],
                 "specialismes": [
-                  "Cardiologie",
-                  "Gynaecologie en Verloskunde",
-                  "Klinische geriatrie",
-                  "SEH",
-                  "Specialismen onbekend",
+                    "Cardiologie",
+                    "Gynaecologie en Verloskunde",
+                    "Klinische geriatrie",
+                    "SEH",
+                    "Specialismen onbekend",
                 ],
                 "ingangsklachten": [
-                  "Humerusfractuur",
-                  "Hydradenitis",
-                  "Hypercalciumie",
+                    "Humerusfractuur",
+                    "Hydradenitis",
+                    "Hypercalciumie",
                 ],
                 "capacity": {
-                  "artsen": ["sha", "vpk"]
+                  "artsen": [ "sha", "vpk" ]
                 },
               },
               "ehh": {
@@ -777,16 +777,16 @@ definitions:
                   "beslissing_tot_opname": 30
                 },
                 "target_vbt": 180,
-                "artsen": ["sha", "vpk"],
-                "features": ["capacity"],
+                "artsen": [ "sha", "vpk" ],
+                "features": [ "capacity" ],
                 "specialismes": [
-                  "Cardiologie",
-                  "SEH",
+                    "Cardiologie",
+                    "SEH",
                 ],
                 "ingangsklachten": [
-                  "Hyperventilatie",
-                  "Hypocalciëmie",
-                  "Hypoglykemie"
+                    "Hyperventilatie",
+                    "Hypocalciëmie",
+                    "Hypoglykemie"
                 ]
               }
             }
@@ -800,6 +800,7 @@ definitions:
       - naam
       - theme
       - locaties
+      - gebieden
     properties:
       naam:
         type: string
@@ -811,6 +812,16 @@ definitions:
         type: object
         additionalProperties:
           type: object
+          properties:
+            naam:
+              type: string
+      gebieden:
+        type: object
+        description: Mapt gebieden naar locaties. Leeg indien er geen onderscheid in gebieden is.
+        additionalProperties:
+          type: array
+          items:
+            type: string
     example:
       {
         "naam": "Huisartsenpost",
@@ -822,6 +833,10 @@ definitions:
           "lumc": {
             "naam": "LUMC"
           }
+        },
+        "gebieden": {
+          "Noord": [ "alph" ],
+          "Zuid-West": ["lumc"]
         }
       }
 
@@ -1004,10 +1019,10 @@ definitions:
               "start": "2017-10-01T12:00:00+02:00",
               "einde": "2017-10-01T13:00:00+02:00",
               "tijden": [
-                "2017-10-01T12:00:00+02:00",
-                "2017-10-01T12:15:00+02:00",
-                "2017-10-01T12:30:00+02:00",
-                "2017-10-01T12:45:00+02:00"
+                  "2017-10-01T12:00:00+02:00",
+                  "2017-10-01T12:15:00+02:00",
+                  "2017-10-01T12:30:00+02:00",
+                  "2017-10-01T12:45:00+02:00"
               ],
               "bezetting": {
                 "lumc": 25,
@@ -1306,7 +1321,7 @@ definitions:
     type: object
     required:
       - id
-      - open 
+      - open
       - vertraagd
       - wachttijd_min
       - wachttijd_max
@@ -1472,10 +1487,10 @@ definitions:
       patient:
         type: string
         enum:
-        - "gepland"
-        - "afgerond"
-        - "achter"
-        - "geen"
+          - "gepland"
+          - "afgerond"
+          - "achter"
+          - "geen"
         description: Indicatie van de status van deze patiënt.
       icpc_code:
         type: string
@@ -1564,7 +1579,7 @@ parameters:
     format: 'date'
     in: query
     required: true
-    description: Datum (zonder tijd) in het verleden; gebruikt om een periode aan te geven. 
+    description: Datum (zonder tijd) in het verleden; gebruikt om een periode aan te geven.
 
   d-to:
     name: to
@@ -1622,7 +1637,7 @@ paths:
             type: array
             items:
               type: string
-            example: ["demo.door2doc.net", "zkh.door2doc.net"]
+            example: [ "demo.door2doc.net", "zkh.door2doc.net" ]
 
   /v2/settings/:
     get:

@@ -2,12 +2,16 @@ openapi: 3.0.0
 
 info:
   title: Workflow Simulation API
-  version: 1.0
+  version: "1.0"
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
   description: |
+    API voor het draaien van HAP Simulaties
 
 servers:
-  - url: https://shr.door2doc.net
-  - url: https://dddb.door2doc.net
+  - url: https://primacura.door2doc.net
+  - url: https://limes.door2doc.net
 
 components:
   schemas:
@@ -20,6 +24,28 @@ components:
         error:
           type: string
       example: {"error": "tekstuele toelichting op de fout"}
+
+    Scenario:
+      description: Simulatie scenario
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          format: html
+      required:
+        - id
+        - name
+        - description
+      example:
+        {
+          "id": "sc01",
+          "name": "Drukke middag",
+          "description": "12 december 2020<br/>12:00 &emdash; 20:00"
+        }
 
     TriageUrgentie:
       description: Urgentie zoals bepaald tijdens de triage
@@ -79,7 +105,6 @@ components:
         ["shr_al_201705012300_x", "shr_al_201705012315_x", "shr_al_201705012345_x"]
         ]
       }
-
 
     SimulationScore:
       description: Huidige score van de simulatie. Let op dat de bezettingsgraad al terug te vinden is in de grid status.
@@ -633,28 +658,53 @@ components:
             $ref: '#/components/schemas/SpoedPatient'
 
 paths:
-  /services/v2/simulation/:
+  /services/v2/simulation/scenarios:
+    get:
+      summary: Haal de beschikbare scenarios op
+      operationId: getScenarios
+      tags:
+        - Nieuwe simulatie
+      responses:
+        200:
+          description: Beschikbare scenario's
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scenarios:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Scenario'
+
+
+  /services/v2/simulation:
     post:
-      summary: Begin een nieuwe simulatie
+      summary: Begin een nieuwe simulatie op basis van een scenario, óf op basis van een arbitraire tijdsspanne.
       operationId: newSimulation
+      tags:
+        - Nieuwe simulatie
       parameters:
+        - name: scenario_id
+          schema:
+            type: string
+            example: 'sc12'
+          in: query
+          description: ID van een scenario. Gebruik óf dit veld, óf de combinatie (from/to).
         - name: from
           schema:
             type: string
             format: 'date-time'
             example: "2017-07-01T22:00:00+02:00"
           in: query
-          required: true
-          description: Datum/tijd in RFC3339 van de begintijd van de simulatie.
+          description: Datum/tijd in RFC3339 van de begintijd van de simulatie. Gebruik dit veld in combinatie met `to`, óf gebruik `scenario_id`.
         - name: to
           schema:
             type: string
             format: 'date-time'
             example: "2017-07-02T08:00:00+02:00"
-          format: 'date-time'
           in: query
-          required: true
-          description: Datum/tijd in RFC3339 van de eindtijd van de simulatie.
+          description: Datum/tijd in RFC3339 van de eindtijd van de simulatie. Gebruik dit veld in combinatie met `from`, óf gebruik `scenario_id`.
 
       responses:
         '201':
@@ -697,13 +747,21 @@ paths:
               parameters:
                 simulation_id: '$response.body#/id'
               description: Het `id` in de response kan worden gebruikt als `simulation_id` in de andere requests.
+        '400':
+          description: Incorrecte parameters opgegeven.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '500':
           $ref: '#/components/responses/ServerError'
 
-  /services/v2/simulation/{simulation_id}/:
+  /services/v2/simulation/{simulation_id}:
     get:
       summary: Huidige status van de simulatie
       operationId: getSimulation
+      tags:
+        - Executie
       parameters:
         - $ref: '#/components/parameters/simulation_id'
       responses:
@@ -721,6 +779,8 @@ paths:
     post:
       summary: Plan de openstaande afspraak in
       operationId: planAfspraak
+      tags:
+        - Executie
       parameters:
         - $ref: '#/components/parameters/simulation_id'
         - name: slot_id
@@ -733,8 +793,8 @@ paths:
           in: query
           schema:
             type: boolean
+            default: false
           description: Geef het resultaat van het inplannen van deze afspraak, zonder de afspraak daadwerkelijk in te plannen.
-          default: false
       responses:
         '200':
           description: Nieuwe status van de simulatie
@@ -749,10 +809,12 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
-  /services/v2/simulation/{simulation_id}/block/:
+  /services/v2/simulation/{simulation_id}/block:
     post:
       summary: Blokkeer een slot
       operationId: block
+      tags:
+        - Executie
       parameters:
         - $ref: '#/components/parameters/simulation_id'
         - name: slot_id
@@ -786,10 +848,12 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
-  /services/v2/simulation/{simulation_id}/unblock/:
+  /services/v2/simulation/{simulation_id}/unblock:
     post:
       summary: Deblokkeer een geblokkeerd slot
       operationId: unblock
+      tags:
+        - Executie
       parameters:
         - $ref: '#/components/parameters/simulation_id'
         - name: slot_id
@@ -812,10 +876,12 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
-  /services/v2/simulation/{simulation_id}/add/:
+  /services/v2/simulation/{simulation_id}/add:
     post:
       summary: Voeg een slot toe. Dit kan alleen op basis van sloten met de status "Beschikbaar".
       operationId: add
+      tags:
+        - Executie
       parameters:
         - $ref: '#/components/parameters/simulation_id'
         - name: slot_id
@@ -847,10 +913,12 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
-  /services/v2/simulation/{simulation_id}/visitearts/:
+  /services/v2/simulation/{simulation_id}/visitearts:
     post:
       summary: Beheer de aanwezigheid van de visite-arts.
       operationId: setVisiteArts
+      tags:
+        - Executie
       parameters:
         - $ref: '#/components/parameters/simulation_id'
         - name: aanwezig
@@ -875,9 +943,12 @@ paths:
         '404':
           $ref: '#/components/responses/SimulationNotFound'
 
-  /services/v2/simulation/{simulation_id}/spoed-patient/:
+  /services/v2/simulation/{simulation_id}/spoed-patient:
     get:
       summary: Vraag de huidige waarde van de "spoed-patient" interrupt op.
+      operationId: getInterrupt
+      tags:
+        - Notificaties
       parameters:
         - name: locatie
           in: query
@@ -885,11 +956,15 @@ paths:
             type: string
           required: true
           description: Locatie waarvoor de interrupt wordt opgevraagd.
+        - $ref: '#/components/parameters/simulation_id'
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
     put:
       summary: Activeer de interrupt "spoed-patient"
+      operationId: activateInterrupt
+      tags:
+        - Notificaties
       parameters:
         - name: locatie
           in: query
@@ -897,11 +972,15 @@ paths:
             type: string
           required: true
           description: Locatie waarvoor de interrupt wordt ingesteld.
+        - $ref: '#/components/parameters/simulation_id'
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
     delete:
       summary: Deactiveer de interrupt "spoed-patient"
+      operationId: deactiveInterrupt
+      tags:
+        - Notificaties
       parameters:
         - name: locatie
           in: query
@@ -909,15 +988,18 @@ paths:
             type: string
           required: true
           description: Locatie waarvoor de interrupt wordt ingesteld.
+        - $ref: '#/components/parameters/simulation_id'
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
 
 
-  /services/v2/simulation/{simulation_id}/wachtkamer/:
+  /services/v2/simulation/{simulation_id}/wachtkamer:
     get:
       summary: Huidige wachtkamer info van de simulatie
       operationId: getWachtkamer
+      tags:
+        - Wachtkamer informatie
       parameters:
         - $ref: '#/components/parameters/simulation_id'
       responses:
