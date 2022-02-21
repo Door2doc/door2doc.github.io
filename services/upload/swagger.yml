@@ -104,8 +104,8 @@ info:
 
     De API is hieronder terug te vinden en bestaat uit twee endpoints:
 
-    * /services/v1/upload/bezoeken – upload bezoeken
-    * /services/v1/upload/diagnostische_orders – upload diagnostische orders
+    * /services/v3/upload/bezoeken – upload bezoeken
+    * /services/v3/upload/diagnostische_orders – upload diagnostische orders
 
     De API is [hier](http://docs.door2doc.com/services/upload/swagger.yml) beschikbaar als OpenAPI v2.0 definitie.
 
