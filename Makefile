@@ -7,4 +7,5 @@ verify:
 		/services/v4/zkh-mylive.yml \
 		/services/v4/zkh-review.yml \
 		/services/v4/zkh-widget.yml \
-		/services/workflow-simulation/openapi.yml 
+		/services/workflow-simulation/openapi.yml \
+		/services/upload/swagger.yml

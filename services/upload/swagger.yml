@@ -1,8 +1,10 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   title: Aansluitinformatie Upload Service Door2doc
   version: "1.0"
-
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
   description: |
     Om de correcte informatie te kunnen presenteren, dient de Door2doc software op de hoogte te zijn van relevante
     bezoek-gegevens. U kunt deze gegevens aanleveren via de Upload Service die hier beschreven wordt.
@@ -39,12 +41,11 @@ info:
     * Naar behandelkamer - het moment waarop de bezoeker naar een behandelkamer gaat; vanaf dit moment is het
       kamernummer bekend.
     * Eerste contact arts - het moment waarop de arts voor het eerst contact heeft met de patiënt.
-    * Afdeling gebeld - voor patiënten die opgenomen moeten worden: het eerste moment waarop de afdeling is gebeld
-      om de patiënt op te halen van de SEH.
-    * Gereed voor opname - voor patiënten die opgenomen moeten worden: het moment waarop de patiënt zover is.
-    * Vertrek - voor patiënten die opgenomen moeten worden: het moment waarop ze daadwerkelijk opgenomen worden.
-      Voor de overige patiënten: het moment waarop de SEH verlaten.
-
+    * Opname - voor patiënten die opgenomen moeten worden: het moment waarop een bed op de verpleegafdeling is gereserveerd voor de bezoeker op de SEH.
+    * Arts klaar - het moment waarop het medische gedeelte van de behandeling op de SEH gereed is.
+    * Vertrek - het moment waarop de bezoeker de SEH verlaat.
+    * Einde – tijdstip waarop het bezoek administratief is afgerond
+    
     Hier tussendoor kunnen de volgende handelingen worden uitgevoerd:
     
     * Diagnostiek - aanvraag en uitslag van de diagnostiek.
@@ -102,262 +103,263 @@ info:
 
     # 5. De API
 
-    De API is hieronder terug te vinden en bestaat uit twee endpoints:
-
-    * /services/v3/upload/bezoeken – upload bezoeken
-    * /services/v3/upload/diagnostische_orders – upload diagnostische orders
-
-    De API is [hier](https://docs.door2doc.com/services/upload/swagger.yml) beschikbaar als OpenAPI v2.0 definitie.
-
-basePath: /
-schemes:
-  - https
-
-consumes:
-  - application/json
-
-produces:
-  - application/json
-
-definitions:
-  BezoekRecordList:
-    type: array
-    items:
-      $ref: '#/definitions/BezoekRecord'
-    example:
-      [
-        {
-          "bezoek_id": "A12345",
-          "dt_aangemeld": "2016-10-07T13:00:00+0200",
-          "dt_binnenkomst": "2016-10-07T13:00:00+0200",
-          "code_ingangsklacht": "PAC",
-          "code_specialisme": "9",
-          "code_herkomst": "4",
-          "code_vervoerder": "0",
-          "cat_leeftijd": "194"
-        },
-        {
-          "bezoek_id": "123456AAA",
-          "dt_binnenkomst": "2016-10-07T13:08:47+0200",
-          "dt_aanvang_triage": "2016-10-07T13:08:47+0200",
-          "dt_naar_behandelkamer": "2016-10-07T13:10:12+0200",
-          "dt_eerste_contact_arts": "2016-10-07T13:42:00+0200",
-          "dt_afdeling_gebeld": "2016-10-07T13:50:00+0200",
-          "dt_gereed_opname": "2016-10-07T14:02:17+0200",
-          "dt_vertrek": "2016-10-07T14:04:17+0200",
-          "behandelkamer": "D18",
-          "bed": "2",
-          "code_ingangsklacht": "Klacht extremiteit",
-          "code_specialisme": "11",
-          "code_triage": "1",
-          "code_herkomst": "4",
-          "code_vervoerder": "0",
-          "code_ontslagbestemming": "AX",
-          "code_opnameafdeling": "B3",
-          "code_opnamespecialisme": "11",
-          "cat_leeftijd": "197"
-        },
-      ]
-
-  BezoekRecord:
-    type: object
-    example:
-      {
-        "bezoek_id": "123456AAA",
-        "dt_aangemeld": "2016-10-07T13:05:23+0200",
-        "dt_binnenkomst": "2016-10-07T13:08:47+0200",
-        "dt_naar_behandelkamer": "2016-10-07T13:10:12+0200",
-        "dt_eerste_contact_arts": "2016-10-07T13:42:00+0200",
-        "dt_vertrek": "2016-10-07T14:04:17+0200",
-        "behandelkamer": "D18",
-        "bed": "2",
-        "code_ingangsklacht": "Klacht extermiteit/gewricht",
-        "code_specialisme": "11",
-        "code_herkomst": "4",
-        "code_vervoerder": "0",
-        "cat_leeftijd": "201"
-      }
-    required:
-      - bezoek_id
-    properties:
-      bezoek_id:
-        type: string
-        description: Uniek ID voor dit bezoek. Dit is *geen* patiënt nummer; meerdere bezoeken door dezelfde bezoeker resulteren in verschillende IDs.
-
-      dt_aangemeld:
-        type: string
-        format: date-time
-        description: Datum/Tijd waarop de patiënt voor het eerst is aangemeld.
-
-      dt_binnenkomst:
-        type: string
-        format: date-time
-        description: Datum/Tijd van binnenkomst.
-
-      dt_aanvang_triage:
-        type: string
-        format: date-time
-        description: Datum/Tijd waarop de triage is begonnen.
-
-      dt_naar_behandelkamer:
-        type: string
-        format: date-time
-        description: Datum/Tijd waarop de patiënt naar de behandelkamer is gegaan.
-
-      dt_eerste_contact_arts:
-        type: string
-        format: date-time
-        description: Datum/Tijd van het eerste contact van de patiënt met de behandelend arts.
-
-      dt_afdeling_gebeld:
-        type: string
-        format: date-time
-        description: "Voor patiënten die moeten worden opgenomen: datum/tijd waarop de afdeling is gebeld om de patient op te halen van de SEH."
-
-      dt_gereed_opname:
-        type: string
-        format: date-time
-        description: "Voor patiënten die moeten worden opgenomen: datum/tijd waarop de patiënt gereed is voor opname."
-
-      dt_vertrek:
-        type: string
-        format: date-time
-        description: Datum/Tijd waarop de patiënt vertrokken is van de SEH, danwel daadwerkelijk opgenomen.
-
-      behandelkamer:
-        type: string
-        description: Code van de behandelkamer. Wordt geacht aanwezig te zijn wanneer `dt_naar_behandelkamer` ingevuld is.
-
-      bed:
-        type: string
-        description: Code van het bed binnen de behandelkamer; indien van toepassing.
-
-      code_ingangsklacht:
-        type: string
-        description: Code van de ingangsklacht, zoals gebruikt in het ZIS.
-
-      code_specialisme:
-        type: string
-        description: Code van het specialisme waar de patiënt aan toegewezen is, zoals gebruikt in het ZIS.
-
-      code_triage:
-        type: string
-        description: Toegekende triage code, indien van toepassing.
-
-      code_herkomst:
-        type: string
-        description: Code van de herkomst van de patiënt, zoals gebruikt in het ZIS.
-
-      code_vervoerder:
-        type: string
-        description: Code van de vervoerder gebruiker om op de SEH te komen.
-
-      code_ontslagbestemming:
-        type: string
-        description: Code van de ontslagbestemming.
-
-      code_opnameafdeling:
-        type: string
-        description: Code van de afdeling waar de patiënt is opgenomen; indien van toepassing.
-
-      code_opnamespecialisme:
-        type: string
-        description: Code van het specialisme bij opname, indien van toepassing.
-
-      cat_leeftijd:
-        type: string
-        description: >
-          Leeftijdscategorie. Deze wordt bepaald door het laatste cijfer van de leeftijd weg te laten, volgens de
-          formule floor(leeftijd/10). Dus bij de leeftijd 4 hoort leeftijdscode 0; bij de leeftijd 97 hoort de
-          leeftijdscode 9.
-
-  DiagnostischeOrderList:
-    type: array
-    items:
-      $ref: '#/definitions/DiagnostischeOrder'
-
-  DiagnostischeOrder:
-    type: object
-    required:
-      - bezoek_id
-      - order_id
-      - code_status
-      - code_specialisme
-    properties:
-      bezoek_id:
-        type: integer
-        description: ID van het bezoek dat eerder is geüpload.
-        example: 88273
-
-      order_id:
-        type: integer
-        description: Volgnummer van de order. De combinatie bezoek_id/order_volgnummer wordt als unieke sleutel gebruikt.
-        example: 166311
-
-      dt_start:
-        type: string
-        format: date-time
-        description: Datum/Tijd waarop is begonnen de order te verwerken.
-
-      dt_eind:
-        type: string
-        format: date-time
-        description: Datum/Tijd waarop het resultaat is teruggegeven.
-
-      code_status:
-        type: string
-        description: Code van de verrichting.
-        example: Afgesloten
-
-      code_module:
-        type: string
-        description: Module, alleen van toepassing voor radiologie
-        example: Bucky
-
-      code_specialisme:
-        type: string
-        description: Code van het specialisme dat de order heeft aangevraagd.
-        example: RAD
+    De API is [hier](https://docs.door2doc.com/services/upload/swagger.yml) beschikbaar als OpenAPI v3.0 definitie.
 
 
-  Verwerking:
-    type: object
-    example:
-      {
-        "duur_verwerking": 423,
-        "records_verwerkt": 12,
-      }
-    required:
-      - duur_verwerking
-      - records_verwerkt
-    properties:
-      duur_verwerking:
-        type: integer
-        format: int32
-        minimum: 0
-        description: Aantal milliseconden dat benodigd was voor de verwerking.
-      records_verwerkt:
-        type: integer
-        format: int32
-        minimum: 0
-        description: Aantal records dat is verwerkt.
+servers:
+  - url: https://integration.door2doc.net
 
-  Probleem:
-    type: object
-    example:
-      {
-        "messages": [
-          "'2016' is not a valid date-time"
-        ]
-      }
-    required:
-      - messages
-    properties:
-      messages:
-        type: array
-        items:
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    BezoekRecordList:
+      type: array
+      items:
+        $ref: '#/components/schemas/BezoekRecord'
+
+    BezoekRecord:
+      type: object
+      required:
+        - code_locatie
+        - bezoeknummer
+        - dt_aangemeld
+      properties:
+        code_locatie:
           type: string
+          description: Code voor de locatie waar het bezoek plaatsvindt.
+          example: 'loc'
 
+        code_afdeling:
+          type: string
+          description: Code voor de afdeling waar het bezoek plaatsvindt.
+          example: 'afd'
+
+        bezoeknummer:
+          type: integer
+          description: Uniek ID voor dit bezoek. Dit is *geen* patiënt nummer; meerdere bezoeken door dezelfde bezoeker resulteren in verschillende IDs.
+          example: 12345
+
+        dt_aangemeld:
+          type: string
+          format: date-time
+          description: Datum/Tijd waarop de patiënt voor het eerst is aangemeld.
+          example: "2016-10-07T13:08:47+0200"
+
+        dt_binnenkomst:
+          type: string
+          format: date-time
+          description: Datum/Tijd van binnenkomst.
+          example: "2016-10-07T13:08:47+0200"
+
+        dt_triage:
+          type: string
+          format: date-time
+          description: Datum/Tijd waarop de triage is begonnen.
+          example: "2016-10-07T13:08:47+0200"
+
+        dt_naar_kamer:
+          type: string
+          format: date-time
+          description: Datum/Tijd waarop de patiënt naar de behandelkamer is gegaan.
+          example: "2016-10-07T13:10:12+0200"
+
+        dt_bij_arts:
+          type: string
+          format: date-time
+          description: Datum/Tijd van het eerste contact van de patiënt met de behandelend arts.
+          example: "2016-10-07T13:42:00+0200"
+
+        dt_arts_klaar:
+          type: string
+          format: date-time
+          description: Datum/Tijd waarop het medische gedeelte van de behandeling op de SEH gereed is.
+          example: "2016-10-07T13:50:00+0200"
+
+        dt_gereed_opname:
+          type: string
+          format: date-time
+          description: "Voor patiënten die opgenomen moeten worden: het moment waarop een bed op de verpleegafdeling is gereserveerd voor de bezoeker op de SEH"
+          example: "2016-10-07T14:02:17+0200"
+
+        dt_vertrek:
+          type: string
+          format: date-time
+          description: Datum/Tijd waarop de patiënt vertrokken is van de SEH, danwel daadwerkelijk opgenomen.
+          example: "2016-10-07T14:04:17+0200"
+
+        dt_einde:
+          type: string
+          format: date-time
+          description: Datum/Tijd waarop het bezoek administratief is afgerond.
+
+        mutatie_id:
+          type: integer
+          description: Uniek ID voor de mutatie die resulteerde in dit record.
+          example: 17
+
+        dt_mutatie_einde:
+          type: string
+          format: date-time
+          description: Datum/Tijd van de mutatie die resulteerde in dit record.
+          example: "2016-10-07T14:04:17+0200"
+
+        is_vervallen:
+          type: boolean
+          default: false 
+          description: True indien dit record niet langer van toepassing is.
+
+        kamer:
+          type: string
+          description: Code van de behandelkamer. Wordt geacht aanwezig te zijn wanneer `dt_naar_behandelkamer` ingevuld is.
+          example: "D18"
+
+        bed:
+          type: string
+          description: Code van het bed binnen de behandelkamer; indien van toepassing.
+          example: "02"
+
+        leeftijd:
+          type: string
+          description: >
+            Leeftijdscategorie. Deze wordt bepaald door het laatste cijfer van de leeftijd weg te laten, volgens de
+            formule floor(leeftijd/10). Dus bij de leeftijd 4 hoort leeftijdscode 0; bij de leeftijd 97 hoort de
+            leeftijdscode 9.
+          example: "7"
+
+        code_ingangsklacht:
+          type: string
+          description: Code van de ingangsklacht, zoals gebruikt in het ZIS.
+          example: "Klacht extremiteit"
+
+        code_urgentie:
+          type: string
+          description: Code van de urgentie, zoals gebruikt in het ZIS.
+          example: "3"
+
+        code_specialisme:
+          type: string
+          description: Code van het specialisme waar de patiënt aan toegewezen is, zoals gebruikt in het ZIS.
+          example: "11"
+
+        code_herkomst:
+          type: string
+          description: Code van de herkomst van de patiënt, zoals gebruikt in het ZIS.
+          example: "4"
+
+        code_vervoerder:
+          type: string
+          description: Code van de vervoerder gebruiker om op de SEH te komen.
+          example: "0"
+
+        code_ontslagbestemming:
+          type: string
+          description: Code van de ontslagbestemming.
+          example: "AX"
+
+        code_opnameafdeling:
+          type: string
+          description: Code van de afdeling waar de patiënt is opgenomen; indien van toepassing.
+          example: "B3"
+
+        code_opnamespecialisme:
+          type: string
+          description: Code van het specialisme bij opname, indien van toepassing.
+          example: "11"
+
+    DiagnostischeOrderList:
+      type: array
+      items:
+        $ref: '#/components/schemas/DiagnostischeOrder'
+
+    DiagnostischeOrder:
+      type: object
+      required:
+        - bezoek_id
+        - order_id
+        - code_status
+      properties:
+        bezoek_id:
+          type: integer
+          description: ID van het bezoek dat eerder is geüpload.
+          example: 88273
+
+        order_id:
+          type: integer
+          description: Volgnummer van de order. De combinatie bezoek_id/order_volgnummer wordt als unieke sleutel gebruikt.
+          example: 166311
+
+        dt_start:
+          type: string
+          format: date-time
+          description: Datum/Tijd waarop is begonnen de order te verwerken.
+          example: "2016-10-07T13:42:00+0200"
+
+        dt_eind:
+          type: string
+          format: date-time
+          description: Datum/Tijd waarop het resultaat is teruggegeven.
+          example: "2016-10-07T15:40:00+0200"
+
+        code_status:
+          type: string
+          description: Code van de verrichting.
+          example: Afgesloten
+
+        code_module:
+          type: string
+          description: Module, alleen van toepassing voor radiologie
+          example: Bucky
+
+        code_specialisme:
+          type: string
+          description: Code van het specialisme dat de order heeft aangevraagd.
+          example: RAD
+
+
+    Verwerking:
+      type: object
+      example:
+        {
+          "duur_verwerking": 423,
+          "records_verwerkt": 12,
+        }
+      required:
+        - duur_verwerking
+        - records_verwerkt
+      properties:
+        duur_verwerking:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Aantal milliseconden dat benodigd was voor de verwerking.
+        records_verwerkt:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Aantal records dat is verwerkt.
+
+    Probleem:
+      type: object
+      example:
+        {
+          "messages": [
+            "'2016' is not a valid date-time"
+          ]
+        }
+      required:
+        - messages
+      properties:
+        messages:
+          type: array
+          items:
+            type: string
+
+security:
+  - BasicAuth: []
 
 paths:
   /services/v3/upload/bezoeken:
@@ -366,22 +368,26 @@ paths:
       operationId: post_events
       tags:
         - Service definitie
-      parameters:
-        - name: records
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/BezoekRecordList'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BezoekRecordList'
 
       responses:
         200:
           description: De records zijn succesvol verwerkt. Het retourbericht bevat aanvullende informatie over de verwerking.
-          schema:
-            $ref: '#/definitions/Verwerking'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Verwerking'
         400:
           description: Er was een probleem met één of meerdere records. Het retourbericht bevat aanvullende informatie.
-          schema:
-            $ref: '#/definitions/Probleem'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Probleem'
 
   /services/v3/upload/orders/{type}:
     post:
@@ -392,25 +398,31 @@ paths:
       parameters:
         - name: type
           in: path
-          type: string
-          enum:
-            - lab
-            - consult
-            - radiologie
-          required: true
-        - name: records
-          in: body
-          required: true
           schema:
-            $ref: '#/definitions/DiagnostischeOrderList'
+            type: string
+            enum:
+              - lab
+              - consult
+              - radiologie
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiagnostischeOrderList'
 
       responses:
         200:
           description: De records zijn succesvol verwerkt. Het retourbericht bevat aanvullende informatie over de verwerking.
-          schema:
-            $ref: '#/definitions/Verwerking'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Verwerking'
         400:
           description: Er was een probleem met één of meerdere records. Het retourbericht bevat aanvullende informatie.
-          schema:
-            $ref: '#/definitions/Probleem'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Probleem'
 
