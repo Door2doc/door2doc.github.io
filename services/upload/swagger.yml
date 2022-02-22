@@ -107,7 +107,7 @@ info:
     * /services/v3/upload/bezoeken – upload bezoeken
     * /services/v3/upload/diagnostische_orders – upload diagnostische orders
 
-    De API is [hier](http://docs.door2doc.com/services/upload/swagger.yml) beschikbaar als OpenAPI v2.0 definitie.
+    De API is [hier](https://docs.door2doc.com/services/upload/swagger.yml) beschikbaar als OpenAPI v2.0 definitie.
 
 basePath: /
 schemes:
