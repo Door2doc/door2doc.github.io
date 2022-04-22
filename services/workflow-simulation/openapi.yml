@@ -705,6 +705,12 @@ paths:
             example: "2017-07-02T08:00:00+02:00"
           in: query
           description: Datum/tijd in RFC3339 van de eindtijd van de simulatie. Gebruik dit veld in combinatie met `from`, óf gebruik `scenario_id`.
+        - name: locaties
+          schema:
+            type: string
+            example: "ld,lu"
+          in: query
+          description: Komma-gescheiden lijst van locaties, alleen gebruiken in combinatie met `from` en `to`.
 
       responses:
         '201':
