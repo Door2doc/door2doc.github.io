@@ -77,156 +77,10 @@ components:
       type: http
       scheme: basic
 
-#  examples:
-#    ScheduleList:
-#      value:
-#        resourceType: "List"
-#
-#    OperationalOutcomeSuccess:
-#    {
-#      "resourceType": "OperationOutcome",
-#      "text": {
-#        "status": "additional",
-#        "div": "success"
-#      },
-#      "issue": [
-#      {
-#        "severity": "information",
-#        "code": "informational",
-#        "details": {
-#          "text": "success"
-#        }
-#      }
-#      ]
-#    }
-#
-#    OperationalOutcomeAuth: {
-#      "resourceType": "OperationOutcome",
-#      "text": {
-#        "status": "additional",
-#        "div": "Unauthorized to access /fhir/v3/List"
-#      },
-#      "issue": [
-#      {
-#        "severity": "error",
-#        "code": "security",
-#        "details": {
-#          "text": "not authorized"
-#        },
-#        "diagnostics": "..."
-#      }
-#      ]
-#    }
-#
-#    OperationalOutcomeInvalid: {
-#      "resourceType": "OperationOutcome",
-#      "text": {
-#        "status": "additional",
-#        "div": "invalid resource"
-#      },
-#      "issue": [
-#      {
-#        "severity": "error",
-#        "code": "processing",
-#        "details": {
-#          "text": "while determining resource type: invalid character 'u' looking for beginning of value"
-#        },
-#        "diagnostics": "..."
-#      },
-#      {
-#        "severity": "error",
-#        "code": "processing",
-#        "details": {
-#          "text": "invalid character 'u' looking for beginning of value"
-#        },
-#        "diagnostics": "..."
-#      }
-#      ]
-#    }
-#
-#    OperationalOutcomeInternal: {
-#      "resourceType": "OperationOutcome",
-#      "text": {
-#        "status": "additional",
-#        "div": "failed to create resource"
-#      },
-#      "issue": [
-#      {
-#        "severity": "error",
-#        "code": "processing",
-#        "details": {
-#          "text": "..."
-#        },
-#        "diagnostics": "..."
-#      }
-#      ]
-#    }
-#
-#    AppointmentNew: {
-#      "resourceType": "Appointment",
-#      "contained": [
-#      {
-#        "resourceType": "Patient",
-#        "id": "1",
-#        "address": [
-#        {
-#          "postalCode": "1001",
-#          "birthDate": "1970-07-11T08:30:00.000+02:00",
-#        }
-#        ]
-#      },
-#      {
-#        "resourceType": "Location",
-#        "id": "4",
-#        "name": "Kamer 1",
-#        "partOf": {
-#          display: "LUMC"
-#        }
-#      }
-#      ],
-#      "identifier": [
-#      {
-#        "use": "secondary",
-#        "system": "urn:topicuszorg:topplan:afspraaknummer",
-#        "value": "123456789"
-#      }
-#      ],
-#      "status": "booked",
-#      "serviceType": [
-#      {
-#        "coding": [
-#        {
-#          "system": "urn:topicuszorg:topplan:afspraakprotocol:code",
-#          "code": "HuisartsConsult"
-#        }
-#        ],
-#      }
-#      ],
-#      "start": "2018-10-11T12:00:00.000+02:00",
-#      "end": "2018-10-11T12:15:00.000+02:00",
-#      "minutesDuration": 15,
-#      "participant": [
-#      {
-#        "actor": {
-#          "reference": "#4",
-#          "display": "Kamer 1"
-#        },
-#        "status": "accepted"
-#      },
-#      {
-#        "actor": {
-#          "reference": "#2"
-#        },
-#        "status": "accepted"
-#      }
-#      ]
-#    }
-
-
 paths:
   /topicus/export/:
     post:
-      summary: Regelmatige upload van recent afgeronde en openstaande afspraken.
+      summary: Regelmatige upload van recent afgeronde en openstaande afspraken en visites.
       operationId: importAfspraken
       tags:
         - Afspraken
@@ -309,6 +163,23 @@ paths:
                   agenda:
                     type: string
                     example: "Kamer 1"
+                  auto_id:
+                    type: string
+                    example: "234"
+                    description: "Alleen relevant voor visites – ID van de gebruikte auto"
+                  visite_aankomsttijd:
+                    type: string
+                    format: date-time
+                    description: "Alleen relevant voor visites – aankomsttijd"
+                  visite_vertrektijd:
+                    type: string
+                    format: date-time
+                    description: "Alleen relevant voor visites – vertrektijd"
+                  visite_afrondtijd:
+                    type: string
+                    format: date-time
+                    description: "Alleen relevant voor visites – tijdstip waarom de visite administratief is afgerond"
+
       responses:
         200:
           description: De export is succesvol verwerkt
