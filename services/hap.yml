@@ -1,23 +1,57 @@
 openapi: "3.0.0"
 info:
   title: Aansluitinformatie Gegevensuitwisseling HAP
-  version: 2.0
+  version: "2.0"
 
   description: |
 
     # Communicatie-stromen
 
-    1. Afspraken -- Topicus is de bron van deze data, en pusht deze naar door2doc
-    2. Afspraakvoorstellen -- Door2doc is de bron van deze data, Topicus vraagt de voorstellen op bij door2doc
-    3. Blokkades/extra slots -- Topicus is de bron van deze data, en pusht deze naar door2doc
-    door2doc
+    1. Afspraken – Topicus is de bron van deze data, en pusht deze naar door2doc. 
+    2. Afspraakvoorstellen – Door2doc is de bron van deze data, Topicus vraagt de voorstellen op bij door2doc.
+    3. Roosters – Topicus is de bron van deze data, en pusht deze naar door2doc.
 
-    In alle gevallen is Topicus de initiator van de communicatie -- hetzij door middel van push (bij afspraken), hetzij door middel
-    van pull (bij de overige stromen).
-
-    Afspraken worden gepusht bij iedere wijziging in een of meer van de velden die in dit document worden beschreven. Afspraakvoorstellen
-    worden gepullt zodra er een afspraakvoorstel nodig is. Blokkades en extra slots worden gepullt wanneer Topicus maar
-    wil.
+    In alle gevallen is Topicus de initiator van de communicatie.
+    
+    ## Afspraken
+    
+    Voor afspraken zijn er drie stromen: 
+    
+    1. Incidentele export – deze wordt gebruikt bij het aansluiten van een nieuwe klant, en maakt gebruik van het endpoint
+       `/topicus/export`. 
+    2. Continue export – deze wordt gebruikt om afspraak-informatie tussen Topicus en door2doc in sync te houden. Dit is hetzelfde
+       endpoint `/topicus/export`, maar wordt elke minuut aangeroepen. Deze export bevat alle afspraken die recent gewijzigd zijn, 
+       met een limiet van 48h. 
+    3. Directe updates – deze wordt gebruikt zodra er in Topicus een afspraak wordt aangemaakt, zodat het rooster van door2doc 
+       in sync blijft met het rooster van Topicus. Deze updates bevatten minder informatie dan de continue export. Het relevante 
+       endpoint is `/fhir/v3/Appointment`.
+    
+    ### Data
+    
+    In totaal verwerkt door2doc de volgende velden. Niet ieder veld is in iedere stroom aanwezig; zie de endpoint documentatie
+    voor meer informatie. 
+    
+    * call ID – het CallID zoals gehanteerd in Topicus HAP. 
+    * behandelplan ID – het Behandelplan ID zoals gehanteerd in TopPlan.  
+    * lokatie – naam van de lokatie waar de afspraak is gepland
+    * actie – soort afspraak; door2doc verwerkt niet alle soorten afspraak
+    * agenda – naam van de agenda in TopPlan
+    * urgentie – urgentie van de call, `"U0"` t/m `"U5"`. 
+    * zelfverwijzer - boolean 
+    * aannametijd – datum/tijd van aanname van de call
+    * geplande tijd - datum/tijd waarom afspraak gepland is
+    * aankomsttijd – datum/tijd waarop de patiënt gearriveerd is
+    * begintijd – datum/tijd waarop de afspraak begonnen is
+    * eindtijd – datum/tijd waarop de afspraak afgerond is
+    * afrondtijd – datum/tijd waarop de afspraak administratief afgerond is
+    * leeftijdsgroep – leeftijd van de patiënt in 5-jaars categorieën (`floor(leeftijd/5)`) 
+    * postcode - 4 cijfers van de postcode
+    * ingangsklachten - lijst van ingangsklachten van de patiënt
+    * ICPC code – ICPC code van de call
+    
+    ## Roosters
+    
+    Voor roosters is er maar één stroom; deze loopt via FHIR en is gedocumenteerd onder `/fhir/v3/List`. 
 
     # Beveiliging
 
@@ -43,206 +77,150 @@ components:
       type: http
       scheme: basic
 
-  examples:
-    ScheduleList: {
-      "resourceType": "List",
-      "contained": [
-      {
-        "resourceType": "Schedule",
-        "id": "1",
-        "identifier": [
-        {
-          "system": "urn:topicuszorg:topplan:plekroosterblok:id",
-          "value": "1"
-        }
-        ],
-        "actor": [
-        {
-          "reference": "#3",
-        }
-        ],
-        "planningHorizon": {
-          "start": "2018-10-05T10:30:00+02:00",
-          "end": "2018-10-05T11:30:00+02:00"
-        }
-      },
-      {
-        "resourceType": "Slot",
-        "id": "2",
-        "serviceType": [
-        {
-          "coding": [
-          {
-            "system": "urn:topicuszorg:topplan:afspraakprotocol:code",
-            "code": "HuisartsConsult",
-          }
-          ]
-        }
-        ],
-        "schedule": {
-          "reference": "#1"
-        },
-        "status": "free",
-        "start": "2018-10-05T10:30:00.000+02:00",
-        "end": "2018-10-05T10:55:00.000+02:00"
-      },
-      {
-        "resourceType": "Location",
-        "id": "3",
-        "partOf": {
-          display: "LUMC"
-        }
-      }
-      ],
-      "status": "current",
-      "mode": "working",
-      "entry": [
-      {
-        "item": {
-          "reference": "#2"
-        }
-      },
-      ]
-    }
-
-    OperationalOutcomeSuccess: {
-      "resourceType": "OperationOutcome",
-      "text": {
-        "status": "additional",
-        "div": "success"
-      },
-      "issue": [
-      {
-        "severity": "information",
-        "code": "informational",
-        "details": {
-          "text": "success"
-        }
-      }
-      ]
-    }
-
-    OperationalOutcomeAuth: {
-      "resourceType": "OperationOutcome",
-      "text": {
-        "status": "additional",
-        "div": "Unauthorized to access /fhir/v3/List"
-      },
-      "issue": [
-      {
-        "severity": "error",
-        "code": "security",
-        "details": {
-          "text": "not authorized"
-        },
-        "diagnostics": "..."
-      }
-      ]
-    }
-
-    OperationalOutcomeInvalid: {
-      "resourceType": "OperationOutcome",
-      "text": {
-        "status": "additional",
-        "div": "invalid resource"
-      },
-      "issue": [
-      {
-        "severity": "error",
-        "code": "processing",
-        "details": {
-          "text": "while determining resource type: invalid character 'u' looking for beginning of value"
-        },
-        "diagnostics": "..."
-      },
-      {
-        "severity": "error",
-        "code": "processing",
-        "details": {
-          "text": "invalid character 'u' looking for beginning of value"
-        },
-        "diagnostics": "..."
-      }
-      ]
-    }
-
-    OperationalOutcomeInternal: {
-      "resourceType": "OperationOutcome",
-      "text": {
-        "status": "additional",
-        "div": "failed to create resource"
-      },
-      "issue": [
-      {
-        "severity": "error",
-        "code": "processing",
-        "details": {
-          "text": "..."
-        },
-        "diagnostics": "..."
-      }
-      ]
-    }
-
-    AppointmentNew: {
-      "resourceType": "Appointment",
-      "contained": [
-      {
-        "resourceType": "Patient",
-        "id": "1",
-        "address": [
-        {
-          "postalCode": "1001",
-          "birthDate": "1970-07-11T08:30:00.000+02:00",
-        }
-        ]
-      },
-      {
-        "resourceType": "Location",
-        "id": "4",
-        "name": "Kamer 1",
-        "partOf": {
-          display: "LUMC"
-        }
-      }
-      ],
-      "identifier": [
-      {
-        "use": "secondary",
-        "system": "urn:topicuszorg:topplan:afspraaknummer",
-        "value": "123456789"
-      }
-      ],
-      "status": "booked",
-      "serviceType": [
-      {
-        "coding": [
-        {
-          "system": "urn:topicuszorg:topplan:afspraakprotocol:code",
-          "code": "HuisartsConsult"
-        }
-        ],
-      }
-      ],
-      "start": "2018-10-11T12:00:00.000+02:00",
-      "end": "2018-10-11T12:15:00.000+02:00",
-      "minutesDuration": 15,
-      "participant": [
-      {
-        "actor": {
-          "reference": "#4",
-          "display": "Kamer 1"
-        },
-        "status": "accepted"
-      },
-      {
-        "actor": {
-          "reference": "#2"
-        },
-        "status": "accepted"
-      }
-      ]
-    }
+#  examples:
+#    ScheduleList:
+#      value:
+#        resourceType: "List"
+#
+#    OperationalOutcomeSuccess:
+#    {
+#      "resourceType": "OperationOutcome",
+#      "text": {
+#        "status": "additional",
+#        "div": "success"
+#      },
+#      "issue": [
+#      {
+#        "severity": "information",
+#        "code": "informational",
+#        "details": {
+#          "text": "success"
+#        }
+#      }
+#      ]
+#    }
+#
+#    OperationalOutcomeAuth: {
+#      "resourceType": "OperationOutcome",
+#      "text": {
+#        "status": "additional",
+#        "div": "Unauthorized to access /fhir/v3/List"
+#      },
+#      "issue": [
+#      {
+#        "severity": "error",
+#        "code": "security",
+#        "details": {
+#          "text": "not authorized"
+#        },
+#        "diagnostics": "..."
+#      }
+#      ]
+#    }
+#
+#    OperationalOutcomeInvalid: {
+#      "resourceType": "OperationOutcome",
+#      "text": {
+#        "status": "additional",
+#        "div": "invalid resource"
+#      },
+#      "issue": [
+#      {
+#        "severity": "error",
+#        "code": "processing",
+#        "details": {
+#          "text": "while determining resource type: invalid character 'u' looking for beginning of value"
+#        },
+#        "diagnostics": "..."
+#      },
+#      {
+#        "severity": "error",
+#        "code": "processing",
+#        "details": {
+#          "text": "invalid character 'u' looking for beginning of value"
+#        },
+#        "diagnostics": "..."
+#      }
+#      ]
+#    }
+#
+#    OperationalOutcomeInternal: {
+#      "resourceType": "OperationOutcome",
+#      "text": {
+#        "status": "additional",
+#        "div": "failed to create resource"
+#      },
+#      "issue": [
+#      {
+#        "severity": "error",
+#        "code": "processing",
+#        "details": {
+#          "text": "..."
+#        },
+#        "diagnostics": "..."
+#      }
+#      ]
+#    }
+#
+#    AppointmentNew: {
+#      "resourceType": "Appointment",
+#      "contained": [
+#      {
+#        "resourceType": "Patient",
+#        "id": "1",
+#        "address": [
+#        {
+#          "postalCode": "1001",
+#          "birthDate": "1970-07-11T08:30:00.000+02:00",
+#        }
+#        ]
+#      },
+#      {
+#        "resourceType": "Location",
+#        "id": "4",
+#        "name": "Kamer 1",
+#        "partOf": {
+#          display: "LUMC"
+#        }
+#      }
+#      ],
+#      "identifier": [
+#      {
+#        "use": "secondary",
+#        "system": "urn:topicuszorg:topplan:afspraaknummer",
+#        "value": "123456789"
+#      }
+#      ],
+#      "status": "booked",
+#      "serviceType": [
+#      {
+#        "coding": [
+#        {
+#          "system": "urn:topicuszorg:topplan:afspraakprotocol:code",
+#          "code": "HuisartsConsult"
+#        }
+#        ],
+#      }
+#      ],
+#      "start": "2018-10-11T12:00:00.000+02:00",
+#      "end": "2018-10-11T12:15:00.000+02:00",
+#      "minutesDuration": 15,
+#      "participant": [
+#      {
+#        "actor": {
+#          "reference": "#4",
+#          "display": "Kamer 1"
+#        },
+#        "status": "accepted"
+#      },
+#      {
+#        "actor": {
+#          "reference": "#2"
+#        },
+#        "status": "accepted"
+#      }
+#      ]
+#    }
 
 
 paths:
@@ -250,6 +228,8 @@ paths:
     post:
       summary: Regelmatige upload van recent afgeronde en openstaande afspraken.
       operationId: importAfspraken
+      tags:
+        - Afspraken
       security:
         - BasicAuth: []
       requestBody:
@@ -269,9 +249,11 @@ paths:
                   triage_urgentie:
                     type: string
                     enum: ["0", "1", "2", "3", "4", "5"]
+                    example: "2"
                   afsluit_urgentie:
                     type: string
                     enum: ["0", "1", "2", "3", "4", "5"]
+                    example: "2"
                   urgentie_gewijzigd:
                     type: boolean
                   zelfverwijzer:
@@ -344,16 +326,21 @@ paths:
 
   /topicus/propose/:
     post:
-      summary: |
+      summary: Vraag een afspraak-voorstel op.
+      tags:
+        - Afspraakvoorstel
+      description: | 
         Vraag een afspraak-voorstel op. De afspraak wordt ingeschoten als een FHIR appointment. Het resultaat is een
         FHIR Bundle met nul of meer Slots. De afspraak moet de volgende informatie bevatten:
 
         * appointmentType: onderscheid tussen zelfverwijzer en niet
         * reason: ingangsklachten van de patiënt
         * priority: initiële triagecode van de patiënt
-        * birthdate: geboortedatum van de patiënt, bij voorkeur afgerond naar 1e van de maand
-        * postcode: postcode van de patiënt, niet nodig voor zelfverwijzers
+        * birthdate: geboortedatum van de patiënt, afgerond op 1 januari; het jaar is idealiter afgerond op 5 jaar. 
+        * postcode: eerste vier cijfers van de postcode van de patiënt, niet nodig voor zelfverwijzers
         * locatie van waar de call is aangenomen
+        * tijdstip waarop de call is aangenomen
+
       operationId: propose
       security:
         - BasicAuth: []
@@ -362,75 +349,93 @@ paths:
         required: true
         content:
           application/fhir+json:
-            example: {
-              "resourceType": "Appointment",
-              "status": "PROPOSED",
-              "appointmentType": {
-                "coding": [
-                  {
-                    "system": "http://hl7.org/fhir/v2/0276",
-                    "code": "WALKIN",
-                    "display": "A previously unscheduled walk-in visit"
-                  }
-                ]
-              },
-              "reason": [
+            schema:
+              example:
                 {
-                  "coding": [
-                  {
-                    "system": "todo",
-                    "code": "45",
-                    "display": "Wond"
-                  }
+                  "resourceType": "Appointment",
+                  "contained": [
+                    {
+                      "resourceType": "Patient",
+                      "id": "1",
+                      "birthDate": "1999-01-01",
+                      "address": [
+                        {
+                          "postalCode": "8607"
+                        }
+                      ]
+                    },
+                    {
+                      "resourceType": "Location",
+                      "id": "2",
+                      "identifier": [
+                        {
+                          "use": "official",
+                          "system": "urn:topicuszorg:topplan:plek:id",
+                          "value": "933"
+                        }
+                      ],
+                      "name": "Locatie A",
+                      "managingOrganization": {
+                        "reference": "#3"
+                      }
+                    },
+                    {
+                      "resourceType": "Organization",
+                      "id": "3",
+                      "name": "Dokterswacht Demo"
+                    }
+                  ],
+                  "identifier": [
+                    {
+                      "system": "urn:topicuszorg:hap:callmodel:id",
+                      "value": "5891892230"
+                    }
+                  ],
+                  "status": "proposed",
+                  "serviceType": [
+                    {
+                      "coding": [
+                        {
+                          "system": "urn:topicuszorg:topplan:afspraakprotocol:code",
+                          "code": "ConsultHuisarts_15",
+                          "display": "HA Locatie A"
+                        },
+                        {
+                          "system": "urn:topicuszorg:topplan:afspraakprotocol:code",
+                          "code": "ConsultHuisarts_15",
+                          "display": "HA Locatie B"
+                        },
+                        {
+                          "system": "urn:topicuszorg:topplan:afspraakprotocol:code",
+                          "code": "ConsultHuisarts_15",
+                          "display": "HA Locatie C"
+                        }
+                      ]
+                    }
+                  ],
+                  "appointmentType": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/v2/0276",
+                        "code": "WALKIN"
+                      }
+                    ]
+                  },
+                  "priority": 2,
+                  "participant": [
+                    {
+                      "actor": {
+                        "reference": "#1"
+                      }
+                    },
+                    {
+                      "actor": {
+                        "reference": "#2"
+                      }
+                    }
                   ]
                 }
-              ],
-              "priority": 3,
-              "participant": [
-              {
-                "actor": {
-                  "reference": "#patient1"
-                }
-              },
-              {
-                "actor": {
-                  "reference": "#location1"
-                }
-              }
-              ],
-              "contained": [
-              {
-                "resourceType": "Patient",
-                "id": "patient1",
-                "birthDate": "1970-07-11T08:30:00.000+02:00",
-                "address": [
-                {
-                  "postalCode": "7411"
-                }
-                ]
-              },
-              {
-                "resourceType": "Location",
-                "id": "#location1",
-                "identifier": [
-                {
-                  "use": "official",
-                  "system": "urn:topicuszorg:topplan:plek:id",
-                  "value": "34"
-                }
-                ],
-                "name": "Leiderdorp",
-                "managingOrganization": {
-                  "reference": "#7"
-                }
-              },
-              {
-                "resourceType": "Organization",
-                "id": "7",
-                "name": "HAP D2D SHR"
-              }
-              ]
-            }
+
       responses:
         200:
           description: Er is een afspraak voorstel beschikbaar. Het resultaat is een Bundle met nul of meer Slots.
@@ -469,6 +474,10 @@ paths:
       summary: |
         Upload een schedule met 0 of meer slots. Het bestaande schedule wordt in zijn geheel vervangen door het nieuwe
         schedule.
+      description: |
+        Het model volgt het standaard FHIRv3 model voor `Schedule` en `Slot`.
+      tags:
+        - Roosters
       operationId: postList
       security:
         - BasicAuth: []
@@ -479,43 +488,92 @@ paths:
           application/fhir+json:
             schema:
               example:
-                $ref: '#/components/examples/ScheduleList'
+                {
+                  "resourceType": "List",
+                  "contained": [
+                  {
+                    "resourceType": "Schedule",
+                    "id": "1",
+                    "identifier": [
+                    {
+                      "system": "urn:topicuszorg:topplan:plekroosterblok:id",
+                      "value": "1"
+                    }
+                    ],
+                    "actor": [
+                    {
+                      "reference": "#3",
+                    }
+                    ],
+                    "planningHorizon": {
+                      "start": "2018-10-05T10:30:00+02:00",
+                      "end": "2018-10-05T11:30:00+02:00"
+                    }
+                  },
+                  {
+                    "resourceType": "Slot",
+                    "id": "2",
+                    "serviceType": [
+                    {
+                      "coding": [
+                      {
+                        "system": "urn:topicuszorg:topplan:afspraakprotocol:code",
+                        "code": "HuisartsConsult",
+                      }
+                      ]
+                    }
+                    ],
+                    "schedule": {
+                      "reference": "#1"
+                    },
+                    "status": "free",
+                    "start": "2018-10-05T10:30:00.000+02:00",
+                    "end": "2018-10-05T10:55:00.000+02:00"
+                  },
+                  {
+                    "resourceType": "Location",
+                    "id": "3",
+                    "partOf": {
+                      display: "LUMC"
+                    }
+                  }
+                  ],
+                  "status": "current",
+                  "mode": "working",
+                  "entry": [
+                  {
+                    "item": {
+                      "reference": "#2"
+                    }
+                  },
+                  ]
+                }
+
+
 
       responses:
         201:
           description: De records zijn succesvol verwerkt. Het resultaat is beschreven in een OperationalOutcome.
-          content:
-            application/fhir+json:
-              schema:
-                example:
-                  $ref: '#/components/examples/OperationalOutcomeSuccess'
         403:
           description: Er was een probleem met het authenticeren. Het probleem is beschreven in een OperationalOutcome.
-          content:
-            application/fhir+json:
-              schema:
-                example:
-                  $ref: '#/components/examples/OperationalOutcomeAuth'
         422:
           description: Er was een probleem met het uitlezen van één of meerdere resources. Het probleem is beschreven in een OperationalOutcome.
-          content:
-            application/fhir+json:
-              schema:
-                example:
-                  $ref: '#/components/examples/OperationalOutcomeInvalid'
         500:
           description: Er was een probleem met het verwerken van de upload. Het probleem is beschreven in een OperationalOutcome.
-          content:
-            application/fhir+json:
-              schema:
-                example:
-                  $ref: '#/components/examples/OperationalOutcomeInternal'
 
   /fhir/v3/Appointment:
     post:
-      summary: |
-        Registreer een afspraak. Een bestaande afspraak met hetzelfde ID wordt vervangen.
+      summary: Registreer een afspraak. Een bestaande afspraak met hetzelfde ID wordt vervangen.
+      description: |
+        Dit endpoint volgt het standaard FHIRv3 model voor Appointment. 
+        
+        Bijzonderheden:
+        * Voor de postcode worden alleen de eerste vier cijfers gebruikt.
+        * Geboortedatum (indien aanwezig) wordt afgerond op 1 januari; idealiter wordt ook het jaartal afgerond op 5 jaar. 
+
       operationId: postAppointment
+      tags:
+        - Afspraken
       security:
         - BasicAuth: []
       requestBody:
@@ -525,35 +583,132 @@ paths:
           application/fhir+json:
             schema:
               example:
-                $ref: '#/components/examples/AppointmentNew'
+                {
+                  "contained": [
+                    {
+                      "id": "1",
+                      "identifier": [
+                        {
+                          "system": "urn:topicuszorg:topplan:plek:id",
+                          "use": "official",
+                          "value": "918"
+                        }
+                      ],
+                      "managingOrganization": {
+                        "reference": "#2"
+                      },
+                      "name": "kamer 1",
+                      "partOf": {
+                        "reference": "#3"
+                      },
+                      "physicalType": {
+                        "coding": [
+                          {
+                            "code": "si",
+                            "display": "Site"
+                          }
+                        ]
+                      },
+                      "resourceType": "Location"
+                    },
+                    {
+                      "id": "2",
+                      "name": "HAP Dokterswacht Demo",
+                      "resourceType": "Organization"
+                    },
+                    {
+                      "address": {
+                        "postalCode": "8441"
+                      },
+                      "id": "3",
+                      "identifier": [
+                        {
+                          "system": "urn:topicuszorg:topplan:plek:id",
+                          "use": "official",
+                          "value": "917"
+                        }
+                      ],
+                      "managingOrganization": {
+                        "reference": "#4"
+                      },
+                      "name": "Locatie A",
+                      "resourceType": "Location"
+                    },
+                    {
+                      "id": "4",
+                      "name": "HAP Dokterswacht Demo",
+                      "resourceType": "Organization"
+                    },
+                    {
+                      "gender": "unknown",
+                      "id": "5",
+                      "resourceType": "Patient"
+                    }
+                  ],
+                  "created": "2022-07-01T07:33:10+02:00",
+                  "end": "2022-07-01T08:00:00.000+02:00",
+                  "identifier": [
+                    {
+                      "system": "urn:topicuszorg:topplan:afspraaknummer",
+                      "value": "22070107209601"
+                    },
+                    {
+                      "system": "urn:topicuszorg:topplan:afspraak:id",
+                      "value": "2987073"
+                    }
+                  ],
+                  "minutesDuration": 15,
+                  "participant": [
+                    {
+                      "actor": {
+                        "display": "afspraaklocatie",
+                        "reference": "#1"
+                      },
+                      "status": "accepted"
+                    },
+                    {
+                      "actor": {
+                        "reference": "#5"
+                      },
+                      "status": "accepted"
+                    }
+                  ],
+                  "priority": 3,
+                  "resourceType": "Appointment",
+                  "serviceType": [
+                    {
+                      "coding": [
+                        {
+                          "code": "ConsultHuisarts_15",
+                          "display": "ConsultHuisarts_15"
+                        }
+                      ],
+                      "text": "ConsultHuisarts_15"
+                    }
+                  ],
+                  "start": "2022-07-01T07:45:00.000+02:00",
+                  "status": "booked",
+                  "supportingInformation": [
+                    {
+                      "identifier": {
+                        "system": "urn:topicuszorg:topplan:behandelplan:id",
+                        "value": "2998051"
+                      }
+                    },
+                    {
+                      "display": "afspraaklocatie",
+                      "reference": "#1"
+                    }
+                  ]
+                }
 
-        responses:
-          201:
-            description: De afspraak is succesvol verwerkt. Het resultaat is beschreven in een OperationalOutcome.
-            content:
-              application/fhir+json:
-                schema:
-                  example:
-                    $ref: '#/components/examples/OperationalOutcomeSuccess'
-          403:
-            description: Er was een probleem met het authenticeren. Het probleem is beschreven in een OperationalOutcome.
-            content:
-              application/fhir+json:
-                schema:
-                  example:
-                    $ref: '#/components/examples/OperationalOutcomeAuth'
-          422:
-            description: Er was een probleem met het uitlezen van de afspraak. Het probleem is beschreven in een OperationalOutcome.
-            content:
-              application/fhir+json:
-                schema:
-                  example:
-                    $ref: '#/components/examples/OperationalOutcomeInvalid'
-          500:
-            description: Er was een probleem met het verwerken van de afspraak. Het probleem is beschreven in een OperationalOutcome.
-            content:
-              application/fhir+json:
-                schema:
-                  example:
-                    $ref: '#/components/examples/OperationalOutcomeInternal'
+      responses:
+        201:
+          description: De afspraak is succesvol verwerkt. Het resultaat is beschreven in een OperationalOutcome.
+        403:
+          description: Er was een probleem met het authenticeren. Het probleem is beschreven in een OperationalOutcome.
+        422:
+          description: Er was een probleem met het uitlezen van de afspraak. Het probleem is beschreven in een OperationalOutcome.
+        500:
+          description: Er was een probleem met het verwerken van de afspraak. Het probleem is beschreven in een OperationalOutcome.
 
