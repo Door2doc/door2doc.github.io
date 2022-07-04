@@ -97,50 +97,59 @@ paths:
                 properties:
                   call_id:
                     type: string
+                  careplan_id:
+                    type: string
+                    nullable: true
                   locatie:
                     type: string
                     example: "leiderdorp"
                   triage_urgentie:
                     type: string
                     enum: ["0", "1", "2", "3", "4", "5"]
-                    example: "2"
+                    nullable: true
                   afsluit_urgentie:
                     type: string
                     enum: ["0", "1", "2", "3", "4", "5"]
                     example: "2"
-                  urgentie_gewijzigd:
-                    type: boolean
                   zelfverwijzer:
                     type: boolean
                   aannametijd:
                     type: string
                     format: date-time
+                    nullable: true
                   aankomsttijd:
                     type: string
                     format: date-time
+                    nullable: true
                   originele_afspraak_begintijd:
                     type: string
                     format: date-time
+                    nullable: true
                   urgent_gepland:
                     type: boolean
                   laatste_keer_openen_HA:
                     type: string
                     format: date-time
+                    nullable: true
                   contact_begintijd:
                     type: string
                     format: date-time
+                    nullable: true
                   contact_eindtijd:
                     type: string
                     format: date-time
+                    nullable: true
                   fiatteertijd:
                     type: string
                     format: date-time
+                    nullable: true
                   type_arts:
                     type: string
                     enum: ["Huisarts", "Visitearts", "Nurse-Practitioner"]
-                  geboortedatum:
-                    type: string
+                  leeftijd:
+                    type: integer
                     format: date-time
+                    example: 50
                   postcode:
                     type: string
                     example: "7401"
@@ -157,6 +166,7 @@ paths:
                   code_icpc:
                     type: string
                     example: "T91.01"
+                    nullable: true
                   actie:
                     type: string
                     example: "Consult"
@@ -167,18 +177,22 @@ paths:
                     type: string
                     example: "234"
                     description: "Alleen relevant voor visites – ID van de gebruikte auto"
+                    nullable: true
                   visite_aankomsttijd:
                     type: string
                     format: date-time
                     description: "Alleen relevant voor visites – aankomsttijd"
+                    nullable: true
                   visite_vertrektijd:
                     type: string
                     format: date-time
                     description: "Alleen relevant voor visites – vertrektijd"
+                    nullable: true
                   visite_afrondtijd:
                     type: string
                     format: date-time
                     description: "Alleen relevant voor visites – tijdstip waarom de visite administratief is afgerond"
+                    nullable: true
 
       responses:
         200:
