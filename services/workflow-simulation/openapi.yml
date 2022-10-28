@@ -271,6 +271,9 @@ components:
           enum:
             - huisarts
             - nurse-practitioner
+        origineel_gepland:
+          type: string
+          description: "Slot waar dit event oorspronkelijk gepland is. Deze waarde kan leeg zijn, of verwijzen naar een niet-bestaand slot."
 
     Simulation:
       description: Status van de simulatie op tijdstip t.
