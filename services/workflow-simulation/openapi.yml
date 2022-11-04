@@ -13,6 +13,13 @@ servers:
   - url: https://primacura.door2doc.net
   - url: https://limes.door2doc.net
 
+tags:
+  - name: Nieuwe simulatie
+  - name: Executie
+  - name: Notificaties
+  - name: Wachtkamer informatie
+  - name: Evaluatie modus
+
 components:
   schemas:
     Error:
@@ -680,7 +687,6 @@ paths:
                     items:
                       $ref: '#/components/schemas/Scenario'
 
-
   /services/v2/simulation:
     post:
       summary: Begin een nieuwe simulatie op basis van een scenario, óf op basis van een arbitraire tijdsspanne.
@@ -1002,7 +1008,6 @@ paths:
         '200':
           $ref: '#/components/responses/SpoedPatient'
 
-
   /services/v2/simulation/{simulation_id}/wachtkamer:
     get:
       summary: Huidige wachtkamer info van de simulatie
@@ -1023,3 +1028,136 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /services/v2/evaluation:
+    post:
+      summary: Begin een nieuwe evaluatie op van een arbitraire tijdsspanne.
+      operationId: newEvaluation
+      tags:
+        - Evaluatie modus
+      parameters:
+        - name: from
+          schema:
+            type: string
+            format: 'date-time'
+            example: "2017-07-01T22:00:00+02:00"
+          in: query
+          required: true
+          description: Datum/tijd in RFC3339 van de begintijd van de evaluatie
+        - name: to
+          schema:
+            type: string
+            format: 'date-time'
+            example: "2017-07-02T08:00:00+02:00"
+          in: query
+          required: true
+          description: Datum/tijd in RFC3339 van de eindtijd van de simulatie.
+        - name: locaties
+          schema:
+            type: string
+            example: "ld,lu"
+          in: query
+          required: true
+          description: Komma-gescheiden lijst van de gewenste locaties.
+
+      responses:
+        '201':
+          description: De nieuwe simulatie is aangemaakt, en verwijst door naar de aangemaakte simulatie.
+          headers:
+            Location:
+              description: De Location header geeft aan waar de nieuwe simulatie gevonden kan worden.
+              schema:
+                type: string
+                format: uri
+                example: https://shr.door2doc.net/services/v2/simulation/d6dcb822-bcb0-49c8-9c32-fe659b902007
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                  - locaties
+                  - slot_duur
+                properties:
+                  id:
+                    type: string
+                    format: 'uuid'
+                    example: "d6dcb822-bcb0-49c8-9c32-fe659b902007"
+                    description: Uniek ID voor deze simulatie
+                  locaties:
+                    type: array
+                    items:
+                      - type: string
+                    description: Locaties in deze simulatie
+                    example: ['ld', 'al', 'lu']
+                  slot_duur:
+                    type: number
+                    format: int32
+                    example: 15
+                    description: Duur van een enkel slot in deze simulatie
+          links:
+            GetSimulation:
+              operationId: getSimulation
+              parameters:
+                simulation_id: '$response.body#/id'
+              description: Het `id` in de response kan worden gebruikt als `simulation_id` in de andere requests.
+        '400':
+          description: Incorrecte parameters opgegeven.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/v2/evaluation/{evaluation_id}:
+    get:
+      summary: Huidige status van de evaluatie
+      operationId: getEvaluation
+      tags:
+        - Evaluatie modus
+      parameters:
+        - $ref: '#/components/parameters/evaluation_id'
+      responses:
+        '200':
+          description: Huidige status van de evaluatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      summary: Plan de openstaande afspraak in
+      operationId: planAfspraak
+      tags:
+        - Evaluatie modus
+      parameters:
+        - $ref: '#/components/parameters/evaluation_id'
+        - name: slot_id
+          in: query
+          schema:
+            type: string
+          required: true
+          description: ID van het slot waar de afspraak gepland moet worden
+        - name: evaluate
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: Geef het resultaat van het inplannen van deze afspraak, zonder de afspraak daadwerkelijk in te plannen.
+      responses:
+        '200':
+          description: Nieuwe status van de evaluatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '409':
+          $ref: '#/components/responses/SlotError'
+        '500':
+          $ref: '#/components/responses/ServerError'
