@@ -1076,7 +1076,7 @@ paths:
             example: "2017-07-02T08:00:00+02:00"
           in: query
           required: true
-          description: Datum/tijd in RFC3339 van de eindtijd van de simulatie.
+          description: Datum/tijd in RFC3339 van de eindtijd van de evaluatie.
         - name: locaties
           schema:
             type: string
@@ -1121,10 +1121,10 @@ paths:
                     example: 15
                     description: Duur van een enkel slot in deze evaluatie
           links:
-            GetSimulation:
-              operationId: getSimulation
+            GetEvaluation:
+              operationId: getEvaluation
               parameters:
-                simulation_id: '$response.body#/id'
+                evaluation_id: '$response.body#/id'
               description: Het `id` in de response kan worden gebruikt als `evaluation_id` in de andere requests.
         '400':
           description: Incorrecte parameters opgegeven.
