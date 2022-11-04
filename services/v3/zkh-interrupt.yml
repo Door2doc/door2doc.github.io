@@ -18,6 +18,8 @@ servers:
           - demo
           - qa-demo
 
+security:
+  - {}
 
 components:
   parameters:
@@ -151,3 +153,5 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InterruptStatus'
+        400:
+          description: Fout bij het uitlezen van een van de parameters

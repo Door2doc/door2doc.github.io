@@ -18,6 +18,9 @@ servers:
           - demo
           - qa-demo
 
+security:
+  - {}
+
 components:
   schemas:
     Arts:
@@ -276,6 +279,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RoomOverview'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
 
   /services/v3/rooms/{kamernummer}:
     get:

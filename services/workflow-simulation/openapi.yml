@@ -13,12 +13,20 @@ servers:
   - url: https://primacura.door2doc.net
   - url: https://limes.door2doc.net
 
+security:
+  - {}
+
 tags:
   - name: Nieuwe simulatie
+    description: Aanmaken van een nieuwe simulatie
   - name: Executie
+    description: Mogelijke stappen gedurende een lopende simulatie
   - name: Notificaties
+    description: Aan/uitzetten en opvragen van notificaties gedurende een lopende simulatie
   - name: Wachtkamer informatie
+    description: Het wachtkamerscherm van een lopende simulatie
   - name: Evaluatie modus
+    description: Speciale modus voor het evalueren van historische scenario's
 
 components:
   schemas:
@@ -638,9 +646,18 @@ components:
         type: string
         format: uuid
 
+    evaluation_id:
+      description: Uniek ID van de evaluatie
+      name: evaluation_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
   responses:
     SimulationNotFound:
-      description: Onbekende simulatie
+      description: Onbekende simulatie of evaluatie
       content:
         application/json:
           schema:
@@ -686,6 +703,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Scenario'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
 
   /services/v2/simulation:
     post:
@@ -975,6 +994,9 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
+        '400':
+          description: Fout bij het uitlezen van een van de parameters
+
     put:
       summary: Activeer de interrupt "spoed-patient"
       operationId: activateInterrupt
@@ -991,6 +1013,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
+        '400':
+          description: Fout bij het uitlezen van een van de parameters
     delete:
       summary: Deactiveer de interrupt "spoed-patient"
       operationId: deactiveInterrupt
@@ -1007,6 +1031,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SpoedPatient'
+        '400':
+          description: Fout bij het uitlezen van een van de parameters
 
   /services/v2/simulation/{simulation_id}/wachtkamer:
     get:
@@ -1131,7 +1157,7 @@ paths:
 
     post:
       summary: Plan de openstaande afspraak in
-      operationId: planAfspraak
+      operationId: planEvaluatieAfspraak
       tags:
         - Evaluatie modus
       parameters:

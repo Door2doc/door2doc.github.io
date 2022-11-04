@@ -13,6 +13,9 @@ info:
 servers:
   - url: https://data.door2doc.net
 
+security:
+  - {}
+
 components:
   schemas:
     WidgetInfo:

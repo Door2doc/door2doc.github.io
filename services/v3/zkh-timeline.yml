@@ -18,6 +18,9 @@ servers:
           - demo
           - qa-demo
 
+security:
+  - {}
+
 components:
   parameters:
     afdeling:
