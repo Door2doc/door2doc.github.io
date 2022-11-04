@@ -1087,10 +1087,10 @@ paths:
 
       responses:
         '201':
-          description: De nieuwe simulatie is aangemaakt, en verwijst door naar de aangemaakte simulatie.
+          description: De nieuwe evaluatie is aangemaakt, en verwijst door naar de aangemaakte evaluatie.
           headers:
             Location:
-              description: De Location header geeft aan waar de nieuwe simulatie gevonden kan worden.
+              description: De Location header geeft aan waar de nieuwe evaluatie gevonden kan worden.
               schema:
                 type: string
                 format: uri
@@ -1108,24 +1108,24 @@ paths:
                     type: string
                     format: 'uuid'
                     example: "d6dcb822-bcb0-49c8-9c32-fe659b902007"
-                    description: Uniek ID voor deze simulatie
+                    description: Uniek ID voor deze evaluatie
                   locaties:
                     type: array
                     items:
                       - type: string
-                    description: Locaties in deze simulatie
+                    description: Locaties in deze evaluatie
                     example: ['ld', 'al', 'lu']
                   slot_duur:
                     type: number
                     format: int32
                     example: 15
-                    description: Duur van een enkel slot in deze simulatie
+                    description: Duur van een enkel slot in deze evaluatie
           links:
             GetSimulation:
               operationId: getSimulation
               parameters:
                 simulation_id: '$response.body#/id'
-              description: Het `id` in de response kan worden gebruikt als `simulation_id` in de andere requests.
+              description: Het `id` in de response kan worden gebruikt als `evaluation_id` in de andere requests.
         '400':
           description: Incorrecte parameters opgegeven.
           content:
