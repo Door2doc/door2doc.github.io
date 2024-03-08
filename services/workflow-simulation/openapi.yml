@@ -1077,13 +1077,6 @@ paths:
           in: query
           required: true
           description: Datum/tijd in RFC3339 van de eindtijd van de evaluatie.
-        - name: locaties
-          schema:
-            type: string
-            example: "ld,lu"
-          in: query
-          required: true
-          description: Komma-gescheiden lijst van de gewenste locaties.
 
       responses:
         '201':
@@ -1094,38 +1087,19 @@ paths:
               schema:
                 type: string
                 format: uri
-                example: https://shr.door2doc.net/services/v2/simulation/d6dcb822-bcb0-49c8-9c32-fe659b902007
+                example: https://shr.door2doc.net/services/v2/evaluation/d6dcb822-bcb0-49c8-9c32-fe659b902007
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - id
-                  - locaties
-                  - slot_duur
-                properties:
-                  id:
-                    type: string
-                    format: 'uuid'
-                    example: "d6dcb822-bcb0-49c8-9c32-fe659b902007"
-                    description: Uniek ID voor deze evaluatie
-                  locaties:
-                    type: array
-                    items:
-                      - type: string
-                    description: Locaties in deze evaluatie
-                    example: ['ld', 'al', 'lu']
-                  slot_duur:
-                    type: number
-                    format: int32
-                    example: 15
-                    description: Duur van een enkel slot in deze evaluatie
+                $ref: '#/components/schemas/Simulation'
           links:
             GetEvaluation:
               operationId: getEvaluation
               parameters:
                 evaluation_id: '$response.body#/id'
               description: Het `id` in de response kan worden gebruikt als `evaluation_id` in de andere requests.
+        '204':
+          description: Er is geen data beschikbaar voor deze range
         '400':
           description: Incorrecte parameters opgegeven.
           content:
@@ -1155,25 +1129,14 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
 
+  /services/v2/evaluation/{evaluation_id}/next:
     post:
-      summary: Plan de openstaande afspraak in
-      operationId: planEvaluatieAfspraak
+      summary: Bekijk de volgende stap
+      operationId: nextEvaluatie
       tags:
         - Evaluatie modus
       parameters:
         - $ref: '#/components/parameters/evaluation_id'
-        - name: slot_id
-          in: query
-          schema:
-            type: string
-          required: true
-          description: ID van het slot waar de afspraak gepland moet worden
-        - name: evaluate
-          in: query
-          schema:
-            type: boolean
-            default: false
-          description: Geef het resultaat van het inplannen van deze afspraak, zonder de afspraak daadwerkelijk in te plannen.
       responses:
         '200':
           description: Nieuwe status van de evaluatie
@@ -1181,6 +1144,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Simulation'
+        '204':
+          description: De laatste stap is bereikt
+        '404':
+          $ref: '#/components/responses/SimulationNotFound'
+        '409':
+          $ref: '#/components/responses/SlotError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/v2/evaluation/{evaluation_id}/prev:
+    post:
+      summary: Bekijk de vorige stap
+      operationId: nextEvaluatie
+      tags:
+        - Evaluatie modus
+      parameters:
+        - $ref: '#/components/parameters/evaluation_id'
+      responses:
+        '200':
+          description: Nieuwe status van de evaluatie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Simulation'
+        '204':
+          description: De eerste stap is bereikt
         '404':
           $ref: '#/components/responses/SimulationNotFound'
         '409':
