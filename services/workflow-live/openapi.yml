@@ -1,0 +1,158 @@
+openapi: "3.0.0"
+
+info:
+  title: Live voorstellen en afspraken
+  version: "1.0"
+
+  description: |
+    De live voorstellen en afspraken is een SSE stream met drie soorten events:
+    
+    * `connected` - aan het begin van de stream; bevat geen relevante data
+    * `afspraak` - wanneer een nieuwe afspraak ingepland is
+    * `voorstel` - wanneer een nieuw voorstel gedaan is
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: qa-dwf
+
+paths:
+  /services/sse/workflow/voorstellen:
+    get:
+      responses:
+        200:
+          description: SSE stream zoals hierboven beschreven
+          content:
+            text/event-stream:
+              schema:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: "#/components/schemas/Afspraak"
+                    - $ref: '#/components/schemas/Voorstel'
+
+  /services/v2/workflow/voorstellen/test/:
+    post:
+      description: Test endpoint voor het genereren van live voorstellen
+      parameters:
+        - name: slot
+          in: query
+          schema:
+            type: string
+          description: Slot ID waarvoor een voorstel gegenereerd moet worden
+          example: "shr_ld_201707241630_h1"
+      responses:
+        200:
+          description: Een random voorstel is op de stream geplaatst
+          content:
+            text/plain: {}
+
+
+  /services/v2/workflow/voorstellen/test-afspraak:
+    post:
+      description: Test endpoint voor het genereren van live afspraken
+      parameters:
+        - name: slot
+          in: query
+          schema:
+            type: string
+          description: Slot ID waarvoor een afspraak gegenereerd moet worden
+          example: "shr_ld_201707241630_h1"
+        - name: call_id
+          in: query
+          schema:
+            type: string
+          description: Call ID waarvoor de afspraak gegenereerd moet worden
+          example: "12345"
+      responses:
+        200:
+          description: Een afspraak is op de stream geplaatst
+          content:
+            text/plain: {}
+
+components:
+  schemas:
+    Afspraak:
+      description: Live afspraak
+      type: object
+      properties:
+        slot:
+          type: string
+          description: Slot waarop ingepland is
+        call_id:
+          type: string
+          description: CallID waarvoor ingepland is
+
+    Voorstel:
+      description: Live voorstel
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
+        tria:
+          $ref: '#/components/schemas/Tria'
+
+    Event:
+      type: object
+      description: Data waarvoor voorstel gemaakt is
+      properties:
+        call_id:
+          type: string
+          description: CallID voor deze data
+        locatie:
+          type: string
+          description: Locatie waar de call is aangenomen
+          example: "al"
+        urgentie:
+          type: string
+          enum:
+            - U0
+            - U1
+            - U2
+            - U3
+            - U4
+            - U5
+        ingangsklachten:
+          type: array
+          items:
+            type: string
+        postcode:
+          type: string
+          description: Postcode van de patient
+          example: "2204"
+        leeftijdsgroep:
+          type: string
+          description: Leeftijdsgroep van de patient
+          example: 30
+        zelfverwijzer:
+          type: boolean
+          description: Is deze patient zelf binnen komen lopen?
+        reistijd:
+          description: Locatienaam -> Reistijd (in minuten)
+          type: object
+          additionalProperties:
+            type: number
+            format: int32
+            minimum: 0
+        gem_duur:
+          type: number
+          description: Gemiddelde duur van een afspraak met deze kenmerken in minuten
+          example: 17
+        type_arts:
+          type: string
+          enum:
+            - huisarts
+            - nurse-practitioner
+
+
+    Tria:
+      type: object
+      description: Het daadwerkelijke voorstel
+      properties:
+        plan:
+          description: IDs van de voorgestelde slots
+          type: array
+          items:
+            - type: string
+          example: ["shr_ld_201707241630_h1"]
