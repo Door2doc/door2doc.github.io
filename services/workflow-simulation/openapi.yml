@@ -476,6 +476,15 @@ components:
             - achterwacht
             - nurse-practitioner
             - visite-arts
+        reservering:
+          type: string
+          description: "Optioneel veld. Indien aanwezig, betekent dat dit veld gereserveerd is. Een gereserveerd veld kan iedere mogelijke `status` en `afspraak` hebben. Zo is het mogelijk een slot te hebben met status `bezet`, reservering `u2` en een afspraak met urgentie U3"
+          enum:
+            - u2
+            - binnenloper
+            - u2-spoed
+            - achterloper
+            - dubbelconsult
         status:
           type: string
           description: Status van dit slot. Een open slot kan gevuld worden met een afspraak. Een bezet slot heeft een afspraak. Een geblokkeerd slot kan niet gevuld worden met een afspraak. Een beschikbaar slot is niet zichtbaar, maar kan worden bijgeplust.
