@@ -41,6 +41,7 @@ components:
       type: object
       required:
         - locatie
+        - aankomsttijd
         - status
         - behandelruimtes
         - bezet
@@ -50,70 +51,20 @@ components:
         locatie:
           type: string
           description: Code van de locatie waar deze bezoeker zich bevindt
-        status:
-          $ref: '#/components/schemas/BezoekerStatus'
-        wachtend:
-          type: number
-          description: Aantal wachtenden (op dezelfde arts) voor deze patiënt. Alleen aanwezig indien dit veld getoond moet worden.
-          example: 3
-        in-behandeling:
-          type: number
-          description: Aantal patiënten in behandeling bij dezelfde arts. Alleen aanwezig indien dit veld getoond moet worden.
-          example: 3
-        wachttijd:
-          type: number
-          description: Verwachte wachttijd in minuten. Alaleen aanwezig indien dit veld getoond moet worden.
-          example: 72
+          example: hil
+        aankomsttijd:
+          type: string
+          format: date-time
+          description: Tijdstip waarop deze bezoeker is binnengekomen
         verblijftijd:
           type: number
-          description: Verwachte verblijftijd in minuten. Alleen aanwezig indien dit veld getoond moet worden.
-          example: 84
-        behandelruimtes:
-          type: number
-          description: Aantal behandelruimtes beschikbaar.
-          example: 11
-        bezet:
-          type: number
-          description: Aantal behandelruimtes in gebruik.
-          example: 8
-        vrij:
-          type: number
-          description: Aantal behandelruimtes vrij
+          description: Ondergrens van de verwachte verblijftijd in uren.
           example: 3
         stappen:
           type: array
           items:
             $ref: '#/components/schemas/Stap'
           description: Stappenplan voor deze patient.
-      example:
-        {
-          "locatie": "ams",
-          "status": "wacht-op-arts",
-          "wachtend": 5,
-          "wachttijd": 75,
-          "behandelruimtes": 11,
-          "bezet": 8,
-          "vrij": 3,
-          "stappen": [
-             "bloedonderzoek",
-             "ct-scan",
-             "bespreking-uitslagen",
-          ]
-        }
-
-    BezoekerStatus:
-      type: string
-      enum:
-        - wacht-op-arts
-        - wacht-op-beslissing
-        - wacht-op-vertrek
-        - vertrokken
-      description: |
-        Status van de bezoeker.
-        * wacht-op-arts: Wachtend op arts
-        * wacht-op-beslissing: Gezien door een arts, maar nog geen beslissing
-        * wacht-op-vertrek: Arts heeft beslissing genomen, patient nog niet vertrokken
-        * vertrokken: Patient is vertrokken
 
     Stap:
       type: string
