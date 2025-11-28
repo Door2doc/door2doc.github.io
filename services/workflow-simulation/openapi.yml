@@ -485,6 +485,7 @@ components:
             - u2-spoed
             - achterloper
             - dubbelconsult
+            - custom
         status:
           type: string
           description: Status van dit slot. Een open slot kan gevuld worden met een afspraak. Een bezet slot heeft een afspraak. Een geblokkeerd slot kan niet gevuld worden met een afspraak. Een beschikbaar slot is niet zichtbaar, maar kan worden bijgeplust.
