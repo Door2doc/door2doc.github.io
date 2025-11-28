@@ -1,0 +1,164 @@
+openapi: 3.0.0
+
+info:
+  title: MyLive Service
+  version: "5"
+  description: |
+    De MyLive service geeft de status van een specifieke bezoeker weer. De MyLive informatie kan worden opgevraagd
+    via de QR-Coode in Room Service:
+
+    1. QR-Code redirect naar `https://{customer}.door2doc.net/app/mobile/mylive.html?code={code}`. Deze link mag gedeeld worden met derden.
+    2. Vraag de huidige status op via `/services/v5/mylive/status/{code}`. Deze code mag gedeeld worden met derden.
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
+
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: demo
+        enum:
+          - demo
+          - qa-demo
+
+security:
+  - {}
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: "stuff went wrong"
+
+    Status:
+      type: object
+      required:
+        - locatie
+        - status
+        - behandelruimtes
+        - bezet
+        - stappen
+        - onderzoeken
+      properties:
+        locatie:
+          type: string
+          description: Code van de locatie waar deze bezoeker zich bevindt
+        status:
+          $ref: '#/components/schemas/BezoekerStatus'
+        wachtend:
+          type: number
+          description: Aantal wachtenden (op dezelfde arts) voor deze patiënt. Alleen aanwezig indien dit veld getoond moet worden.
+          example: 3
+        in-behandeling:
+          type: number
+          description: Aantal patiënten in behandeling bij dezelfde arts. Alleen aanwezig indien dit veld getoond moet worden.
+          example: 3
+        wachttijd:
+          type: number
+          description: Verwachte wachttijd in minuten. Alaleen aanwezig indien dit veld getoond moet worden.
+          example: 72
+        verblijftijd:
+          type: number
+          description: Verwachte verblijftijd in minuten. Alleen aanwezig indien dit veld getoond moet worden.
+          example: 84
+        behandelruimtes:
+          type: number
+          description: Aantal behandelruimtes beschikbaar.
+          example: 11
+        bezet:
+          type: number
+          description: Aantal behandelruimtes in gebruik.
+          example: 8
+        vrij:
+          type: number
+          description: Aantal behandelruimtes vrij
+          example: 3
+        stappen:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stap'
+          description: Stappenplan voor deze patient.
+      example:
+        {
+          "locatie": "ams",
+          "status": "wacht-op-arts",
+          "wachtend": 5,
+          "wachttijd": 75,
+          "behandelruimtes": 11,
+          "bezet": 8,
+          "vrij": 3,
+          "stappen": [
+             "bloedonderzoek",
+             "ct-scan",
+             "bespreking-uitslagen",
+          ]
+        }
+
+    BezoekerStatus:
+      type: string
+      enum:
+        - wacht-op-arts
+        - wacht-op-beslissing
+        - wacht-op-vertrek
+        - vertrokken
+      description: |
+        Status van de bezoeker.
+        * wacht-op-arts: Wachtend op arts
+        * wacht-op-beslissing: Gezien door een arts, maar nog geen beslissing
+        * wacht-op-vertrek: Arts heeft beslissing genomen, patient nog niet vertrokken
+        * vertrokken: Patient is vertrokken
+
+    Stap:
+      type: string
+      enum:
+        - onderzoek-arts
+        - bloedonderzoek
+        - rontgenfoto
+        - ct-scan
+        - bespreking-uitslagen
+        - opname
+        - consult-arts
+        - observatie
+
+paths:
+  /public/v5/mylive/status:
+    get:
+      summary: Vraag de huidige status op voor een specifieke bezoeker.
+      operationId: getStatus
+      tags:
+        - 'Public'
+      parameters:
+        - name: code
+          in: query
+          required: true
+          description: De code uit de QR Code.
+          schema:
+            type: string
+      responses:
+        401:
+          description: De code is ongeldig.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        410:
+          description: De code is verlopen.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        200:
+          description: De huidige status voor deze bezoeker.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
