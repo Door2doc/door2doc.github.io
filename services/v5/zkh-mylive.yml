@@ -42,11 +42,8 @@ components:
       required:
         - locatie
         - aankomsttijd
-        - status
-        - behandelruimtes
-        - bezet
+        - verblijftijd
         - stappen
-        - onderzoeken
       properties:
         locatie:
           type: string
