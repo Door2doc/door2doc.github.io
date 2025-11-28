@@ -1,0 +1,157 @@
+openapi: 3.0.0
+
+info:
+  title: Review Service
+  version: "5"
+  description: |
+    De review service heeft een openbaar endpoint voor het geven van reviews, en een private endpoint
+    voor het opvragen van recente reviews.
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
+
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: demo
+        enum:
+          - demo
+          - qa-demo
+
+security:
+  - {}
+
+components:
+  schemas:
+    Reviews:
+      description: Verzamelobject voor reviews
+      type: object
+      properties:
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+
+    Review:
+      description: Een specifieke review
+      type: object
+      properties:
+        score:
+          description: Score voor de review
+          type: integer
+          minimum: 0
+          maximum: 5
+        vragen:
+          description: Vragen
+          type: array
+          items:
+            type: string
+        antwoorden:
+          description: Antwoorden op de vragen
+          type: array
+          items:
+            type: string
+        datum:
+          type: string
+          format: date-time
+          example: "2017-02-28T16:54:00+01:00"
+        locatie:
+          description: Locatiecode
+          type: string
+          example: "hil"
+        bron:
+          description: Bron van de review
+          type: string
+          enum:
+            - mylive
+            - wachtverzachter-algemeen
+            - wachtverzachter-persoonlijk
+      required:
+        - score
+        - vragen
+        - antwoorden
+        - datum
+        - locatie
+        - bron
+
+    NewReview:
+      description: Format voor het indienen van een nieuwe review
+      type: object
+      properties:
+        score:
+          description: Score voor de review
+          type: integer
+          minimum: 0
+          maximum: 5
+        vragen:
+          description: Vragen
+          type: array
+          items:
+            type: string
+        antwoorden:
+          description: Antwoorden op de vragen
+          type: array
+          items:
+            type: string
+        locatie:
+          description: Locatiecode
+          type: string
+          example: "hil"
+        bron:
+          description: Bron van de review
+          type: string
+          enum:
+            - mylive
+            - wachtverzachter-algemeen
+            - wachtverzachter-persoonlijk
+      required:
+        - score
+        - vragen
+        - antwoorden
+        - locatie
+        - bron
+
+paths:
+  /public/v5/review:
+    post:
+      summary: Post een nieuwe review
+      operationId: addReview
+      tags:
+        - 'Public'
+      requestBody:
+        description: Inhoud van de review
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewReview'
+      responses:
+        200:
+          description: De nieuwe review is verwerkt
+        400:
+          description: Een of meer parameters waren incorrect
+
+  /services/v5/review:
+    get:
+      summary: Alle recente reviews.
+      operationId: getReviews
+      tags:
+        - 'Private'
+      parameters:
+        - name: loc
+          description: Locatie code
+          schema:
+            type: string
+          required: true
+          in: query
+      responses:
+        200:
+          description: Een arbitrair geordende lijst van reviews
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reviews'
+        400:
+          description: Fout bij het uitlezen van een van de parameters
