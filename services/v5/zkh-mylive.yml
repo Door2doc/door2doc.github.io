@@ -57,6 +57,9 @@ components:
           type: number
           description: Ondergrens van de verwachte verblijftijd in uren.
           example: 3
+        verblijftijd_max:
+          type: number
+          description: Bovengrens van de verwachte verblijftijd in uren. Kan afwezig zijn; in dat geval is de verblijftijd de ondergrens "of hoger", bv "3+"
         stappen:
           type: array
           items:
