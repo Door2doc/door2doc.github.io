@@ -79,6 +79,25 @@ components:
         - observatie
 
 paths:
+  /public/v5/mylive/wachtkamer.png:
+    get:
+      summary: QR Code voor de algemene wachtkamer, linkt naar de generieke pagina.
+      operationId: getQRCode
+      tags:
+        - 'Public'
+      parameters:
+        - name: locatie
+          in: query
+          required: true
+          description: Code van de locatie waar deze bezoeker zich bevindt
+          schema:
+            type: string
+      responses:
+        200:
+          description: QR Code voor de algemene wachtkamer
+          content:
+            image/png: {}
+
   /public/v5/mylive/status:
     get:
       summary: Vraag de huidige status op voor een specifieke bezoeker.
