@@ -73,6 +73,7 @@ components:
             - wachtverzachter-algemeen
             - wachtverzachter-persoonlijk
       required:
+        - score
         - vragen
         - antwoorden
         - datum
@@ -114,6 +115,7 @@ components:
             - wachtverzachter-algemeen
             - wachtverzachter-persoonlijk
       required:
+        - score
         - vragen
         - antwoorden
         - locatie
