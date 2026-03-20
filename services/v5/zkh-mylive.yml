@@ -73,6 +73,7 @@ components:
         - bloedonderzoek
         - rontgenfoto
         - ct-scan
+        - echo
         - bespreking-uitslagen
         - opname
         - consult-arts
