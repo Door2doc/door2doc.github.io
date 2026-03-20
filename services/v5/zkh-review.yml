@@ -38,6 +38,10 @@ components:
       description: Een specifieke review
       type: object
       properties:
+        titel:
+          description: Titel van de review
+          type: string
+          example: "Vindt u onze wachtkamer fijn?"
         score:
           description: Score voor de review
           type: integer
@@ -80,6 +84,10 @@ components:
       description: Format voor het indienen van een nieuwe review
       type: object
       properties:
+        titel:
+          description: Titel van de review
+          type: string
+          example: "Vindt u onze wachtkamer fijn?"
         score:
           description: Score voor de review
           type: integer
@@ -127,6 +135,15 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/NewReview'
+            example:
+              titel: "Vindt u onze wachtkamer fijn?"
+              score: 1
+              vragen:
+                - "Fijn om te horen. Heeft u nog tips?"
+              antwoorden:
+                - "De wachtkamer is helemaal goed."
+              locatie: "noord"
+              bron: "wachtverzachter-algemeen"
       responses:
         200:
           description: De nieuwe review is verwerkt
