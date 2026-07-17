@@ -83,6 +83,7 @@ components:
       description: Kleurcode van de urgentie van deze patient
       type: string
       enum:
+        - paars
         - rood
         - oranje
         - geel
