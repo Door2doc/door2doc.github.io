@@ -1,0 +1,199 @@
+openapi: 3.0.0
+
+info:
+  title: Content Service
+  version: "3"
+  description: |
+    De content service levert statische JSON-content per ziekenhuis, zoals
+    frontend-teksten en de lijst met beschikbare talen.
+
+    De inhoud wordt samengesteld uit een algemene default
+    (`default/<naam>.json`) waar de ziekenhuis-specifieke overrides
+    (`<ziekenhuis>/<naam>.json`) op topniveau overheen worden gelegd. Beide
+    bestanden mogen ontbreken; bestaat geen van beide, dan volgt een 404.
+
+    QA-, test- en dev-omgevingen (`qa-`, `test-`, `dev-` subdomeinen) vallen
+    automatisch terug op de content van het productie-ziekenhuis.
+  license:
+    name: Door2doc
+    url: https://www.door2doc.com
+
+
+servers:
+  - url: https://{customer}.door2doc.net
+    variables:
+      customer:
+        default: demo
+        enum:
+          - demo
+          - qa-demo
+
+security:
+  - {}
+
+components:
+  schemas:
+    Talen:
+      description: Beschikbare talen en welke talen elk ziekenhuis aanbiedt
+      type: object
+      properties:
+        talen:
+          description: Alle ondersteunde talen, per taalcode
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Taal'
+        ziekenhuisTalen:
+          description: Aangeboden taalcodes per ziekenhuis, met een `default`-lijst
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              example: nl
+      example:
+        talen:
+          nl:
+            afkorting: NL
+            titel: Nederlands
+            vlag: nl.svg
+          en:
+            afkorting: EN
+            titel: English
+            vlag: en.svg
+        ziekenhuisTalen:
+          default: [nl, en]
+          demo: [nl, en, ar]
+
+    Taal:
+      description: Weergave-informatie voor een taal
+      type: object
+      properties:
+        afkorting:
+          type: string
+          example: NL
+        titel:
+          type: string
+          example: Nederlands
+        vlag:
+          description: Bestandsnaam van het vlag-icoon
+          type: string
+          example: nl.svg
+
+    Teksten:
+      description: |
+        Frontend-teksten voor één taal: een platte map van tekst-sleutel naar
+        vertaling.
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        spoedmelding: "We helpen nu een patiënt in levensgevaar. U moet mogelijk langer wachten."
+        app_welkom: "Welkom op de Spoedeisende Hulp"
+
+    ReviewConfiguratie:
+      description: Review-vragen voor de algemene en persoonlijke wachtverzachter
+      type: object
+      properties:
+        algemeen:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewVraag'
+        persoonlijk:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewVraag'
+
+    ReviewVraag:
+      description: Eén review-vraag, met teksten per taalcode
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/ReviewVraagTeksten'
+      example:
+        nl:
+          titel: "Vindt u de uitleg duidelijk?"
+          vraag_niet_blij: "Wat kunnen we beter doen?"
+          vraag_neutraal: "Wat kunnen we beter doen?"
+          vraag_blij: "Fijn om te horen. Heeft u nog tips?"
+          placeholder: "Leg uw mening uit. Deel geen persoonlijke gegevens."
+          bedankt: "Bedankt voor uw mening. Samen maken we de zorg beter."
+          error: "Er ging iets mis. Probeer het later opnieuw."
+
+    ReviewVraagTeksten:
+      description: Teksten van een review-vraag in één taal
+      type: object
+      properties:
+        titel:
+          type: string
+        vraag_niet_blij:
+          type: string
+        vraag_neutraal:
+          type: string
+        vraag_blij:
+          type: string
+        placeholder:
+          type: string
+        bedankt:
+          type: string
+        error:
+          type: string
+
+  responses:
+    NotFound:
+      description: Geen content beschikbaar onder deze naam
+
+paths:
+  /public/v3/content/talen:
+    get:
+      summary: Beschikbare talen
+      operationId: getTalen
+      tags:
+        - 'Public'
+      responses:
+        200:
+          description: De talenconfiguratie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Talen'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+  /public/v3/content/texts.{taal}:
+    get:
+      summary: Frontend-teksten voor één taal
+      operationId: getTeksten
+      tags:
+        - 'Public'
+      parameters:
+        - name: taal
+          description: Taalcode
+          schema:
+            type: string
+            enum: [nl, en, ar]
+          required: true
+          in: path
+      responses:
+        200:
+          description: De teksten voor het ziekenhuis in de gevraagde taal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teksten'
+        404:
+          $ref: '#/components/responses/NotFound'
+
+  /public/v3/content/review:
+    get:
+      summary: Review-configuratie
+      operationId: getReviewConfiguratie
+      tags:
+        - 'Public'
+      responses:
+        200:
+          description: De review-vragen voor het ziekenhuis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewConfiguratie'
+        404:
+          $ref: '#/components/responses/NotFound'
