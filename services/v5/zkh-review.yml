@@ -6,6 +6,10 @@ info:
   description: |
     De review service heeft een openbaar endpoint voor het geven van reviews, en een private endpoint
     voor het opvragen van recente reviews.
+
+    Het endpoint wordt gedeeld door de ziekenhuis- en de HAP-wachtverzachter; het veld `bron` geeft aan
+    waar de review vandaan komt (`wachtverzachter-*` voor ziekenhuizen, `hap-wachtverzachter-*` voor
+    huisartsenposten).
   license:
     name: Door2doc
     url: https://www.door2doc.com
@@ -72,6 +76,8 @@ components:
             - mylive
             - wachtverzachter-algemeen
             - wachtverzachter-persoonlijk
+            - hap-wachtverzachter-algemeen
+            - hap-wachtverzachter-persoonlijk
       required:
         - score
         - vragen
@@ -114,6 +120,8 @@ components:
             - mylive
             - wachtverzachter-algemeen
             - wachtverzachter-persoonlijk
+            - hap-wachtverzachter-algemeen
+            - hap-wachtverzachter-persoonlijk
       required:
         - score
         - vragen
